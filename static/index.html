@@ -1,0 +1,3243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"><!--width=device-width,initial-scale=1.0, maximum-scale=1.0, -->
+    <meta name="viewport">
+    <title>狗东（GG）</title>
+    <!--    标题栏：-->
+    <link href="/image/icon/title.ico" rel="icon" type="image/x-icon">
+    <link href="/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <script src="/js/jquery/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="/js/jquery/jquery.lazyload.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="/js/vue/vue.js" type="text/javascript"></script>
+    <!-- 注意：vue-resource 依赖于 Vue，所以先后顺序注意 -->
+    <script src="/js/vue/vue-resource-1.5.1.js" type="text/javascript"></script>
+    <script src="/js/sweetalert/sweetalert.min.js" type="text/javascript"></script>
+
+    <script src="/js/apiUrlConfig.js" type="text/javascript"></script>
+    <script src="/js/configCustomer.js" type="text/javascript"></script>
+    <script src="/js/localStorageCustomer.js" type="text/javascript"></script>
+    <script src="/js/user.js" type="text/javascript"></script>
+
+
+    <style>
+        :root {
+            --nav-head-height: 31px;
+            --search-head-height:141px;
+            --nav-head-bgcolor:#e3e4e5;
+            --nav-head-li-backgd: #fff;
+            --search--head-backgd:fff;
+
+            /*主体 变量*/
+            --body-bgcolor:#f4f4f4;
+
+            --column-margin:30px;   /*每栏的间距*/
+
+        }
+
+        /*手机，平板显示一样*/
+        @media only screen and (max-device-width: 1024px) {
+            /*中间商品的轮播主页设置动态样式*/
+            .carousel-left-menu, .carousel-right-info{
+                width:20% !important;
+            }
+            .carousel-center-one {
+                width:57% !important;
+            }
+
+            /*秒杀设置样式*/
+            .spike-left,.spike-right{
+                width:20% !important;
+            }
+            .spike-center{
+                width:60% !important;
+            }
+            .image-price-div-body{
+                width:80% !important;
+            }
+            .image-price-div-body .price-miaosha,.image-price-div-body .price-origin{
+                width: 50% !important;
+            }
+            .spcike-more-image-div .price-miaosha:before{
+                border-width:unset !important;
+            }
+        }
+
+        /*平板*/
+        /*@media only screen and (max-device-width: 768px) {
+            !*商品轮播的主要信息 样式设置*!
+            .carousel-left-menu, .carousel-right-info{
+                width:20% !important;
+            }
+            .carousel-center-one {
+                width:57% !important;
+            }
+        }*/
+
+        /*平板Pro*/
+        @media only screen and (max-device-width: 1024px){
+            .hidden-sm{
+                display: none !important;
+            }
+            .col-md-8{
+                width: 100%;
+            }
+            #search-input{
+                width: 61% !important;
+                margin-left: 16% !important;
+            }
+            .search-title ul{
+                margin-left: 15% !important;
+            }
+            .search-title li:not(:first-child), .search-title li:not(:last-child) {
+                margin: 0px 14px !important;
+            }
+            .search-bottom-div ul{
+                margin-left: unset !important;
+                text-align: center;
+            }
+}
+
+
+        html {
+            margin: 0;
+            height: 0;
+            height:2000px;
+            background-color:var(--body-bgcolor);
+        }
+        body{
+            font-family: "Microsoft YaHei", "Heiti SC", tahoma, arial, "Hiragino Sans GB", 宋体, sans-serif;
+        }
+        #app{
+            background-color:var(--body-bgcolor);
+        }
+        div[class^="col"] {
+            /*border:1px solid red;*/
+            height:100%;
+        }
+        /*顶部的活动栏*/
+        .index-head-activity{
+            height:80px;
+        }
+        .activity-both-div{
+            background-color: rgb(1, 208, 202);
+            height:100%
+        }
+        .activity-center-div{
+            background-image: url(/image/index/activity-image.jpg);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        .activity-close-btn{
+            display: block;
+            width: 20px;
+            height: 20px;
+            float: right;
+            margin-top: 11px;
+            background-image:url('/image/index/close-bottom.png');
+            background-repeat: no-repeat;
+            background-size: 20px;
+        }
+
+
+        /*最上面的导航栏*/
+        #index-head-nav {
+            height: var(--nav-head-height);
+            border-bottom: 1px solid #ddd;
+            background-color: var(--nav-head-bgcolor);
+            line-height: 28px;
+            color: #999;
+            font: 12px/1.5 Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, "\5B8B\4F53", sans-serif;
+        }
+        .head-nav-man{
+            /*display: flex;*/
+            /*justify-content: flex-start;*/
+            /*flex-wrap: wrap;*/
+            position:relative;
+        }
+        .head-nav-man .left{
+            width:10%;
+        }
+        .head-nav-man .right{
+            width:90%;
+        }
+        /*.hide-div-body{
+            width: 100%;
+            height: 100px;
+            !*background: red;*!
+            position: absolute;
+            top: var(--nav-head-height);;
+        }*/
+        .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12{
+            padding-right:0px;
+            padding-left:0px;
+
+        }
+        #index-head-nav a {
+            color: #999;
+            text-decoration: none;
+        }
+        #index-head-nav ul {
+            height: var(--nav-head-height);
+            line-height: var(--nav-head-height);
+            list-style-type: none;
+            margin: 0;
+            display: inline-block;
+        }
+
+        #index-head-nav ul li {
+            height: var(--nav-head-height);
+            display: inline-block;
+        }
+
+        #nav-left-ul {
+            padding: 0;
+            float: left;
+            justify-content: space-around;
+        }
+
+        #nav-left-ul li:first-child {
+            margin-left: 10px;
+        }
+
+        #nav-left-ul li:nth-child(2) {
+            margin-right: 10px;
+        }
+
+        .position-image {
+            width: 20px;
+            height: 21px;
+            margin-top: -4px;
+        }
+
+        #nav-right-ul {
+            text-align: right;
+            float: right;
+        }
+
+        #nav-right-ul li {
+            /*width: 10%;*/
+            text-align: center;
+        }
+        #nav-right-ul li > a{
+            padding:0 10px;
+        }
+
+        #nav-right-ul li .glyphicon{
+            top:unset !important;
+            font-variant: all-small-caps !important;
+            position: relative;
+            left: 5px;
+        }
+        /*设置导航栏的li分割线*/
+        #nav-right-ul i{
+            font-style: unset;
+        }
+
+        .a-none-pointer {
+            cursor: default;
+        }
+
+        .color-red {
+            color: #f10215 !important;
+        }
+
+        .color-red-hover:hover {
+            color: #f10215 !important;
+        }
+        .bg-color-hover:hover{
+            background-color:var(--nav-head-bgcolor);
+        }
+
+        /*其它鼠标移入的div显示*/
+        /*li 鼠标移入背景色变白色*/
+        .bg-white-hover:hover {
+            background: var(--nav-head-li-backgd);
+        }
+        /*{{}} 不显示*/
+        [v-cloak]{
+            display: none !important;
+        }
+        /*位置下拉选*/
+        #position-outer-div {
+            display: block;
+            position: absolute;
+            background: var(--nav-head-li-backgd);
+            box-shadow: 0px 3px 3px 0px;
+            z-index:30;
+        }
+        #position-outer-div tr {
+            display: block;
+            margin: 0 15px -5px 15px;
+        }
+        #position-outer-div tr:first-child {
+            margin-top: 8px;
+        }
+        #position-outer-div tr:last-child {
+            margin-bottom: 8px;
+        }
+        #position-outer-div tr hr {
+            margin: 6px 0 6px 0;
+        }
+        #position-outer-div td {
+            width: 60px;
+            text-align: left;
+        }
+        #position-outer-div td a{
+            margin-left: 5px;
+            /*padding-top: 2px;*/
+            /*padding-bottom: 2px;*/
+            padding-left: 10px;
+            padding-right: 10px;
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+        }
+        #position-outer-div td a[class*='active']{
+            background-color: #f10215;
+            color: white;
+        }
+
+
+        /*用户登陆后*/
+        #user-login-nava-login-li{
+            width: 140px !important;
+            padding:0 1%;
+            position: relative;
+            text-align: left !important;
+        }
+        #user-login-nav{
+            display: inline-block;
+            width: 50%;
+            position: absolute;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        #user-outer-div{
+            position: absolute;
+            background: var(--nav-head-li-backgd);
+            box-shadow: 0px 3px 3px 0px;
+            z-index: 10;
+            width:270px;
+            left: 0.1%;
+        }
+        .user-display-flex{
+            display: flex;
+            flex-direction: column;
+            line-height: 24px;
+        }
+        .user-display-flex hr{
+            margin: 10px;
+        }
+        .user-display-flex-top{
+            display: flex;
+            margin-top: 5px;
+            justify-content: space-around;
+            width:100%;
+        }
+        .user-display-flex-top .user-head{
+            width:60px;
+            margin-right: 10px;
+            margin-left: 10px;
+            position: relative;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #f5f5f5;
+            overflow: hidden;
+            background-image: url("/image/index/no-img_mid_.jpg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            cursor: pointer;
+        }
+        .user-display-flex-top .user-info{
+            width:70%;
+        }
+        .user-display-flex-top .user-vip-icon{
+            display: inline-block;
+            width: 52px;
+            height: 20px;
+            background-image: url(/image/index/vip-icon.png);
+            background-position: 0px 40px;
+            margin-top: 5%;
+            cursor: pointer;
+        }
+        .user-display-flex-top .exit{
+            float: right;
+            margin-right: 5%;
+            margin-top: 5%;
+            cursor: pointer;
+        }
+        .user-display-flex-top .detail{
+            display: block;
+            margin-top: -3%;
+            cursor: pointer;
+        }
+
+        /*登录下拉菜单的下面轮播图*/
+        .user-display-flex-bottom{
+            height:105px;
+        }
+        .user-display-flex-bottom .user-function-icom-1{
+            background-image: url(/image/index/user-function.png);
+            height: 55px;
+            width: 55px;
+            margin: 0 auto;
+        }
+        .user-display-flex-bottom .item{
+            margin: 0;
+            text-align: center;
+        }
+        .user-display-flex-bottom .item .row{
+            display: flex;
+            justify-content: center;
+        }
+
+        .user-display-flex-bottom .item .row > div:hover{
+            color: #f10215 !important;
+            cursor:pointer;
+        }
+
+        .user-display-flex-bottom .user-function-name {
+            height: 16px;
+            line-height: 16px;
+            margin: 3px 0 10px 0;
+            display: inline-block;
+            padding: 0 5px;
+        }
+
+        #user-detail-info-carouse a{
+            color: #999;
+            text-decoration: none;
+            width: 10px;
+            height: 0px;
+        }
+        #user-detail-info-carouse a span{
+            position: unset !important;
+            font-size: 10px;
+            left: 0;
+            margin: 0px;
+            width: 10px;
+            height: 15px;
+        }
+        #user-detail-info-carouse a.left span{
+            margin-left: 10px
+        }
+        #user-detail-info-carouse a.right span{
+            margin-left: -20px
+        }
+
+
+        #user-login-nava-login-li .glyphicon{
+            position: relative;
+            left: 90% !important;
+        }
+        .user-login-vip-icon{
+            width: 48px;
+            height: 16px;
+            display: inline-block;
+            background-image: url(/image/index/vip-icon.png);
+            background-position: -82px 58px;
+            margin: 0 auto;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            transform: translate(-33%, -50%);
+            left: 65%;
+        }
+
+        /*我的京东*/
+        #home-outer-div {
+            position: absolute;
+            background: var(--nav-head-li-backgd);
+            box-shadow: 0px 3px 3px 0px;
+            z-index:10;
+        }
+        #home-outer-div tr {
+            display: block;
+            margin: 0 15px -5px 15px;
+        }
+        #home-outer-div tr:first-child {
+            margin-top: 8px;
+        }
+        #home-outer-div tr:last-child {
+            margin-bottom: 8px;
+        }
+        #home-outer-div tr hr {
+            margin: 6px 0 6px 0;
+        }
+        #home-outer-div td {
+            width: 120px;
+            text-align: left;
+        }
+
+        /*企业采购*/
+        #enterprise-outer-div {
+            position: absolute;
+            background: var(--nav-head-li-backgd);
+            box-shadow: 0px 3px 3px 0px;
+            z-index:10;
+        }
+        #enterprise-outer-div tr:first-child {
+            margin-top: 8px;
+        }
+        #enterprise-outer-div tr:last-child {
+            margin-bottom: 8px;
+        }
+        #enterprise-outer-div tr {
+            display: block;
+            margin: 0 0px -5px 11px;
+        }
+        #enterprise-outer-div td {
+            width: 70px;
+            text-align: left;
+        }
+
+        /*客户服务*/
+        #customService-outer-div{
+            position: absolute;
+            /*margin-left: -68px;*/
+            background: var(--nav-head-li-backgd);
+            box-shadow: 0px 3px 3px 0px;
+            z-index:10;
+        }
+        #customService-outer-div tr:first-child {
+            margin-top: 8px;
+        }
+        #customService-outer-div tr:last-child {
+            margin-bottom: 8px;
+        }
+        #customService-outer-div tr {
+            display: block;
+            margin: 0 0px -5px 11px;
+        }
+        #customService-outer-div td {
+            width: 70px;
+            text-align: left;
+        }
+        #customService-outer-div hr{
+            margin:10px 0 10px 0;
+        }
+
+        .color-black-weight{
+            color: black;
+            font-weight: 600;
+        }
+        .td-title{
+            opacity: 0.8;
+        }
+
+        /*网站导航 */
+        #webNav-outer-div{
+            width: 100%;
+            height: 180px;
+            right: 0px;
+            position: absolute;
+            background: var(--nav-head-li-backgd);
+            box-shadow: 0px 3px 3px 0px;
+            z-index:30;
+            display: flex;
+        }
+        #webNav-outer-div > div:nth-child(1){
+              width:34%;
+        }
+
+        #webNav-outer-div > div:before{
+            content: "";
+            display: inline-block;
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            -ms-transform: translateY(-50%);
+            background: -webkit-gradient(linear,left top,left bottom,from(white),color-stop(#eeeeee),to(white));
+            background: linear-gradient(180deg,white,#eeeeee,white);
+        }
+
+        #webNav-outer-div > div {
+            width:22%;
+            height:100%;
+        }
+        .webNav-div{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            justify-content: flex-start;
+        }
+        .webNav-div > div{
+            width: 25%;
+            height: 20px;
+            text-align: left;
+            line-height: 20px;
+            padding: 0px 0px 0px 20px;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .webNav-right > div{
+            width: 33%;
+        }
+        .webNav-div .one-header{
+            width: 100%;
+            text-align: left;
+            height: 30px;
+            margin: 10px 0 5px 20px;
+            line-height: 30px;
+            padding:0px;
+            font-weight: 700;
+            color: #666;
+        }
+        .webNav-div a:hover{
+            color: #f10215 !important;
+        }
+
+
+
+        /*搜索框*/
+        .search-head-row{
+            height:var(--search-head-height);
+            background:var(--search--head-backgd);
+            border: 1px solid #706c6c69;
+            background-color: white;
+        }
+        .search-head-row .row{
+            height:100%;
+        }
+        .search-head-two-row{
+
+        }
+        .search-left-a{
+            width:190px;
+            height:120px;
+            display: block;
+            background: url(/image/index/sprite.png) 50% 15px no-repeat;
+            margin: 0 auto;
+            background-position: bottom;
+        }
+
+        .search-center-outerdiv{
+            width:100%;
+            height:100%;
+            /*background:bisque;*/
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .search-center-outerdiv div{
+            width:100%;
+        }
+        .search-top-div{
+            height:66%;
+        }
+        .search-input-div{
+            height:35px;
+            margin-top:25px;
+        }
+        .search-bottom-div{
+            height:34%;
+        }
+        .search-bottom-div ul {
+            list-style-type: none;
+            height: 40px;
+            /*text-align: center;*/
+            line-height: 40px;
+            font-size: 15px;
+            padding: 0;
+            margin-top: 8px;
+            opacity: 0.9;
+            margin-left: 10%;
+            /*background: red;*/
+        }
+        .search-bottom-div ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .search-bottom-div a{
+            color: #333;
+            text-decoration: none;
+        }
+        .search-input-div .search-input {
+            width: 65%;
+            height: 36px;
+            margin-left: 10%;
+            border: 2px solid #e1251b;
+            padding-left: 16px;
+        }
+        .search-input-div .search-input:focus{
+            border:2px solid #e1251b !important;
+        }
+        .search-input-div .search-button{
+            display: inline-block;
+            width: 58px;
+            height: 36px;
+            background: #e1251b;;
+            position: absolute;
+            border: 2px solid #e1251b;
+        }
+        .search-input-div .search-button .search-img{
+            width: 20px;
+            position: absolute;
+            margin-top: 5px;
+            margin-left: 17px;
+        }
+
+        .photograph-a{
+            display: inline-block;
+            position: absolute;
+            margin-left: -50px;
+            margin-top: 7px;
+        }
+        .photograph-img{
+            width:20px;
+        }
+
+        .search-title ul {
+            list-style-type: none;
+            margin-left: 10%;
+            padding:0;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .search-title ul li{
+            display: inline-block;
+        }
+        .search-title li:not(:first-child),.search-title li:not(:last-child){
+            margin:0 5px;
+        }
+        .search-title a {
+            text-decoration: none;
+            color: #666;
+            opacity: 0.8;
+        }
+
+        .order-div{
+            display: inline-block;
+            position: absolute;
+            margin-left: 8%;
+            width: 140px !important;
+            height: 36px;
+            border: 1px solid #6666661c;
+        }
+        .order-div:hover{
+            border:1px solid red;
+        }
+
+        .shopping-cart{
+            width: 16px;
+            height: 17.6px;
+            display: inline-block;
+            background-image: url("/image/index/shopping-cart.png");
+            background-repeat: no-repeat;
+            background-size: 16px 17.6px;
+            position: absolute;
+            margin: 8px 0 5px 10px;
+        }
+        .shopping-cart-a{
+            color:#e1251b !important;
+            font-family: "Microsoft YaHei", "Heiti SC", tahoma, arial, "Hiragino Sans GB", 宋体, sans-serif;
+            font-size:14px;
+            text-decoration:none !important;
+            display: inline-block;
+            position: absolute;
+            margin: 8px 0 9px 45px;
+        }
+
+        .shopping-cart-num{
+            display: inline-block;
+            height: 15px;
+            background: #e1251b;
+            border-radius: 50px;
+            font-family: 微软雅黑;
+            font-style: normal;
+            padding-left: 4px;
+            padding-right: 4px;
+            font-size: 10px;
+            color: white;
+            position: absolute;
+            margin: 3px 0 0 21px;
+        }
+
+        .cursor-pointer-hover:hover{
+            cursor: pointer !important;
+        }
+
+        .search-right{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        #new-activity{
+            width:190px;
+            height:120px;
+            margin-top: 10px;
+            background-image: url("/image/index/new-activity.png");
+            background-repeat: no-repeat;
+
+        }
+
+        /*轮播图*/
+        .carousel-row{
+            /*height:480px;*/
+            height:500px;
+            background-color:var(--body-bgcolor);
+            padding-top:10px;
+        }
+        .carousel-row-left{
+            height:100%;
+            background-image: url(/image/index/left1.png);
+            cursor: pointer;
+            background-repeat: no-repeat;
+            background-position-x: right;
+            background-position-y: center;
+            background-size: 100% 100%;
+        }
+        .carousel-row-right{
+            height:100%;
+            background-image: url(/image/index/right1.png);
+            cursor: pointer;
+            background-repeat: no-repeat;
+            background-position-x: left;
+            background-position-y: center;
+            background-size: 100% 100%;
+        }
+        .carousel-row-center{
+            display: flex;
+            height: 100%;
+            padding: 0;
+            justify-content: space-between;
+        }
+        .carousel-row-center ul {
+            list-style-type: none;
+            padding: 0px;
+            opacity: 0.9;
+            font: 12px/1.5 Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
+            color: #333;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .carousel-left-menu ul li{
+            height: 25px;
+            text-align: left;
+            line-height: 25px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .carousel-left-menu ul li:hover{
+            background-color:#d9d9d9;
+        }
+        /*商品菜单 按钮 之间分割斜线*/
+        .left-menu-commodity-ul li a:not(:first-child):before{
+            content: " / ";
+            color: #333;
+            font-weight: 500;
+        }
+
+        .carousel-row-center a{
+            text-decoration: none;
+            opacity: 0.9;
+            font: 12px/1.5 Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .carousel-row-center li a:first-child{
+            padding-left:18px;
+        }
+
+        .carousel-left-menu{
+            width: 15%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color:white;
+            /*margin-right:10px;*/
+            margin-right: 1%;
+            overflow: hidden;
+            z-index: 20
+        }
+        .menu-detailed-big-div{
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            height: 100%;
+            background-color: white;
+            width: 85%;
+            box-shadow: 2px 0px 8px 0px;
+            left: 15%;
+            display: flex;
+            overflow: hidden;
+        }
+        .menu-detailed-big-div ul{
+            list-style-type: none;
+        }
+        .menu-detailed-big-div ul li{
+            text-decoration: none;
+            display: inline-block;
+
+        }
+        .menu-detailed-left > div{
+            margin-left:20px;
+        }
+
+        .menu-detailed-left{
+            width:80%;
+        }
+        .menu-detailed-left ul.detailed-title{
+            padding: 0;
+            margin: 0;
+            margin-top:20px;
+            font-weight:unset;
+            font-size:12px;
+            opacity: unset;
+        }
+        .menu-detailed-left ul.detailed-title li {
+            padding: 0 10px;
+            height: 25px;
+            background: #333333;
+            text-align: center;
+            line-height: 25px;
+            color: white;
+            margin: 0 15px 10px 0px;
+        }
+
+        .bottom-detailed {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom-row-detailed{
+            display: flex;
+            justify-items: center;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        .bottom-row-detailed .row-head{
+            /*font-weight: 600;
+            margin: 0 0;
+            width: 110px;
+            opacity: 1;
+            text-align: right;*/
+            font-weight: 700;
+            margin: 0 0;
+            width: 90px;
+            opacity: 1;
+            text-align: right;
+            color: black;
+        }
+        .bottom-row-detailed .row-body{
+            display: flex;
+            justify-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .bottom-row-detailed .row-body>div{
+            margin: 0 8px;
+            margin-bottom: 5px;
+            font-size: 10px;
+            height: unset;
+        }
+
+        .menu-detailed-right{
+            width:20%;
+            background:white;
+            margin: 0 20px;
+        }
+        .menu-detailed-right .right-head{
+            height: 30%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .menu-detailed-right .right-head > div{
+            width: 49%;
+            height: 24%;
+        }
+        .menu-detailed-right .right-head a {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 100% 100%;
+            cursor:pointer;
+        }
+
+
+        .menu-detailed-right .right-body{
+            height: 30%;
+            margin-top: 10px;
+            background: var(--nav-head-bgcolor);
+        }
+
+
+        .menu-detailed-right .right-body a {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 100% 100%;
+            cursor:pointer;
+        }
+
+        .menu-detailed-right .right-bottom{
+            height: 30%;
+            margin-top: 5px;
+        }
+        .menu-detailed-right .right-bottom  a {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 100% 100%;
+            cursor:pointer;
+        }
+
+        .carousel-center-one{
+            width: 52%;
+            /*background-color:yellow;*/
+            /*margin-right:10px;*/
+            margin-right:1%;
+            height: 97%;
+        }
+        .carousel-center-one > ul {
+            position:absolute;
+            left:10%;
+            bottom:3%;
+        }
+
+        .carousel-inner{
+            width:100%;
+            height:100%
+        }
+
+        .carousel-inner .item{
+            width:100%;
+            height:100%
+        }
+
+        .carousel-inner img{
+            width:100% !important;
+            height: 100% !important;
+        }
+
+        .carousel-center-two{
+            width: 15%;
+            margin-right:1%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            height:97%;
+        }
+        .carousel-center-two .glyphicon {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+        .carousel-center-two .item .head{
+            position: absolute;
+            top: 0;
+        }
+        .carousel-center-two .item .body{
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+        }
+        .carousel-center-two .item .foot{
+            position: absolute;
+            bottom: 0;
+        }
+
+        .carousel-center-two .item > div{
+            height:150px;
+            cursor:pointer;
+        }
+        .carousel-center-two .item > div:hover{
+            opacity: 0.7;
+        }
+        .carousel-center-two .carousel-control{
+            width:0;
+        }
+
+        .bgcolor-red-hover:hover{
+            background-color:#c81623 !important;
+            color: white !important;
+            transition-property:background-color;
+            transition-duration:0.5s;
+
+        }
+
+        .carousel-right-info{
+            width: 15%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height:97%;
+        }
+        .carousel-right-info hr{
+            margin:5px;
+        }
+        .right-info-top {
+            height: 22%;
+            position: relative;
+            padding-bottom: 1px;
+        }
+        .right-user-info{
+            height: 60%;
+            display: flex;
+            margin-top:4px;
+            justify-content: center;
+        }
+        .right-user-vip{
+            height:40%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .carousel-right-info {
+            font:12px/1.5 Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
+            font-family: "Microsoft YaHei", "Heiti SC", tahoma, arial, "Hiragino Sans GB", 宋体, sans-serif;
+        }
+        .carousel-right-info p{
+            height: 20px;
+            line-height: 20px;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #666 !important;
+            font-size: 12px !important;
+            font-weight: 400 !important;
+        }
+        .right-user-info a{
+            height: 20px;
+            line-height: 20px;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #666 !important;
+            font-size: 12px !important;
+            font-weight: 400 !important;
+        }
+
+        .user-info-avatar{
+            width: 34%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            right: 10px;
+        }
+        .avatar-div{
+            width:40px;
+            height:40px;
+            border-radius: 50%;
+            background-color: white;
+        }
+        .user-info-name{
+            width:50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .right-info-username{
+            display: inline-block;
+            width: 35%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            position: absolute;
+        }
+        /*登录后，中间用户信息显示图标*/
+        .user-login-icon-div{
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .user-login-icon-div i {
+            width: 21px;
+            height: 21px;
+            background-repeat: no-repeat;
+            background-image: url(/image/index/user-info-login.png);
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-size: 168px 130px;
+        }
+        .user-login-icon-div i.one {
+            background-position: -110px -20px;
+        }
+        .user-login-icon-div i.two {
+            margin-left: 3px;
+            background-position: -110px -44px;
+        }
+        .user-login-icon-div span.exit{
+            margin-left: 3px;
+            color: #666;
+        }
+
+        .user-vip a{
+            display: inline-block;
+            height: 26px;
+            line-height: 26px;
+            border-radius: 12px;
+            padding: 0 10px;
+            text-align: center;
+            font-weight: 400;
+            color: white;
+        }
+        .user-vip a.login{
+            color: #e1251b;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+            width: 162px;
+            height: 25px;
+            font-size: 12px;
+            text-align: center;
+            line-height: 25px;
+            background-color: unset !important;
+            transition: background .3s ease,color .3s ease;
+        }
+        .user-vip a.login:hover{
+            color: #fff;
+            background-color: #c81623!important;
+
+        }
+        .jdkb-top{
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .right-info-center {
+            height:30%;
+            /*background: #ffaa00;*/
+        }
+        .right-info-center a {
+            font-size: 10px !important;
+        }
+        .jdkb-div-one{
+            display: inline-block;
+            padding-left: 10%;
+            width: 50%;
+            font-size: 14px;
+            color:#333;
+            font-weight: bold;
+        }
+        .jdkb-div-two{
+            display: inline-block;
+            width: 50%;
+            padding-right: 10%;
+            text-align: right;
+        }
+        .right-info-inner-ul li{
+            font-size: 12px;
+            color:#666;
+            height: 20px;
+        }
+
+        .right-info-inner-ul li:nth-child(1){
+            width: 22%;
+            text-align: center;
+            background: #fdeeed;
+            color:#e1251b
+        }
+        .right-info-inner-ul li:nth-child(2){
+            width: 70%;
+            text-align: left;
+            overflow: hidden;
+            word-break: keep-all;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            line-height: 26px;
+        }
+
+        .jd-express{
+            width: 100%;
+            padding: 0 10%;
+        }
+        .jd-express ul{
+            list-style-type: none;
+        }
+        .right-info-inner-ul li {
+            display:inline-block;
+        }
+        .right-info-bottom {
+            height:50%;
+            /*background: #0073ff;*/
+        }
+        .right-bottom-top{
+            height: 100%;
+        }
+        .right-bottom-top-row{
+            height: 24%;
+            display: flex;
+            /*padding-top: 5%;*/
+            flex-direction: column;
+        }
+        .right-bottom-top-row-icon {
+            height:60%;
+            display: flex;
+            padding: 0 10%;
+            justify-content: space-around;
+
+        }
+        .right-bottom-top-row-text {
+            display: flex;
+            padding: 0 10%;
+            justify-content: space-around;
+        }
+        .row-icon-left, .row-icon-center, .row-icon-right{
+            width:28px;
+            height:28px;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            cursor: pointer;
+        }
+        .right-bottom-top-row-text div {
+            width: 30%;
+            display: inline-block;
+            text-align: center;
+        }
+        .row-icon-left{
+
+        }
+        .row-icon-center{
+            width:28px;
+        }
+        .row-icon-right{
+            width:28px;
+        }
+        .right-bottom-top-row-text {
+            height:30%;
+        }
+
+        /*顶部*/
+        .top-div-search{
+            /*height: 52px!important;*/
+            height: 0px;
+            width: 100% !important;;
+            background: white !important;;
+            position: fixed !important;;
+            top: 0 !important;;
+            /*border-bottom: 2px solid #f10214 !important;;*/
+            z-index:100 !important;
+            transition-property: height;
+            transition-duration: 0.5s;
+            overflow: hidden;
+            /*display: none;*/
+
+        }
+        .top-div-search .search-input-div{
+            margin-top: unset !important;
+        }
+        .top-div-search .search-title, .top-div-search .search-bottom-div,.top-div-search .search-right{
+            display:none !important;
+        }
+        .top-div-search .search-left-a{
+            background: url(/image/index/logo.png) 50% 15px no-repeat !important;
+            margin: -8px auto !important;
+            height:100% !important;
+        }
+        .hide-left-menu-div {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /*秒杀栏*/
+
+        .spike-row{
+            padding:0px;
+            height:260px;
+            /*background:red;*/
+            margin-top:var(--column-margin);
+            background-color:var(--body-bgcolor);
+        }
+
+        .spike-row-outer{
+            display:flex;
+        }
+        .spike-row div{
+            padding:0px;
+        }
+        .spike-row > div{
+            height:100%;
+        }
+        .spike-left{
+            width: 15%;
+            height:100%;
+            background-image:url(/image/index/spike-icon.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+        }
+        .spike-left-title{
+            width: 100%;
+            height: 44px;
+            /*background: yellow;*/
+            text-align: center;
+            line-height: 44px;
+            font-size: 30px;
+            font-weight: 700;
+            color:white;
+        }
+        .spike-left-body{
+            width:100%;
+            height:66px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        .spike-left-body-one{
+            font-size: 15px;
+            color:white;
+            height: 26px;
+        }
+        .spike-left-body-one > strong {
+            font-size: 18px;
+        }
+        .spike-left-body-two {
+            margin-top:10px;
+            display: flex;
+            justify-content: center;
+            color:white;
+            font-size: 20px;
+        }
+        .spike-time{
+            width:30px;
+            height:30px;
+            text-align: center;
+            line-height: 30px;
+            background-color:#2f3430;
+        }
+        .spike-time-after{
+            font-weight: bolder;
+            font-size: 18px;
+            width:20px;
+            height:30px;
+            text-align: center;
+            line-height: 30px;
+        }
+        /*秒杀的中间轮播图*/
+        .spike-center{
+            width:70%;
+            height:100%;
+        }
+        .spike-center .row{
+            margin:0;
+        }
+        .spcike-more-image-div div[class^="col"]{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            background-color: white;
+        }
+        .spcike-more-image-div div[class^="col"]:after{
+            content: "";
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 1px;
+            height: 200px;
+            -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            background: -webkit-gradient(linear,left top,left bottom,from(white),color-stop(#eeeeee),to(white));
+            background: linear-gradient(180deg,white,#eeeeee,white);
+        }
+
+        .spcike-more-image-div {
+            width:140px;
+            height:140px;
+        }
+        .spike-center .image-price-div{
+            width:100%;
+            height:70px;
+            text-align: center;
+        }
+        /*图片div*/
+        .spike-center .image-outer-div{
+            width:140px;
+            height:140px;
+            margin-top: 30px;
+        }
+        .spike-center .image-outer-div:hover{
+            opacity: 0.7;
+        }
+        .image-price-div-head{
+            widht:100%;
+            height: 30px;
+            line-height:30px;
+            font-size: 16px;
+            font-weight: 400;
+            color:#333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: color .2s ease;
+        }
+        .image-price-div-head:hover{
+            color:#e1251b;
+        }
+        .image-price-div-body{
+            width:160px;
+            /*width:70%;*/
+            height:24px;
+            background:#e1251b;
+            margin: 0 auto;
+            line-height: 24px;
+            position: relative;
+            border: 1px solid #e1251b;
+        }
+        .image-price-div-body .price-miaosha{
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            width: 80px;
+            float: left;
+        }
+        .image-price-div-body .price-origin{
+            height: 100%;
+            width: 66px;
+            float: right;
+            background: #fff;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            line-height: 22px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-decoration: line-through;
+            vertical-align: top;
+        }
+        .spcike-more-image-div .price-miaosha:before{
+            content: " ";
+            width: 0;
+            height: 0;
+            border-color: transparent white transparent transparent;
+            border-style: solid;
+            border-width: 22px 8px 0 0;
+            position: absolute;
+            top: 0;
+            left: 84px;
+        }
+
+        .spike-center .carousel-control{
+            background-color: unset;
+            width:0px;
+        }
+        .spike-center .glyphicon{
+            margin-left:0px;
+            margin-right:0px;
+        }
+
+        /*秒杀右边的轮播图*/
+        .spike-right{
+            width:15%;
+            background-color:white;
+        }
+        .spike-right .right-spike-outer{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .spike-right .image-outer-div {
+            width:120px;
+            height:120px;
+            margin-top:30px;
+        }
+        .spike-right .text-description{
+            width:100%;
+            height:90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+        }
+        .spike-right .head, .spike-right .body{
+            height:21px;
+            line-height: 21px;
+            color: #666;
+        }
+        .spike-right .body{
+            color: #333;
+            font-weight: 700;
+        }
+        .spike-right .foot{
+            color: #e1251b;
+            border-radius: 14px;
+            width: 82px;
+            height: 24px;
+            box-sizing: border-box;
+            line-height: 22px;
+            font-weight: 700;
+            padding-left: 4px;
+            font-size: 12px;
+            border: 1px solid #e1251b;
+            margin-top: 7px;
+        }
+        .spike-right .carousel-indicators{
+            bottom:0;
+        }
+        .spike-right .carousel-indicators .active{
+            width:5px;
+            height:5px;
+            margin:0;
+            background-color: #e1251b;
+        }
+        .spike-right .carousel-indicators li {
+            width:5px;
+            height:5px;
+            margin:0;
+            background-color: #999999;
+        }
+
+        /*设置轮播图 幻灯片形式切换，使用opacity方式*/
+        .carousel-fade .carousel-inner .item{
+            opacity: 0.8;
+            transition-property: opacity;
+            transition-duration: 0.15s;
+        }
+
+        .carousel-fade .carousel-inner .active{
+            opacity: 1;
+        }
+        .carousel-fade .carousel-inner .active.left,.carousel-fade .carousel-inner .active.right{
+            left: 0;
+            opacity: 0.8;
+        }
+        .carousel-fade .carousel-inner .left,.carousel-fade .carousel-inner .right {
+            opacity: 0.8;
+        }
+
+        /*设置轮播图得按钮*/
+        .carousel-btn > a{
+            width: 0px;
+        }
+        .carousel-btn .left-icon {
+            display: inline-block;
+            width: 25px;
+            height: 35px;
+            background-image: url(/image/index/left-icon-1-30.png);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            position: relative;
+            top: 50%;
+
+        }
+        .carousel-btn .left-icon:hover {
+            background-image: url(/image/index/left-icon-2.png);
+        }
+
+        .carousel-btn .right-icon {
+            display: inline-block;
+            width: 25px;
+            height: 35px;
+            background-image: url(/image/index/right-icon-1-30.png);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            position: relative;
+            float: right;
+            top: 50%;
+        }
+        .carousel-btn .right-icon:hover {
+            background-image: url(/image/index/right-icon-2.png);
+        }
+        /*中间的秒杀栏的按钮*/
+        .skip-left,.skip-right{
+            top:45% !important;
+        }
+
+        /*秒杀栏右侧的功能列表样式*/
+        .right-elevator-list-outer{
+            width: 58px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            margin-left: 20px;
+            font-size: 14px;
+            color: #333;
+            transition: all .3s ease;
+        }
+        .right-elevator-list-outer > div{
+            width: 58px;
+            height: 60px;
+        }
+        .right-elevator-list-outer > div:hover{
+            background-color: #c81623;
+            color:#fff !important;
+            transition:all 0.3s ease;
+            font-weight: 400;
+            fill: #fff;
+        }
+
+        .right-elevator-list-outer span.text{
+            display: block;
+            width: 28px;
+            height: 36px;
+            line-height: 18px;
+            position: relative;
+            top: 25%;
+            left: 25%;
+        }
+        .right-elevator-list-outer .icon-text-div{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .right-elevator-list-outer .top-icon{
+            width: 16px;
+            height: 15px;
+        }
+        .right-elevator-list-outer .bottom-text{
+            margin-top: 3px;
+        }
+        .right-elevator-list-outer .icon-text-div .glyphicon{
+            font-size: larger;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" id="app">
+    <!--置顶的搜索栏-->
+    <!--顶部搜索栏-->
+    <div id="search-head-row-top" class="search-head-row row top-div-search">
+        <div class="col-md-2 hidden-sm "></div>
+        <div class="col-md-8 col-sm-12">
+            <div class="search-head-two-row row">
+                <div class="col-md-2 hidden-sm "><a v-on:mouseenter="indexpngMouseEnter" class="search-left-a" href="javascript:void(0)"></a></div>
+                <div class="col-md-8 col-sm-12">
+                    <div class="search-center-outerdiv">
+                        <div class="search-top-div">
+                            <div class="search-input-div">
+                                <input class="search-input" type="text" placeholder="">
+                                <a v-on:mouseleave="photographLeave" v-on:mouseenter="photographEnter" class="photograph-a" href="javascript:void(0)">
+                                    <img v-cloak class="photograph-img" v-bind:src="photographImgSrc" alt="相机"/>
+                                </a>
+                                <div class="search-button">
+                                    <img class="search-img" src="/image/index/search.png" alt="搜索">
+                                </div>
+                                <div class="order-div">
+                                    <i class="shopping-cart"></i>
+                                    <a class="shopping-cart-a cursor-pointer-hover" href="javascript:void(0)">我的购物车</a>
+                                    <i class="shopping-cart-num">0</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 hidden-sm  search-right"></div>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-sm "></div>
+    </div>
+
+    <!--顶部活动栏能关闭-->
+    <div id="index-head-activity" class="index-head-activity row">
+        <div class="activity-both-div col-md-2 col-sm-2 hidden-sm"></div>
+        <div class="activity-center-div col-md-8 col-sm-8"  data-original="/image/index/activity-image.jpg">
+            <a class="activity-close-btn" href="javascript:void(0)" onclick="$('#index-head-activity').slideUp(500)"></a>
+        </div>
+        <div class="activity-both-div col-md-2 col-sm-2 hidden-sm"></div>
+    </div>
+
+    <!--顶部导航栏-->
+    <div class="row" id="index-head-nav">
+        <div class="col-md-2 hidden-sm"></div>
+        <div class="head-nav-man col-md-8 col-sm-12" v-cloak>
+            <ul id="nav-left-ul" class="bg-white-hover" v-on:mouseover="positionFlag=true" v-on:mouseout="positionFlag=false">
+                <li><img alt="位置" class="position-image" src="/image/index/positionicon.png"/></li>
+                <li><a class="color-red-hover" href="javascript:void(0)">{{ area }}</a></li>
+                <div id="position-outer-div" v-show="positionFlag">
+                    <table>
+                        <!--循环数字是从1开始 Math.ceil(areas.length/areaLineNum)-->
+                        <tr v-for="count in Math.floor(areas.length/areaLineNum)">
+                            <td v-for="index in areaLineNum">
+                                <a class="color-red-hover bg-color-hover" href="javascript:void(0)" v-on:click="clickArea(areas[(count-1)*areaLineNum + index -1].provinceid)">{{ areas[(count-1)*areaLineNum + index -1].province | areaNameFilter}}</a>
+                            </td>
+                        </tr>
+                        <!--最后一行需要单独循环-->
+                        <tr v-for="count in 1">
+                            <td v-for="index in areas.length%areaLineNum">
+                                <a class="color-red-hover bg-color-hover" href="javascript:void(0)" v-on:click="clickArea(areas[Math.floor(areas.length/areaLineNum)*areaLineNum + index -1].provinceid)">{{ areas[Math.floor(areas.length/areaLineNum)*areaLineNum + index -1].province | areaNameFilter}}</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </ul>
+            <ul id="nav-right-ul">
+                    <li v-if="!userIsLoginFlag" id="user-nava-login-li"><a id="user-nav" class="color-red-hover" href="javascript:void(0);" v-on:click="login">你好，请登录</a></li>
+                    <li v-if="!userIsLoginFlag" id="user-nava-regist-li" class="split-line-li"><a class="color-red" href="#" v-on:click="regist">免费注册</a></li>
+                    <!--登陆后，上面两个li隐藏，显示一个li-->
+                    <li v-if="userIsLoginFlag" v-on:mouseover="userOuterFlag=true" v-on:mouseout="userOuterFlag=false" id="user-login-nava-login-li" class="bg-white-hover split-line-li">
+                        <a id="user-login-nav" class="color-red-hover" href="javascript:void(0);" v-on:click="userInfo()" v-text="userLoginData.customerName">用户名</a>
+                        <span aria-hidden="true" class="glyphicon glyphicon-menu-down"></span>
+                        <i class="user-login-vip-icon"></i>
+                        <div id="user-outer-div" v-show="userOuterFlag">
+                            <div class="user-display-flex">
+                                <!--上面-->
+                                <div class="user-display-flex-top">
+                                    <!--头像-->
+                                    <div class="user-head"></div>
+                                    <!--信息-->
+                                    <div class="user-info">
+                                        <i v-bind:style="userVipIcon" class="user-vip-icon"></i>
+                                        <span class="exit"><a v-on:click="userExit" class="color-red-hover">退出</a></span>
+                                        <span class="detail"><a class="color-red-hover">开通PLUS平均省1210元/年></a></span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <!--下面-->
+                                <div class="user-display-flex-bottom">
+                                    <!--data-wrap="false" 不循环播放  data-interval="false" 不自动播放-->
+                                    <div id="user-detail-info-carouse" class="detail-info-carouse carousel slide" data-wrap="false" data-interval="false">
+                                        <!-- Indicators -->
+                                        <div id="user-function-listbox" class="carousel-inner" role="listbox">
+                                           <!-- <div class="item active">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+                                                        <p class="user-function-name">免费试用</p>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+                                                        <p class="user-function-name">免费试用</p>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+                                                        <p class="user-function-name">免费试用</p>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="user-function-icom-1"></div>
+                                                    </div>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                        <a class="left carousel-control" href="#user-detail-info-carouse" role="button" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                        </a>
+                                        <a class="right carousel-control" href="#user-detail-info-carouse" role="button" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <i>|</i>
+                    <li class="split-line-li"><a class="color-red-hover" href="#" v-on:click="order">我的订单</a></li>
+                    <i>|</i>
+                    <li class="bg-white-hover split-line-li" v-on:mouseenter="homeFlag=true" v-on:mouseleave="homeFlag=false">
+                        <a class="" href="#" v-on:click="home">我的京东<span aria-hidden="true" class="glyphicon glyphicon-menu-down"></span></a>
+                        <div id="home-outer-div" v-show="homeFlag">
+                            <table>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">待处理订单</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">消息</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">返修退换货</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">我的问答</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">降价商品</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">我的关注</a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <hr>
+                                    </td>
+                                    <td>
+                                        <hr>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">我的京豆</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">我的优惠券</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">我的白条</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">我的理财</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <i>|</i>
+                    <li class="split-line-li"><a class="color-red-hover" href="#" v-on:click="vip">京东会员</a></li>
+                    <i>|</i>
+                    <li class="bg-white-hover split-line-li" v-on:click="enterprisePurchase"
+                        v-on:mouseenter="enterpriseFlag=true" v-on:mouseleave="enterpriseFlag=false">
+                        <a class="color-red" href="#">企业采购<span aria-hidden="true" class="glyphicon glyphicon-menu-down"></span></a>
+                        <div id="enterprise-outer-div" v-show="enterpriseFlag">
+                            <table>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">企业购</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">商用场景馆</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">工业品</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">礼品卡</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">丰克多商城</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <i>|</i>
+                    <li class="bg-white-hover split-line-li" v-on:mouseenter="customServiceFlag=true" v-on:mouseleave="customServiceFlag=false">
+                        <a class="a-none-pointer" href="#">客户服务<span aria-hidden="true" class="glyphicon glyphicon-menu-down"></span></a>
+                        <div id="customService-outer-div" v-show="customServiceFlag">
+                            <table>
+                                <tr>
+                                    <td class="color-black-weight td-title">客户</td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">帮助中心</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">售后服务</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">在线客服</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">意见建议</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">电话客服</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">客服邮箱</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">金融咨询</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">全球售客服</a></td>
+                                </tr>
+                                <tr>
+                                    <td><hr></td>
+                                    <td><hr></td>
+                                </tr>
+                                <tr>
+                                    <td class="color-black-weight td-title">商户</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">合作招商</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">成长中心</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">商家后台</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">京麦工作台</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">商家帮助</a></td>
+                                    <td><a class="color-red-hover" href="javascript:void(0)">规则平台</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <i>|</i>
+                    <li class="bg-white-hover split-line-li" v-on:mouseenter="webNavFlag=true" v-on:mouseleave="webNavFlag=false">
+                        <a class="a-none-pointer" href="#">网站导航<span aria-hidden="true" class="glyphicon glyphicon-menu-down"></span></a>
+                        <div id="webNav-outer-div" v-show="webNavFlag">
+                            <div class="webNav-div web-nav-1" v-html="webNav1Html"></div>
+                            <div class="webNav-div webNav-right web-nav-2" v-html="webNav2Html"></div>
+                            <div class="webNav-div webNav-right web-nav-3" v-html="webNav3Html"></div>
+                            <div class="webNav-div webNav-right web-nav-4" v-html="webNav4Html"></div>
+                        </div>
+                    </li>
+                    <i class="hidden-sm">|</i>
+                    <li class="hidden-sm"><a class="a-none-pointer" href="#" v-on:mouseenter="phoneAppMouseEnter"
+                           v-on:mouseleave="phoneAppMouseLeave">手机京东</a></li>
+                </ul>
+        </div>
+        <div class="col-md-2 hidden-sm"></div>
+    </div>
+    <!--顶部搜索栏-->
+    <div id="search-head-row" class="search-head-row row">
+        <div class="col-md-2 hidden-sm "></div>
+        <div class="col-md-8 col-sm-12">
+            <div class="search-head-two-row row">
+                <div class="col-md-2 hidden-sm ">
+                    <a v-on:mouseenter="indexpngMouseEnter" class="search-left-a" href="javascript:void(0)"></a>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                    <div class="search-center-outerdiv">
+                        <div class="search-top-div">
+                            <div class="search-input-div">
+                                <input class="search-input" type="text" placeholder="">
+                                <a v-on:mouseleave="photographLeave" v-on:mouseenter="photographEnter" class="photograph-a" href="javascript:void(0)">
+                                    <img v-cloak class="photograph-img" v-bind:src="photographImgSrc" alt="相机"/>
+                                </a>
+                                <div class="search-button">
+                                    <img class="search-img" src="/image/index/search.png" alt="搜索">
+                                </div>
+                                <div class="order-div">
+                                    <i class="shopping-cart"></i>
+                                    <a class="shopping-cart-a cursor-pointer-hover" href="javascript:void(0)">我的购物车</a>
+                                    <i class="shopping-cart-num">0</i>
+                                </div>
+                            </div>
+                            <div class="search-title">
+                                <ul>
+                                    <li><a class="color-red" href="javascript:void(0)">享家电免息</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">0元监测</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">华为新品</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">驱蚊防暑</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">放心肉</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">品质家电</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">低至9.9</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">省电空调</a></li>
+                                    <li><a class="color-red-hover" href="javascript:void(0)">爆款美妆</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="search-bottom-div">
+                            <ul>
+                                <li><a v-fontweight="'700'" class="color-red-hover color-red" href="javascript:void(0)">秒杀</a></li>
+                                <li><a v-fontweight="'700'" class="color-red-hover color-red" href="javascript:void(0)">优惠券</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">PLUS会员</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">品牌闪购</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">拍卖</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">京东家电</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">京东超市</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">京东生鲜</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">京东国际</a></li>
+                                <li><a class="color-red-hover" href="javascript:void(0)">京东金融</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 hidden-sm  search-right">
+                    <div id="new-activity"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-sm "></div>
+    </div>
+
+    <!--轮播图-->
+    <div id="carousel-row" class="carousel-row row">
+        <div class="carousel-row-left col-md-2 hidden-sm "></div>
+        <div class="carousel-row-center col-md-8 col-sm-12">
+            <!--左边菜单栏-->
+            <div  @mouseleave="leftMenuMouseLeave" class="carousel-left-menu">
+
+                <ul class="left-menu-commodity-ul" v-cloak>
+                    <!--循环data下 commodityTypeList 变量 生成商品菜单大分类-->
+                    <li  v-for="(commodityTypeList, i) in commodityTypeList" @mouseenter="showleftMenuDetailMouseEnter(i)">
+                        <a v-for="(typeSonDTOList, x) in commodityTypeList.typeSonDTOList" class="color-red-hover" href="javascript:void(0)">{{ typeSonDTOList.typeName }}</a>
+                    </li>
+                </ul>
+                <!--这个div用来辅助 详细菜单信息div隐藏的-->
+                <div @mouseenter="hideLeftMenuDivMouseEnter" class="hide-left-menu-div"></div>
+
+                <!--详细菜单信息：默认隐藏-->
+                <div v-cloak v-show="menuDetailedFlag" class="menu-detailed-big-div">
+                    <!--左边商品分类-->
+                    <div class="menu-detailed-left">
+                        <!--顶部的大分类-->
+                        <div>
+                            <ul class="detailed-title">
+                                <!--循环生成商品菜单按钮-->
+                                <li v-for="(typeButtonDTOList, i) in commodityTypeDetitalList.typeButtonDTOList" v-cursor="'pointer'" class="bgcolor-red-hover">
+                                    {{ typeButtonDTOList.buttonName }}&nbsp;<i class="glyphicon glyphicon-menu-right"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--底部的详细小分类-->
+                        <div class="bottom-detailed">
+                            <!--一个div当作一类-->
+                            <div v-for="(typeGrandsonDTO, i) in commodityTypeDetitalList.typeGrandsonDTOList" class="bottom-row-detailed">
+                                <div v-cursor="'pointer'" class="row-head color-red-hover"> {{ typeGrandsonDTO.typeName }} <i class="glyphicon glyphicon-menu-right"></i></div>
+                                <div class="row-body">
+                                    <div v-for="(typeDetailDTO, i) in typeGrandsonDTO.typeDetailDTOList" v-cursor="'pointer'" class="color-red-hover">{{ typeDetailDTO.detailName }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--右边相关品牌-->
+                    <div class="menu-detailed-right">
+                        <!--顶部品牌栏 8个-->
+                        <div class="right-head">
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" style="background-image: url('/image/index/right-head-1.png')"></a>
+                            </div>
+                        </div>
+                        <!--底部展示栏-->
+                        <div class="right-body">
+                            <a href="javascript:void(0)" style="background-image: url('/image/index/right-body-1.png')"></a>
+                        </div>
+                        <div class="right-bottom">
+                            <a href="javascript:void(0)" style="background-image: url('/image/index/right-body-1.png')"></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--第一个轮播图-->
+            <div id="carousel-center-one" class="carousel-center-one carousel slide carousel-btn carousel-fade" data-ride="carousel">
+
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                    <li data-target="#carousel-center-one" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-center-one" data-slide-to="1"></li>
+                    <li data-target="#carousel-center-one" data-slide-to="2"></li>
+                    <li data-target="#carousel-center-one" data-slide-to="3"></li>
+                    <li data-target="#carousel-center-one" data-slide-to="4"></li>
+                </ul> <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img class="img-responsive" src="/image/carousel/a (1).webp"/>
+                        <div class="carousel-caption">
+                            <!--<h1>轮播1的标题</h1>
+                            <p>这里是轮播图1的说明</p>-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="/image/carousel/a (2).webp"/>
+                        <div class="carousel-caption">
+                            <!--<h1>轮播2的标题</h1>
+                            <p>这里是轮播图2的说明</p>-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="/image/carousel/a (3).webp"/>
+                        <div class="carousel-caption">
+                            <!-- <h1>轮播3的标题</h1>
+                             <p>这里是轮播图3的说明</p>-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="/image/carousel/a (4).webp"/>
+                        <div class="carousel-caption">
+                            <!-- <h1>轮播3的标题</h1>
+                             <p>这里是轮播图3的说明</p>-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="/image/carousel/a (5).webp"/>
+                        <div class="carousel-caption">
+                            <!-- <h1>轮播3的标题</h1>
+                             <p>这里是轮播图3的说明</p>-->
+                        </div>
+                    </div>
+                </div> <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-center-one" role="button" data-slide="prev"><span class="left-icon"></span></a>
+                <a class="right carousel-control" href="#carousel-center-one" role="button" data-slide="next"><span class="right-icon"></span></a>
+            </div>
+            <!--第二个轮播图-->
+            <div id="carousel-center-two" class="carousel-center-two carousel slide carousel-btn carousel-fade hidden-sm" data-ride="carousel"  v-on:mouseleave="twoCarouselLeftBtnFlag=false;twoCarouselRightBtnFlag=false" v-on:mouseenter="twoCarouselLeftBtnFlag=true;twoCarouselRightBtnFlag=true">
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <div class="head">
+                            <img class="img" src="/image/carousel/small/2.jpg" alt="1.jpg"/>
+                        </div>
+                        <div class="body">
+                            <img class="img" src="/image/carousel/small/1.jpg" alt="2.jpg"/>
+                        </div>
+                        <div class="foot">
+                            <img class="img" src="/image/carousel/small/3.png" alt="3.png"/>
+                        </div>
+
+                    </div>
+                    <div class="item">
+                        <div class="head">
+                            <img class="img" src="/image/carousel/small/4.jpg" alt="4.jpg"/>
+                        </div>
+                        <div class="body">
+                            <img class="img" src="/image/carousel/small/5.png" alt="5.jpg"/>
+                        </div>
+                        <div class="foot">
+                            <img class="img" src="/image/carousel/small/6.jpg" alt="6.png"/>
+                        </div>
+                    </div>
+                </div>
+                <a v-show="twoCarouselLeftBtnFlag"  class="left carousel-control" href="#carousel-center-two" role="button" data-slide="prev">
+                    <span class="left-icon"></span>
+                </a>
+                <a v-show="twoCarouselRightBtnFlag"  class="right carousel-control" href="#carousel-center-two" role="button" data-slide="next">
+                    <span class="right-icon"></span>
+                </a>
+            </div>
+            <!--登录账号的信息-->
+            <div class="carousel-right-info">
+                    <!--个人信息顶部-->
+                    <div class="right-info-top">
+                        <div class="right-user-info">
+                            <!--头像-->
+                            <div class="user-info-avatar">
+                                <div class="avatar-div" v-bind:style="userAvatarStyle"></div>
+                            </div>
+                            <!--账号信息-->
+                            <div class="user-info-name">
+                                <div>
+                                    <span>Hi<span v-if="!userIsLoginFlag">~&nbsp;&nbsp;</span><span v-if="userIsLoginFlag">,&nbsp;&nbsp;</span></span>
+                                    <a v-cursor="'pointer'" class="color-red-hover">
+                                        <span class="right-info-username" v-text="userLoginData.customerName"></span>
+                                    </a>
+                                </div>
+                                <div v-if="!userIsLoginFlag">
+                                    <a @click="login" v-cursor="'pointer'" class="color-red-hover">登录</a>
+                                    &nbsp;|&nbsp;
+                                    <a @click="regist" v-cursor="'pointer'" class="color-red-hover">注册</a>
+                                </div>
+                                <!--登陆后，隐藏上面登陆注册，显示 图标-->
+                                <div v-if="userIsLoginFlag" class="user-login-icon-div">
+                                    <i class="one"></i>
+                                    <i class="two"></i>
+                                    <span class="color-red-hover exit" v-cursor="'pointer'" v-on:click="userExit">退出</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-user-vip">
+                            <div class="user-vip">
+                                <!--登陆前：只显示1 2 两个a标签，登陆后显示第3个a标签-->
+                                <a v-if="!userIsLoginFlag" v-bgcolor="'#e1251b'" class="bgcolor-red-hover" href="javascript:void(0)" class="color-red-hover">新人福利</a>
+                                <a v-if="!userIsLoginFlag" v-bgcolor="'#363634'" v-color="'#e5d790'" class="bgcolor-red-hover font-white-hover" href="javascript:void(0)" class="color-red-hover">PLUS会员</a>
+                                <a v-if="userIsLoginFlag" class="login" v-cursor="'pointer'">开通PLS平均省1210元/年</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!--京东快报-->
+                    <div class="right-info-center">
+                        <div class="jdkb-top">
+                            <div class="jdkb-div-one">京东快报</div>
+                            <div class="jdkb-div-two">
+                                <a href="javascript:void(0)" class="color-red-hover">更多
+                                    <span class="glyphicon glyphicon-menu-right"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="jd-express">
+                            <ul class="right-info-outer-ul">
+                                <li>
+                                    <ul class="right-info-inner-ul">
+                                        <li v-cursor="'pointer'">推荐</li>
+                                        <li v-cursor="'pointer'" class="color-red-hover">转换居家生活用电 习转换居家生活用电习</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul class="right-info-inner-ul">
+                                        <li v-cursor="'pointer'">HOT</li>
+                                        <li v-cursor="'pointer'" class="color-red-hover">史上第一双防水的</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul class="right-info-inner-ul">
+                                        <li v-cursor="'pointer'">HOT</li>
+                                        <li v-cursor="'pointer'" class="color-red-hover">敏感肌就不配拥有夏...</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul class="right-info-inner-ul">
+                                        <li v-cursor="'pointer'">热评</li>
+                                        <li v-cursor="'pointer'" class="color-red-hover">2012年的黑黄Dunk..</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr>
+                    <!--快捷功能-->
+                    <div class="right-info-bottom">
+                        <!--图标-->
+                        <div class="right-bottom-top">
+                            <!--一行图标加文字-->
+                            <div class="right-bottom-top-row">
+                                <!--图标-->
+                                <div class="right-bottom-top-row-icon">
+                                    <div class="row-icon-left" style="background-image: url(/image/index/bottom-icon-1.png)"></div>
+                                    <div class="row-icon-center" style="background-image: url(/image/index/bottom-icon-2.png)"></div>
+                                    <div class="row-icon-right" style="background-image: url(/image/index/bottom-icon-3.png)"></div>
+                                </div>
+                                <!--文字-->
+                                <div class="right-bottom-top-row-text">
+                                    <div class="row-icon-left color-red-hover">话费</div>
+                                    <div class="row-icon-center color-red-hover">机票</div>
+                                    <div class="row-icon-right color-red-hover">酒店</div>
+                                </div>
+                            </div>
+                            <div class="right-bottom-top-row">
+                                <!--图标-->
+                                <div class="right-bottom-top-row-icon">
+                                    <div class="row-icon-left" style="background-image: url(/image/index/bottom-icon-4.png)"></div>
+                                    <div class="row-icon-center" style="background-image: url(/image/index/bottom-icon-5.png)"></div>
+                                    <div class="row-icon-right" style="background-image: url(/image/index/bottom-icon-6.png)"></div>
+                                </div>
+                                <!--文字-->
+                                <div class="right-bottom-top-row-text">
+                                    <div class="row-icon-left color-red-hover" >游戏</div>
+                                    <div class="row-icon-center color-red-hover">加油卡</div>
+                                    <div class="row-icon-right color-red-hover">火车票</div>
+                                </div>
+                            </div>
+                            <div class="right-bottom-top-row">
+                                <!--图标-->
+                                <div class="right-bottom-top-row-icon">
+                                    <div class="row-icon-left" style="background-image: url(/image/index/bottom-icon-7.png)"></div>
+                                    <div class="row-icon-center" style="background-image: url(/image/index/bottom-icon-8.png)"></div>
+                                    <div class="row-icon-right" style="background-image: url(/image/index/bottom-icon-9.png)"></div>
+                                </div>
+                                <!--文字-->
+                                <div class="right-bottom-top-row-text">
+                                    <div class="row-icon-left color-red-hover">众筹</div>
+                                    <div class="row-icon-center color-red-hover">理财</div>
+                                    <div class="row-icon-right color-red-hover">白条</div>
+                                </div>
+                            </div>
+                            <div class="right-bottom-top-row">
+                                <!--图标-->
+                                <div class="right-bottom-top-row-icon">
+                                    <div class="row-icon-left" style="background-image: url(/image/index/bottom-icon-10.png)"></div>
+                                    <div class="row-icon-center" style="background-image: url(/image/index/bottom-icon-11.png)"></div>
+                                    <div class="row-icon-right" style="background-image: url(/image/index/bottom-icon-12.png)"></div>
+                                </div>
+                                <!--文字-->
+                                <div class="right-bottom-top-row-text">
+                                    <div class="row-icon-left color-red-hover">电影票</div>
+                                    <div class="row-icon-center color-red-hover">企业购</div>
+                                    <div class="row-icon-right color-red-hover">礼品卡</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--详细信息-->
+                        <div></div>
+                    </div>
+                </div>
+        </div>
+        <div class="carousel-row-right col-md-2 hidden-sm "></div>
+    </div>
+
+    <!--秒杀栏-->
+    <div class="spike-row row" v-cloak>
+        <div class="col-md-2 hidden-sm "></div>
+        <div class="spike-row-outer col-md-8 col-sm-12" >
+            <!--秒杀时间-->
+            <div class="spike-left" >
+                <!--标题-->
+                <div class="spike-left-title">京东秒杀</div>
+                <!--时间-->
+                <div class="spike-left-body" >
+                    <div class="spike-left-body-one">
+                        <strong id="miaosha-time" >{{ spikeName }}</strong>
+                        点场 倒计时
+                    </div>
+                    <div class="spike-left-body-two">
+                        <div class="spike-time spike-time-hour"></div>
+                        <div class="spike-time-after">:</div>
+                        <div class="spike-time spike-time-minute"></div>
+                        <div class="spike-time-after">:</div>
+                        <div class="spike-time spike-time-second"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--秒杀中间的商品轮播图-->
+            <div id="spike-center" class="spike-center carousel slide carousel-btn" data-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    <!--第一轮-->
+                    <div class="spcike-more-image-div item active row">
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/1.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品1</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>78.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>109.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/1.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品2</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>78.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>109.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/2.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品3</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>78.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>109.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/3.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品4</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>10.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>120.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--第二轮-->
+                    <div class="spcike-more-image-div item row">
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/3.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品5</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>88.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>140.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/2.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品6</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>78.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>120.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/1.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品7</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>870.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>879.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/1.png"/>
+                            </div>
+                            <div class="image-price-div">
+                                <div class="image-price-div-head">商品8</div>
+                                <div class="image-price-div-body">
+                                    <span class="price-miaosha"><i>¥</i><span>1000.90</span></span>
+                                    <span class="price-origin"><i>¥</i><span>1200.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--左右按钮-->
+                <a class="left carousel-control" href="#spike-center" role="button" data-slide="prev"><span class="left-icon skip-left"></span></a>
+                <a class="right carousel-control" href="#spike-center" role="button" data-slide="next"><span class="right-icon skip-right"></span></a>
+            </div>
+
+            <!--秒杀右边的轮播图-->
+            <div id="spike-right-carousel" class="spike-right carousel slide" data-ride="carousel">
+                <ul class="carousel-indicators">
+                    <li data-target="#spike-right-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#spike-right-carousel" data-slide-to="1"></li>
+                </ul>
+                <div class="carousel-inner" role="listbox">
+                    <!--第一轮-->
+                    <div class="item active">
+                        <div class="right-spike-outer">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/1.png"/>
+                            </div>
+                            <div class="text-description">
+                                <div class="head">苹果手机秒杀专场</div>
+                                <div class="body">全场低至2968元</div>
+                                <div class="foot">品牌闪购<span class="glyphicon glyphicon-menu-right"></span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--第二轮-->
+                    <div class="item">
+                        <div class="right-spike-outer">
+                            <div class="image-outer-div">
+                                <img class="img-responsive" src="/image/index/2.png"/>
+                            </div>
+                            <div class="text-description">
+                                <div class="head">苹果手机秒杀专场</div>
+                                <div class="body">全场低至2968元</div>
+                                <div class="foot">品牌闪购<span class="glyphicon glyphicon-menu-right"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-sm">
+            <div v-cursor="'pointer'" class="right-elevator-list-outer">
+                <div><span class="text">京东秒杀</span></div>
+                <div class="color-red"><span class="text">特色优选</span></div>
+                <div><span class="text">频道广场</span></div>
+                <div><span class="text">为你推荐</span></div>
+                <div class="icon-text-div">
+                    <div class="top-icon">
+                        <svg id="icon_timline" viewBox="0 0 16 16">
+                            <path d="M12.986 5.582a.505.505 0 0 0 .25-.063c.34-.188.364-.738.056-1.252-.235-.391-.59-.643-.905-.643a.511.511 0 0 0-.251.063c-.338.188-.363.738-.055 1.252.234.391.59.643.905.643m-9.975 0c.317 0 .674-.252.91-.643.31-.514.286-1.064-.056-1.253a.52.52 0 0 0-.252-.062c-.317 0-.674.252-.91.643-.31.514-.285 1.064.056 1.252.076.042.16.063.252.063m10.779.956a.372.372 0 0 0-.295-.024.387.387 0 0 0-.225.201c-.013.025-.315.609-1.062 1.191-.738.573-2.062 1.26-4.185 1.279h-.075c-2.076 0-3.384-.653-4.116-1.2-.779-.581-1.094-1.177-1.097-1.182a.395.395 0 0 0-.23-.199.371.371 0 0 0-.293.031.42.42 0 0 0-.161.549c.039.077.413.772 1.316 1.45.826.622 2.29 1.363 4.573 1.363l.089-.001c2.331-.019 3.81-.793 4.641-1.439.862-.672 1.225-1.345 1.292-1.475a.419.419 0 0 0-.172-.544m-5.848-.124c1.092 0 2.268-.218 2.268-.697S9.034 5.02 7.942 5.02c-1.071 0-2.152.216-2.152.697s1.081.697 2.152.697m4.086 4.647c-1.004.574-1.052 1.597-1.015 2.223a.098.098 0 0 1-.113.104c-.693-.096-1.161-.407-1.757-.943a1.343 1.343 0 0 0-.933-.351l-.21.003c-3.809 0-6.897-2.458-6.897-5.489 0-3.032 3.088-5.489 6.897-5.489 3.808 0 6.896 2.457 6.896 5.489 0 1.834-1.129 3.461-2.868 4.453M8 0C3.589 0 0 2.931 0 6.533c0 3.603 3.589 6.533 8 6.533l.224-.002c.102 0 .204.033.272.099 1.239 1.205 2.568 1.323 3.303 1.336a.3.3 0 0 0 .303-.342c-.087-.613-.318-1.813.477-2.263C14.722 10.684 16 8.677 16 6.533 16 2.931 12.411 0 8 0"></path>
+                        </svg>
+                    </div>
+                   <div class="bottom-text">客服</div>
+                </div>
+                <div class="icon-text-div">
+                    <div class="top-icon">
+                        <svg id="icon_feedback" viewBox="0 0 16 16">
+                            <path d="M1.4,15l0-1l14,0v1H1.4z M2.5,13H2l0-0.5c0-0.1,0-0.2,0-0.3c0-0.3,0.1-0.8,0.2-1.3c0.1-0.7,0.4-1.7,0.4-2 C2.7,8.7,2.8,8.4,3,8.3l8-8c0.3-0.3,0.8-0.3,1.1,0l2.7,2.7c0.3,0.3,0.3,0.8,0,1.1l0,0l-8,8c-0.1,0.1-0.4,0.3-0.6,0.4 c-0.7,0.2-1.4,0.3-2.1,0.4c-0.5,0.1-1,0.2-1.3,0.2C2.7,13,2.6,13,2.5,13z M11.6,1.1L3.7,9c0,0.1-0.1,0.1-0.1,0.2 c-0.1,0.2-0.3,1.1-0.4,1.9c-0.1,0.3-0.1,0.6-0.1,0.9c0.3,0,0.6-0.1,0.9-0.1c0.7-0.1,1.3-0.2,2-0.4c0,0,0.1-0.1,0.2-0.1L14,3.5 L11.6,1.1z M14.1,3.3C14.1,3.3,14.1,3.3,14.1,3.3L14.1,3.3z M11.4,0.9C11.4,0.9,11.4,0.9,11.4,0.9L11.4,0.9z"></path>
+                        </svg>
+                    </div>
+                    <div class="bottom-text">反馈</div>
+                </div>
+                <div class="icon-text-div color-red" @click="rightScrollTopFun">
+                    <div class="top-icon"><span class="glyphicon glyphicon-chevron-up"></span></div>
+                    <div class="bottom-text">顶部</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--特价 和 闪购-->
+</div>
+
+<!--页面一加载就查询的数据-->
+<script>
+
+    /**
+     * 生成用户的功能菜单轮播图
+     */
+    function makgUserFunctionListbox(arr){
+        // 功能按钮集合
+        var functionArrs = configResult.FUNCTION_LIST;
+        arr = arr == null ? [9,6,11,11,4,14,14,17,19,19,8] : arr;
+
+        var function_list_html = "";
+        var image_path = "/image/index/user-function.png"
+        // 循环整个
+
+        // 步骤1：循环前面的
+        for (let i = 0; i < Math.floor(arr.length / 3); i++) {
+            let one = arr[i * 3];
+            let two = arr[i * 3 + 1];
+            let three = arr[i * 3 + 2];
+            function_list_html += `
+            <div class="item ${i==0?'active':''}">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        <div class="user-function-icom-1"
+                            style="background-image: url('${image_path}');background-position:${functionArrs[one -1][one].x} ${functionArrs[one -1][one].y}"></div>
+                        <p class="user-function-name" style="${functionArrs[one -1][one].style}">${functionArrs[one -1][one].text}</p>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="user-function-icom-1" style="background-image: url('${image_path}');
+                            background-position:${functionArrs[two -1][two].x} ${functionArrs[two -1][two].y}"></div>
+                        <p class="user-function-name">${functionArrs[two -1][two].text}</p>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="user-function-icom-1" style="background-image: url('${image_path}');
+                            background-position:${functionArrs[three -1][three].x} ${functionArrs[three -1][three].y}"></div>
+                        <p class="user-function-name">${functionArrs[three-1][three].text}</p>
+                    </div>
+                </div>
+            </div>
+        `
+        }
+        let inner_div_html = "";
+        // 不能被三整除 多出1个 或 2个
+        if (arr.length % 3 != 0) {
+            inner_div_html = `
+             <div class="item ${arr.length < 3 ? 'active' : ''}">
+                <div class="row">
+        `
+            // 循环多出来的 icon
+            for (let i = 0; i < 3; i++) {
+                if (i < arr.length % 3) {
+                    let one = arr[Math.floor(arr.length / 3) * 3 + i];
+                    inner_div_html += `
+                        <div class="col-md-3 col-sm-3">
+                                <div class="user-function-icom-1"
+                                    style="background-image: url('${image_path}');background-position:${functionArrs[one -1][one].x} ${functionArrs[one -1][one].y}"></div>
+                                <p class="user-function-name">${functionArrs[one -1][one].text}</p>
+                            </div>
+                    `
+                } else { // 少了的补充空白
+                    inner_div_html += `
+                        <div class="col-md-3 col-sm-3">
+                                <div class="user-function-icom-1"
+                                    style="background-image: none;"></div>
+                            </div>
+                    `
+                }
+
+            }
+
+            inner_div_html += '</div></div>'
+
+        }
+
+        function_list_html += inner_div_html;
+
+        $("#user-function-listbox").html(function_list_html);
+    }
+
+    /**
+     * 修改 图标样式
+     */
+    function makeUserVipIcon(level){
+        var vipList = configResult.VIP_LIST;
+        for (let i = 0; i < vipList.length; i++) {
+            if (vipList[i].level == level) {
+                // console.log(vipList[i]);
+               return vipList[i].style;
+                break;
+            }
+        }
+    }
+
+
+    // 生成默认的用户轮播图
+    makgUserFunctionListbox(null)
+
+    // 提示页面显示管理员账号
+    if (configResult.isShowLoginUser) {
+        console.log(configResult);
+        swal({
+            title: '游客账户！',
+            text: '用户名：admin\n密码：123456',
+            timer: 10000
+        }).then(
+            function () {},
+            // handling the promise rejection
+            function (dismiss) {
+                if (dismiss === 'timer') {
+                    console.log('I was closed by the timer')
+                }
+            }
+        )
+
+    }
+
+</script>
+
+<!--Vue相关-->
+<script>
+    var logoImgTimeId;
+    var intervalId;
+    var vmObj;
+    /*定义Vue过滤器*/
+    Vue.filter("areaNameFilter", function(str){
+        return str.substring(0,2);
+    });
+    var vm = new Vue({
+        el: "#app",
+        /*定义数据*/
+        data: {
+            // 页面的显示与隐藏 v-show 和 v-if 使用的变量
+            activityCloseFlag:true, //顶部活动信息关闭(默认显示)
+            searchTopFlag:false, // 搜索框置顶（默认不置顶）
+            positionFlag:false, // 位置鼠标移入时，切换下边的显示和隐藏（默认隐藏）
+            userIsLoginFlag:false, // 用户登录后，显示用户li，隐藏 登录和注册的li
+            userOuterFlag:false, //登录后， 鼠标移入用户li 下拉框显示
+            homeFlag: false, // 我的京东鼠标移入时 切换下边的显示和隐藏（默认隐藏）
+            enterpriseFlag: false, // 企业采购鼠标移入时，切换下边的显示和隐藏（默认隐藏）
+            customServiceFlag: false, // 客户服务鼠标移入时，切换下边的显示和隐藏（默认隐藏）
+            webNavFlag: false, // 网站导航鼠标移入时，切换下边的显示和隐藏
+            menuDetailedFlag:false, // 商品菜单详细,false隐藏（默认隐藏）
+            twoCarouselLeftBtnFlag:false,   // 第二个轮播图的左边按钮（默认隐藏）
+            twoCarouselRightBtnFlag:false,  // 第二个轮播图的右边按钮（默认隐藏）
+
+            area:'地址',
+            areas:[],
+            areaLineNum:5,   // 地址一行用5个td
+            areaEvent:'',   // 点击地址，保存event对象，等下次点击时将上次点击的对象的样式设置回去；
+            photographImgSrc:"/image/index/photograph.png",
+
+            webNav1Html:"",
+            webNav2Html:"",
+            webNav3Html:"",
+            webNav4Html:"",
+
+            carouselOneData:[],
+            carouselTwoData:[
+                {"imgSrc":"/image/carousel/small/1.jpg", "aHref":"#"},
+                {"imgSrc":"/image/carousel/small/2.jpg", "aHref":"#"},
+                {"imgSrc":"/image/carousel/small/3.png", "aHref":"#"},
+            ],
+
+            userAvatarStyle:{"background-image":'url(\"/image/index/defaultUser.png\")', 'background-repeat':"no-repeat", "background-size":'40px', "cursor":'pointer'},
+
+            /*用户登录的数据*/
+            userLoginData:{username:"", "customerName":"欢迎逛京东!"}, //用户登录的数据
+            userVipIcon:"", // vip icon显示样式
+
+            /*中间轮播图的商品菜单信息*/
+            commodityTypeList:[],   // 左边商品菜单需要的数据
+            commodityTypeDetitalList:[],     // 鼠标移入商品菜单时，右边显示的div需要的数据
+
+            /*秒杀信息*/
+            spikeName:"08:00",
+            spikeData:[],
+        },
+        /*定义方法*/
+        http: {
+            root: '/',
+            headers: {
+                token: TOKEN
+            }
+        },
+        methods: {
+            clickArea(i){
+                //点击导航栏的地址
+                // 修改上次的元素
+                $(this.areaEvent.target).removeClass("active");
+                $(this.areaEvent.target).addClass("color-red-hover");
+
+                // 修改本次的元素
+                this.area = event.target.text;
+                $(event.target).addClass("active");
+                $(event.target).removeClass("color-red-hover");
+                // 重新赋值
+                this.areaEvent = new Object(event);
+            },
+            login() { // 点击登录
+                console.log("跳转登陆");
+                window.location.href="/login.html"
+            },
+            regist() { // 点击注册
+                console.log("跳转注册");
+                window.location.href="/regist.html"
+            },
+            userInfo(){ // 用户详情页面
+              console.log("跳转用户详细信息");
+            },
+            order() { //点击订单详细
+                console.log("我的订单");
+            },
+            home() {
+                console.log("我的京东");
+            },
+            vip() {
+                console.log("vip");
+            },
+
+            // 企业采购方法
+            enterprisePurchase() {
+                // console.log("企业采购");
+            },
+
+            // 手机京东
+            phoneAppMouseEnter() {
+                // console.log("手机App 鼠标移入");
+            },
+            phoneAppMouseLeave() {
+                // console.log("手机App 鼠标移出");
+            }
+
+            ,photographLeave(){
+                this.photographImgSrc="/image/index/photograph.png"
+            }
+            ,photographEnter(){
+                this.photographImgSrc="/image/index/photograph-2.png"
+            }
+
+            ,indexpngMouseEnter(){
+                // 搜索栏的logo 鼠标移入变动态图
+                // $(".search-left-a").css("background-image", "url('/image/index/idex-dynamic.gif')");
+                if (!this.searchTopFlag) {
+                    $(".search-left-a").css("background", "url('/image/index/idex-dynamic.gif')  50% 0px no-repeat");
+                    $(".search-left-a").css("background-size", "contain");
+                    if(logoImgTimeId != null){
+                        // 动图还在执行
+                    } else {
+                        // 定时器修改图片
+                        logoImgTimeId = setTimeout(function () {
+                            // $(".search-left-a").css("background-image", "url('/image/index/sprite.png')")
+                            $(".search-left-a").css("background-size", "auto");
+                            $(".search-left-a").css("background", "url('/image/index/sprite.png') 50% 15px no-repeat");
+                            clearTimeout(logoImgTimeId);
+                            logoImgTimeId = null;
+                            console.log("null");
+                        }, 3000);
+                    }
+
+                }
+            }
+
+            /*中间左边的菜单栏*/
+            ,leftMenuMouseLeave(){
+                // 轮播图左边的菜单鼠标移出时触发函数
+                // console.log("鼠标移出了");
+                this.menuDetailedFlag = false;
+            }
+            ,showleftMenuDetailMouseEnter(obj){
+                // 左边每行 鼠标移入时执行：显示右侧的div
+                // console.log(obj);
+                // 给商品详细菜单需要的数据赋值
+                this.commodityTypeDetitalList = this.commodityTypeList[obj];
+
+                // 显示详细商品菜单
+                this.menuDetailedFlag = true;
+            }
+            ,hideLeftMenuDivMouseEnter(){ // 鼠标移入隐藏的div 就隐藏右边的div
+                // console.log("移入了多余的div");
+                this.menuDetailedFlag = false;
+
+            }
+            ,userExit(){ // 用户退出
+                // 清空本地token
+                new Storage().removeItem(configResult.token.LOCAL_STORAGE_TOKEN)
+                // 跳转登录页
+                window.location.href = "/login.html"
+            }
+
+            ,listProvinces(){
+                let apiUrl = apiIndexProvinces
+                // 地址下拉选的城市
+                this.$http.get(apiUrl).then(function(result){
+                    // 通过 result.body拿到服务器返回的成功的数据
+                    this.areas = result.body.data;
+                });
+            }
+            ,listCommodityTypeDTOs(){
+                // 获取商品菜单的分类
+                this.$http.get(apiIndexCommodityTypes).then(function(result){
+                    // 通过 result.body拿到服务器返回的成功的数据
+                    this.commodityTypeList = result.body.data;
+                });
+            }
+            ,createWebNavMenus(){
+                // 创建网站导航菜单
+                this.$http.get(apiIndexWebNavMenus).then(function(result){
+                    // 通过 result.body拿到服务器返回的成功的数据
+                    let data = result.body.data;
+                    // console.log("/index/listWebNavMenus", data);
+                    for (let i = 0; i < data.length; i++) {
+                        let html_code = "";
+                        let twoDOList = data[i].twoDOList;
+                        html_code += `<div class="one-header">${data[i].name}</div>`;
+                        for (let j = 0; j < twoDOList.length; j++) {
+                            html_code += `<div><a href="javascript:void(0)">${twoDOList[j].name}</a></div>`;
+                        }
+                        switch (data[i].order) {
+
+                            case 1:
+                            {
+                                this.webNav1Html = html_code;
+                                break;
+                            }
+                            case 2:
+                            {
+                                this.webNav2Html = html_code;
+                                break;
+                            }
+                            case 3:
+                            {
+                                this.webNav3Html = html_code;
+                                break;
+                            }
+                            case 4:
+                            {
+                                this.webNav4Html = html_code;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+            ,getLoginInfo(){
+                // 获取登录用户信息
+                if (TOKEN != null) {
+                    this.$http.get(apiIndexLoginInfo).then(function(result){
+                        // 通过 result.body拿到服务器返回的成功的数据
+                        let data = result.body.data;
+                        this.userIsLoginFlag=true;
+                        this.userLoginData = data;
+                        this.userVipIcon = makeUserVipIcon(data.customerLevel);
+
+                    }, function (error) {
+                        console.log(error);
+                        alert(1);
+                        console.log("错误");
+                        window.location.href = "/login.html";
+                    });
+                } else {
+
+                }
+            }
+            ,listSpikeDOs(){
+                // 在循环时，this指向的是当前循环的对象（猜想），不能用来操作vue的data和methods
+                // const vmObj = this;
+                vmObj = this;
+                const vmDatas = this.$data;
+                const vmMethods = this.$options.methods;
+                // 获取秒杀时间段
+                this.$http.get(apiIndexSpikes).then(p=>{
+                    let data = p.body.data;
+                    this.spikeData = data;
+                    console.log(data);
+                    vmMethods.setSpikeTimeMethod()
+                }, e=>{
+                    console.log(e);
+                    alert(3);
+                    setErrorDataToLocalStorage(data);
+                });
+            }
+            ,setSpikeTime(time){
+                // 设置商品秒杀的倒计时
+                // 当前时间
+                var now = new Date();
+                // 拼接秒杀时间
+                var str = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + " " + time + ":00";
+                var stime = now.getTime();
+                var etime = new Date(str).getTime();
+                var usedTime = Math.floor((etime - stime) / 1000);  //两个时间戳相差的秒数
+
+                //计算出小时数
+                // h
+                var leave1=Math.floor(usedTime/3600);
+                // m
+                var leave2=Math.floor((usedTime - leave1 * 3600)/60);
+                // s
+                var leave3 = usedTime%60;
+                const vmMethods = this;
+                console.log(leave1, leave2, leave3)
+                if (leave3 >= 0) {
+                    $(".spike-time-second").text(vmMethods.leftZeroNum(leave3));
+                    $(".spike-time-minute").text(vmMethods.leftZeroNum(leave2));
+                    $(".spike-time-hour").text(vmMethods.leftZeroNum(leave1));
+                    // 上面刚设置时间，过一秒后走定时器 设置时间
+                    setTimeout(function(){
+                        // 定时器，设置秒杀时间，当时间减为0时，在调用一下 本方法。
+                        intervalId = setInterval(function(){
+                            leave3--;
+                            if (leave3 >= 0) {
+                                $(".spike-time-second").text(vmMethods.leftZeroNum(leave3));
+                            }else {
+                                // console.log("leave2",leave2)
+                                leave2--;
+                                if (leave2 >= 0) {
+                                    leave3 = 59
+                                    $(".spike-time-second").text(vmMethods.leftZeroNum(leave3));
+                                    $(".spike-time-minute").text(vmMethods.leftZeroNum(leave2));
+                                } else {
+                                    leave1 --;
+                                    if (leave1 >= 0) {
+                                        leave2 = 59;
+                                        leave3 = 59;
+                                        $(".spike-time-second").text(vmMethods.leftZeroNum(leave3));
+                                        $(".spike-time-minute").text(vmMethods.leftZeroNum(leave2));
+                                        $(".spike-time-hour").text(vmMethods.leftZeroNum(leave1));
+                                    } else {
+                                        $(".spike-time-second").text("00");
+                                        $(".spike-time-minute").text("00");
+                                        $(".spike-time-hour").text("00");
+                                        clearInterval(intervalId);
+                                        console.log("执行完一次秒杀", new Date().getHours() + ":" + new Date().getMinutes());
+                                        vmMethods.setSpikeTimeMethod()
+                                    }
+                                }
+                            }
+                        },1000);
+                    },1000);
+
+                } else {
+                    $(".spike-time-second").text("00");
+                    $(".spike-time-minute").text("00");
+                    $(".spike-time-hour").text("00");
+                }
+            }
+            ,setSpikeTimeMethod(){
+                // 将时间换成数字然后比较大小 看看符合哪个时间段的秒杀
+                let now = new Date();
+                let nowTimeNum = parseFloat(Number(now.getHours()) + "." + Number(now.getMinutes()));
+                let flag = true;
+                vmObj.spikeData.forEach(function(item, index, arr){
+                    let spikeStartTime = vmObj.convertTimestrToNum(item.spikeStartTime)
+                    let spikeEndTime = vmObj.convertTimestrToNum(item.spikeEndTime)
+                    if (nowTimeNum > spikeStartTime && nowTimeNum <= spikeEndTime) {
+                        // 在条件范围内，设置秒杀显示
+                        vmObj.spikeName = item.spikeName;
+                        vmObj.setSpikeTime(item.spikeEndTime)
+                        flag = false;
+                        return false;
+                    }
+                })
+
+                if (flag) {
+                    $(".spike-time-second").text("00");
+                    $(".spike-time-minute").text("00");
+                    $(".spike-time-hour").text("00");
+                }
+            }
+            ,convertTimestrToNum(timeStr){
+                // 将时间转换成成数字
+                //  例如：“08:00:00” => "8.0"
+                return parseFloat(timeStr.split(":").splice(0,2).map(Number).join("."));
+            }
+            ,leftZeroNum(num){
+                if (String(num).length <= 1) {
+                    return "0"+num;
+                } else {
+                    return num;
+                }
+            }
+            ,rightScrollTopFun(){
+                // 返回页面顶部
+                // $(window).scrollTop(0)
+                $("html,body").animate({scrollTop:0},500);
+            }
+        }
+
+
+    /*定义自定义指令*/
+        ,directives:{ // 定义私有指令
+            'fontweight':{
+                bind:function(el, binding){
+                    el.style.fontWeight=binding.value;
+                }
+            }
+            , 'cursor':{
+                bind:function(el, binding){
+                    el.style.cursor=binding.value;
+                }
+            }
+            , 'bgcolor':{
+                bind:function(el, binding){
+                    el.style.backgroundColor = binding.value;
+                }
+            }
+            , 'color':{
+                bind:function(el, binding){
+                    el.style.color=binding.value;
+                }
+            }
+        }
+
+        /*各生命周期*/
+        , beforeCreate(){ // 这是我们遇到的第一个生命周期函数，表示实例完全被创建出来之前，会执行它
+            // 注意：在beforeCreate 生命周期函数执行的时候，data和methods中的数据都还没初始化
+        }
+        , created(){ // 这是遇到的第二个生命周期函数
+            // 在created中，data和methods都已经被初始化好了
+            // 如果要调用 methods中的方法，或者操作data中的数据，最早只能在created中进行操作
+        }
+        , beforeMount() { // 这是遇到的第三个生命周期函数，表示 模板已经在内存编译完成，未渲染到页面中去
+            // console.log(document.getElementById('h3').innerText);
+            // 在 beforeMount 执行的时候，页面中的元素，还没有被真正替换过来，还是之前的写的一些模板字符串
+            this.getLoginInfo()
+            this.listSpikeDOs()
+            this.listProvinces()
+            this.listCommodityTypeDTOs()
+            this.createWebNavMenus()
+
+
+        }
+        , mounted(){ // 这是遇到的第四个生命周期函数，表示，内存中的模板，已经真实的挂载到页面中，用户已经可以看到渲染好的页面了
+            // console.log(document.getElementById('h3').innerText);
+            // 注意：mounted 是实例创建期间的最后一个生命周期函数，当执行完 mounted 就表示，实例已经被完全创建好了，此时，
+            // 如果没有其它操作的话，这个实例，就静静的 躺在我们内存中，一动不动
+        }
+
+        // 接下来是运行中的两个事件
+        ,beforeUpdate(){ // 这时候，表示 我们的界面还没有被更新 [数据已经被更新了]
+
+            // 得出结论：当执行 beforeUpdate 的时候，页面中的显示的数据，还是旧的，此时 data中的数据是最新的，页面尚未和最新的数据保持同步
+        }
+        ,updated(){
+            // updated事件执行的时候,页面和 data 数据已经保持同步了,都是最新的
+        }
+
+        ,beforeDestory(){ // 当执行beforeDestroy钩子函数的时候, Vue实例就已经从运行阶段,进入到了销毁阶段。当执行beforeDestroy 的时候,实例身上所有的data和所有的methods，以及过滤器、指令....都处于可用状态,此时,还没有真正执行销毁的过程
+
+        }
+        ,destoryed(){ //当执行到destroyed函数的时候，组件已经被完全销毁了,此时, 组件中所有的数据、方法，指令、过滤器....都已经不可用了
+
+        }
+    });
+
+
+
+
+</script>
+
+<!--Jquery相关-->
+<script>
+
+    // 高度(搜索栏底到页面顶部的)= 顶部活动蓝高度 + 顶部导航栏高度 + 搜索栏高度
+    var scrollHeightOne = $("#carousel-row").offset().top;
+
+    // 显示搜索栏置顶的最小高度
+    var rightheight = Number($("#search-head-row-top").css("height").split("px")[0]) + 90;
+    var scrollHeightTwo = $(".spike-row-outer").offset().top - rightheight;
+
+    // 搜索栏初始高度
+    // var searchBarHeight = getComputedStyle(document.documentElement).getPropertyValue('--search-head-height');
+
+    /*监听滚动条事件*/
+    $(window).scroll(function () {
+        /// document 是整个页面，windows是当前可视
+        // console.log("$(document).height()",$(document).height());
+        // console.log("$(window).scrollTop()",$(window).scrollTop());
+
+        // 是否滚动到第一个监听鼠标滚动位置（鼠标移入商品菜单 显示商品信息）
+        let scrollTop = $(window).scrollTop();
+
+        // 滚动条在轮播图 区域。
+        let flagOne = scrollTop > scrollHeightOne && scrollTop < scrollHeightTwo;
+        // 是否滚动到第二个监听鼠标滚动位置（鼠标移过 轮播图，顶部显示搜索栏）
+        let flagTwo = scrollTop > scrollHeightTwo;
+
+        // 商品菜单信息显示
+        if(flagOne){
+            // console.log("商品菜单信息显示");
+        }
+
+
+
+        // 搜索栏置顶
+        if (flagTwo) {
+            // 处理搜索栏的动图
+            if(logoImgTimeId != null){
+                clearTimeout(logoImgTimeId);
+                logoImgTimeId = null;
+            }
+
+            // 显示置顶的搜搜栏
+            $(".top-div-search").css("border-bottom", "2px solid #f10214");
+            $(".top-div-search").css("height", "52px");
+            vm.$data.searchTopFlag = true;
+
+            // 设置秒杀栏右侧的功能列表
+            $(".right-elevator-list-outer").css("position","fixed");
+            $(".right-elevator-list-outer").css("top","70px");
+
+        } else {
+            // 处理搜索栏的动图
+            if (logoImgTimeId == null) {
+                $(".search-left-a").css("background-size", "auto");
+                $(".search-left-a").css("background", "url('/image/index/sprite.png') 50% 15px no-repeat");
+            }
+
+            // 置顶搜索栏隐藏显示
+            $(".top-div-search").css("border-bottom", "unset");
+            $(".top-div-search").css("height", "0px");
+            vm.$data.searchTopFlag = false;
+
+            // 取消秒杀栏右侧的功能列表悬浮固定位置
+            $(".right-elevator-list-outer").css("position","unset");
+            $(".right-elevator-list-outer").css("top","unset");
+
+        }
+    });
+
+
+
+
+
+    /**
+     * 设置秒杀右边的轮播图属性
+     */
+    $('#spike-right-carousel').carousel({
+        interval: 2000
+    })
+
+    // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑秒杀↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    // 图片懒加载
+    $(function() {
+        $("img.lazy").lazyload({
+            effect:"fadeIn",
+            threshold:0,
+            container:$("body"),
+            placeholder: "/image/index/lazy-load.png",
+        });
+    })
+
+    $('#spike-center').on('slide.bs.carousel', function () {
+        // console.log("执行了方法");
+    })
+
+
+</script>
+
+<!--临时的方法-->
+<script>
+
+</script>
+</body>
+</html>

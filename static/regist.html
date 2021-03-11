@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>注册</title>
+    <!--    标题栏：-->
+    <link rel="icon" href="/image/icon/title.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link href="/css/regist.css" rel="stylesheet">
+
+    <script src="/js/apiUrlConfig.js" type="text/javascript"></script>
+    <script src="/js/jquery/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.js" type="text/javascript"></script>
+    <script src="/js/configCustomer.js" type="text/javascript"></script>
+    <script src="/js/localStorageCustomer.js" type="text/javascript"></script>
+    <script src="/js/user.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="login-header" class="container-fluid">
+    <div id="login-header-row-1" class="row">
+        <div class="col-md-2 hidden-xs"></div>
+        <div class="col-md-8 col-sm-12">
+            <div id="login-header-center" class="container">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2 login-header-center-left">
+                        <img class="login-header-center-left-img" src="/image/login/logo-20200504-b.png" alt="狗东logo"/>
+                    </div>
+                    <div class="col-md-6 col-sm-6 login-header-center-center hidden-xs">
+<!--                        <img class="login-header-center-center-img" src="/image/login/l-icon.png" alt="欢迎登录"/>-->
+                        <div id="login-header-center-center-div">欢迎注册</div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 login-header-center-right">
+                        <div id="head-right-div">
+                            已有账号？&nbsp;&nbsp;<a href="javascript:void(0);" style="color:red;" onclick="window.location.href='/login.html'">请登录&gt;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-xs"></div>
+    </div>
+    <div id="login-header-row-3" class="row">
+        <div class="col-md-12 col-sm-12">
+            <div id="login-body" class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4 col-sm-4"></div>
+                    <div class="col-md-4 col-sm-4 login-body-bg">
+                        <div id="login-body-info">
+                            <div id="prompt-head">
+                                <div id="prompt-email">
+                                    <div id="prompt-head-circle-1" class="prompt-head-circle">1</div>
+                                    输入邮箱
+                                </div>
+                                <div>
+                                    <div class="prompt-head-line" id="prompt-head-circle-2">
+                                        <img id="prompt-head-arrow1" style="width:100%" src="/image/regist/reg-icon_02.png" alt="箭头">
+                                    </div>
+                                </div>
+                                <div id="prompt-password">
+                                    <div id="prompt-head-circle-4" class="prompt-head-circle">2</div>
+                                    输入密码
+                                </div>
+                                <div>
+                                    <div class="prompt-head-line" id="prompt-head-circle-5">
+                                        <img id="prompt-head-arrow2" style="width:100%" src="/image/regist/reg-icon_02.png" alt="箭头">
+                                    </div>
+                                </div>
+                                <div id="prompt-success">
+                                    <div id="prompt-head-circle-3" class="prompt-head-circle">3</div>
+                                    注册成功
+                                </div>
+                            </div>
+                            <div class="regist-one">
+                                <div id="regist-one-div">
+                                    <label class="regist-username-label" for="regist-username"></label>
+                                    <input id="regist-username" type="text" placeholder="请输入邮箱后回车接收验证码" autocomplete="off"/>
+                                </div>
+                                <div class="regist-error" id="regist-username-error">邮箱格式错误</div>
+                            </div>
+                            <div class="regist-three">
+                                <div id="regist-three-div">
+                                    <label class="regist-password-label" for="regist-password"></label>
+                                    <input id="regist-password" required type="password" placeholder="请输入密码" autocomplete="off"/>
+                                </div>
+                                <div class="regist-error" id="regist-password-error">密码长度错误</div>
+                            </div>
+                            <div class="regist-two">
+                                <div id="regist-two-div">
+                                    <label class="regist-pin-label" for="regist-pin"></label>
+                                    <input id="regist-pin" type="text" placeholder="请输入验证码" autocomplete="off"/>
+                                </div>
+                                <div class="regist-error" id="regist-pin-error">验证码错误</div>
+                            </div>
+                            <div class="regist-four" id="regis-btn" onclick="regist()">
+                                注 册
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="login-header-row-4" class="row">
+        <div id="foot" class="col-md-12">
+            <div class="links">
+                <a rel="nofollow" target="_blank">
+                    关于我们
+                </a>
+                |
+                <a rel="nofollow" target="_blank">
+                    联系我们
+                </a>
+                |
+                <a rel="nofollow" target="_blank" >
+                    人才招聘
+                </a>
+                |
+                <a rel="nofollow" target="_blank" >
+                    商家入驻
+                </a>
+                |
+                <a rel="nofollow" target="_blank" >
+                    广告服务
+                </a>
+                |
+                <a rel="nofollow" target="_blank" >
+                    手机狗东
+                </a>
+                |
+                <a target="_blank" >
+                    友情链接
+                </a>
+                |
+                <a target="_blank">
+                    销售联盟
+                </a>
+                |
+                <a target="_blank">
+                    狗东社区
+                </a>
+                |
+                <a target="_blank">
+                    狗东公益
+                </a>
+                |
+                <a target="_blank" clstag="pageclick|keycount|20150112ABD|9">English Site</a>
+            </div>
+            <div class="copyright">
+                Copyright&nbsp;©&nbsp;2020-2020&nbsp;&nbsp;demo&nbsp;版权所有
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/js/regist.js" type="text/javascript"></script>
+
+</body>
+</html>

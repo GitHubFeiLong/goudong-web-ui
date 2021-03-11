@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>登录</title>
+    <!--    标题栏：-->
+    <link href="/image/icon/title.ico" rel="icon" type="image/x-icon">
+
+    <link href="/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/login.css" rel="stylesheet">
+
+    <script src="/js/apiUrlConfig.js" type="text/javascript"></script>
+    <script src="/js/jquery/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="/js/configCustomer.js" type="text/javascript"></script>
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.js" type="text/javascript"></script>
+    <script src="/js/localStorageCustomer.js" type="text/javascript"></script>
+    <script src="/js/user.js" type="text/javascript"></script>
+
+</head>
+<body>
+<div class="container-fluid" id="login-header">
+    <div class="row no-gutters" id="login-header-row-1">
+        <div class="col-md-2 col-sm-2"></div>
+        <div class="col-md-8 col-sm-8">
+            <div class="row">
+                <div class="col-md-2 col-sm-2 login-header-center-left">
+                    <img alt="狗东logo" class="login-header-center-left-img" src="/image/login/logo-20200504-b.png"/>
+                </div>
+                <div class="col-md-6 col-sm-6 hidden-xs login-header-center-center">
+                    <div id="login-header-center-center-div">欢迎登录</div>
+                </div>
+                <div class="col-md-4 col-sm-4 hidden-xs login-header-center-right">
+                    <div>
+                        <img alt="登录页面评价" class="login-header-center-right-img" src="/image/login/q-icon.png"/>
+                        <a href="javascript:void(0);" onclick="alert('do not')">登录页面，调查问卷</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-2"></div>
+    </div>
+    <div class="row hidden-xs no-gutters" id="login-header-row-2">
+        <div class="col-md-12 col-sm-12">
+            <i></i>依据《网络安全法》，为保障您的账户安全和正常使用，请尽快完成手机号验证！ 新版《狗东隐私政策》已上线，将更有利于保护您的个人隐私。
+        </div>
+    </div>
+    <div class="row no-gutters" id="login-header-row-3">
+        <div class="col-md-12 col-sm-12">
+            <div class="row">
+                <div class="col-md-2 col-sm-2"></div>
+                <div class="col-md-7 col-sm-7 login-body-bg">
+                    <div id="login-body-info">
+                        <div class="head">
+                            <i></i>狗东不会以任何理由要求您转账汇款，谨防诈骗。
+                        </div>
+                        <div>
+                            <div>
+                                <a class="login-a" href="javascript:void(0);"
+                                   onclick="switchLoginQRcode(this)">扫码登录</a>
+                            </div>
+                            <div style="width: 0px;">|</div>
+                            <div>
+                                <a href="javascript:void(0);" onclick="switchLoginEntry(this)">账户登录</a>
+                            </div>
+                        </div>
+                        <div id="loggin-div">
+                            <div class="ewm">
+                                <div class="ewm-left" id="ewm-left">
+                                    <img alt="二维码" src="/image/login/show.png"/>
+                                </div>
+                                <div class="ewm-right">
+                                    <img alt="二维码" src="/image/login/phone-orange.png"
+                                         style="width:100%;height:100%"/>
+                                </div>
+
+                            </div>
+                            <div id="ewm-mask">
+                                <div style="color: white;font-weight: 700;">
+                                    <span>二维码已失效</span>
+                                </div>
+                                <div onclick="flushEwm()"
+                                     style="width: 80px;height: 30px; background: #e4393c;line-height: 30px; opacity: 1;z-index: 19;color: #fbfbfb;margin-top: 8px;cursor:pointer;">
+                                    <span>刷新</span>
+                                </div>
+                            </div>
+                            <div class="ewm-bottom">
+                                打开<span>手机狗东</span> &nbsp;扫描二维码
+                            </div>
+                            <div class="ewm-features">
+                                <div>
+                                    <b class="icon-1"></b>
+                                    &nbsp;
+                                    <span>免输入</span>
+                                </div>
+                                <div>
+                                    <b class="icon-2"></b>
+                                    &nbsp;
+                                    <span>更快</span>
+                                </div>
+                                <div>
+                                    <b class="icon-3"></b>
+                                    &nbsp;
+                                    <span>更安全</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="lxfs-div">
+                                <div id="qq-login">
+                                    <b class="icon-qq"></b>
+                                    <span>&nbsp;QQ</span>
+                                </div>
+                                <span class="line">|</span>
+                                <div>
+                                    <b class="icon-wx"></b>
+                                    <span>&nbsp;微信</span>
+                                </div>
+                            </div>
+                            <div class="zc">
+                                <div>
+                                    <b class="icon-zc"></b>
+                                    <span id="regist_span">立即注册</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3"></div>
+            </div>
+            <!--<div class="container-fluid" id="login-body">
+
+            </div>-->
+        </div>
+    </div>
+    <div class="row no-gutters" id="login-header-row-4">
+        <div class="col-md-12 col-sm-12" id="foot">
+            <div class="links">
+                <a rel="nofollow" target="_blank">
+                    关于我们
+                </a>
+                |
+                <a rel="nofollow" target="_blank">
+                    联系我们
+                </a>
+                |
+                <a rel="nofollow" target="_blank">
+                    人才招聘
+                </a>
+                |
+                <a rel="nofollow" target="_blank">
+                    商家入驻
+                </a>
+                |
+                <a rel="nofollow" target="_blank">
+                    广告服务
+                </a>
+                |
+                <a rel="nofollow" target="_blank">
+                    手机狗东
+                </a>
+                |
+                <a target="_blank">
+                    友情链接
+                </a>
+                |
+                <a target="_blank">
+                    销售联盟
+                </a>
+                |
+                <a target="_blank">
+                    狗东社区
+                </a>
+                |
+                <a target="_blank">
+                    狗东公益
+                </a>
+                |
+                <a clstag="pageclick|keycount|20150112ABD|9" target="_blank">English Site</a>
+            </div>
+            <div class="copyright">
+                Copyright&nbsp;©&nbsp;2020-2020&nbsp;&nbsp;demo&nbsp;版权所有
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--页面加载就立即执行的方法-->
+<script src="/js/login.js" type="text/javascript"></script>
+
+</body>
+</html>

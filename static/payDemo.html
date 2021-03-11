@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+        <input value="1" type="text" placeholder="输入订单号" name="order" id="order">
+        <input value="订单名称" type="text" placeholder="订单名称" name="orderName" id="orderName">
+        <input value="描述" type="text" placeholder="商品描述" name="productDetail" id="productDetail">
+        <input value="1000" type="text" placeholder="输入金额" name="amount" id="amount">
+        <input onclick="myFun()" type="button" value="支付">
+
+    <div id="div">
+
+    </div>
+    <script type="text/javascript">
+
+        function myFun() {
+            let order = $("#order").val();
+            let orderName = $("#orderName").val();
+            let productDetail = $("#productDetail").val();
+            let amount = $("#amount").val();
+            $.ajax({
+                url:"/order/demo",
+                data:`order=${order}&orderName=${orderName}&productDetail=${productDetail}&amount=${amount}`,
+                type: "post",
+                dataType:"json",
+                success:function(data){
+                    // console.log(data.result.replace("document.forms[0].submit();",""));
+                    $("#div").html(data.result);
+                }
+            })
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="/js/jquery/jquery.lazyload.min.js" type="text/javascript"></script>
+    <style>
+        .demo-div{
+            width: 40px;
+            height: 40px;
+            margin: 1000px 0;
+        }
+
+        body{
+            height: 3000px;
+        }
+        .lazyload{
+            /*margin-top:700px;*/
+
+        }
+        #content{
+            /*margin-top: 500px;*/
+            width: 100%;
+            height: 200px;
+            overflow: scroll;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+    <img class="lazyload" alt="" width="1000" height="60" data-original="//images.h-ui.net/www/AD-1000x60.gif" />
+</div>
+
+    <script type="text/javascript">
+
+        $(function() {
+            $("img.lazyload").lazyload({
+                effect:"fadeIn",	//载入效果使用渐变
+                threshold:0,		//离页面还有100px时开始加载
+                container:$("#content"),
+                // effect : "show", //渐现，show(直接显示),fadeIn(淡入),slideDown(下拉)
+                // threshold : 0, //预加载，在图片距离屏幕180px时提前载入
+                event: 'scroll',  // 事件触发时才加载，click(点击),mouseover(鼠标划过),sporty(运动的),默认为scroll（滑动）
+                // container: $("body"), // 指定对某容器中的图片实现效果
+                // failure_limit: 2, //加载2张可见区域外的图片,lazyload默认在找到第一张不在可见区域里的图片时则不再继续加载,但当HTML容器混乱的时候可能出现可见区域内图片并没加载出来的情况
+                // placeholder: "/image/index/1.png", //.placeholder :为某一图片路径.此图片用来占据将要加载的图片的位置,待图片加载时,占位图则会隐藏
+            });
+        })
+
+    </script>
+</body>
+</html>
