@@ -1,10 +1,20 @@
 <template>
-    <div id="login-form"> 
+    <div id="login-form">
+        <Hint :hint="hint"/>
     </div>
 </template>
 
 <script>
+    import Hint from './Hint';
     export default {
+        components:{
+            Hint
+        },
+        data () {
+            return {
+                hint:`京东不会以任何理由要求您转账汇款，谨防诈骗。`,
+            }
+        }
 
     }
 </script>

@@ -12,18 +12,22 @@
                 </a>
             </div>
         </div>
-        <div class="row" id="header-hint"> 
-            <p class="hint">
-                <i class='header-i'></i>
-                依据《网络安全法》，为保障您的账户安全和正常使用，请尽快完成手机号验证！ 新版
-                <a href='http://www.baidu.com' @click.prevent="notDone">《京东隐私政策》</a>已上线，将更有利于保护您的个人隐私。
-            </p>
-        </div>
+        <Hint :hint="hint"/>
     </div> 
 </template>
 
 <script>
+    import Hint from './Hint'
     export default {
+        components:{
+            Hint
+        },
+        data(){
+            return {
+                hint:` 依据《网络安全法》，为保障您的账户安全和正常使用，请尽快完成手机号验证！ 新版
+            <a href='http://www.baidu.com'>《京东隐私政策》</a>已上线，将更有利于保护您的个人隐私。`,
+            }
+        },
         methods:{
             notDone(){
                 alert("not done");
@@ -35,7 +39,7 @@
 <style lang="less" scoped>
     @font-color:#999;
     #header{
-        height: 120px;
+        height: 119px;
         width: 100%;
         #header-body{
             width:100%;
@@ -88,31 +92,7 @@
                 }
             }
         }
-        #header-hint{
-            width:100%;
-            height:40px;
-            font-size: 12px;
-            font-family: Arial, Verdana, 宋体;
-            background-color: rgb(255, 248, 240);
-            color: @font-color;
-            display: flex;
-                .hint{
-                    margin: 0 auto;
-                    line-height: 40px;
-                    display: flex;
-                    .header-i{
-                        width: 16px;
-                        height: 16px;
-                        margin: auto;
-                        margin-right: 5px;
-                        background-image: url("~@/assets/imgs/icon-tips.png");
-                    
-                    }
-                    a{
-                        color: #333;
-                    }
-                }
-        }
+        
     }
     
 </style>
