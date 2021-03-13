@@ -1,5 +1,6 @@
 <!--登录页头部组件-->
 <template>
+    <!-- Vue3 开始可以不需要跟标签 -->
     <div id="header" class="container-fluid">
         <div class="row" id="header-body">
             <div class="center">
@@ -16,9 +17,14 @@
     </div> 
 </template>
 
-<script>
-    import Hint from './Hint'
-    export default {
+<!--lang="ts" 可以写ts代码-->
+<script lang="ts">
+    // defineComponent函数定义一个组件，内部可以传入一个配置对象
+    import {defineComponent} from 'vue';
+    // 引入子组件
+    import Hint from './Hint.vue';
+    // 暴露出去一个定义好的组件
+    export default defineComponent({
         components:{
             Hint
         },
@@ -33,7 +39,7 @@
                 alert("not done");
             }
         }
-    }
+    });
 </script>
 
 <style lang="less" scoped>
@@ -69,7 +75,7 @@
                     }
                 }
                 #questionnaire{
-                    color: @font-color;
+                    color: @font-color !important;
                     font: 12px/150% Arial,Verdana,"\5b8b\4f53";
                     width:136px;
                     height:18px;

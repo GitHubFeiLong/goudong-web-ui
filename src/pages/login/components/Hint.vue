@@ -37,8 +37,8 @@
             .header-i{
                 width: 16px;
                 height: 16px;
-                margin: auto;
-                margin-right: 5px;
+                position: relative;
+                margin: 12px 6px 0px 0px;
                 background-image: url("~@/assets/imgs/icon-tips.png");
             }
         }
