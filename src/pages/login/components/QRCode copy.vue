@@ -30,15 +30,16 @@
     <div class="qr-quick-login">
         <div class="qq-wechat">
             <div class="qq">
-                <a href=""><b></b><sapn>QQ</sapn></a>
+                <b></b>
+                <sapn>QQ</sapn>
             </div>
-            <i class="cutting-line"></i>
            <div class="wechat">
-               <a href=""><b></b><sapn>微信</sapn></a>
+                <b></b>
+                <sapn>微信</sapn>
            </div>
         </div>
         <div class="regist">
-            <a href=""><b></b><span>立即注册</span></a>
+            <b></b><a>立即注册</a>
         </div>
     </div>
 </template>
@@ -191,28 +192,15 @@
             justify-content: space-between;
             color:#666;
             font-size: 12px;
-            position: relative;
             .qq{
                 width:50%;
                 height:51px;
                 position: relative;
-                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 18px, 15px);
+                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 18px, 5px);
             }
             .wechat{
                 padding-left: 10px;
                 .QQWechat(url('~@/assets/imgs/QQ-weixin_02.png'), 25px, 35px);
-            }
-            .cutting-line{
-                display: inline-block;
-                width: 1px;
-                height: 12px;
-                background-color: #d4d4d4;
-                position: absolute;
-                margin: auto;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
             }
         }
         .regist{
@@ -226,7 +214,7 @@
                 background-image: url('~@/assets/imgs/regist.png');
                 display: inline-block;
             }
-            span{
+            a{
                 display: inline-block;
                 position: absolute;
                 left: 41px;
