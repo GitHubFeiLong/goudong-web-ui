@@ -30,11 +30,11 @@
     <div class="qr-quick-login">
         <div class="qq-wechat">
             <div class="qq">
-                <a href=""><b></b><sapn>QQ</sapn></a>
+                <b></b><sapn>QQ</sapn>
             </div>
             <i class="cutting-line"></i>
            <div class="wechat">
-               <a href=""><b></b><sapn>微信</sapn></a>
+               <b></b><sapn>微信</sapn>
            </div>
         </div>
         <div class="regist">
@@ -53,8 +53,14 @@
 <style lang="less" scoped>
     .QQWechat(@url,@span-width, @left){
         width:50%;
-        height:51px;
+        height:18px;
         position: relative;
+        margin:auto;
+        &:hover{
+            cursor: pointer;
+            color:#E4393C;
+            text-decoration:underline;
+        }
         b{
             width:19px;
             height:18px;
@@ -155,7 +161,7 @@
                     right: -13px;
                     font-size: 12px;
                     b{
-                        width:25px;
+                        width:26px;
                         height:25px;
                         display: inline-block;
                         position: relative;
@@ -194,7 +200,6 @@
             position: relative;
             .qq{
                 width:50%;
-                height:51px;
                 position: relative;
                 .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 18px, 15px);
             }
