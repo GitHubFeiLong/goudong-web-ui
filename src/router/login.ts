@@ -1,9 +1,6 @@
-/* 
-    login.html 路由 
-*/
-import { createRouter, createWebHistory, RouteRecordRaw,createWebHashHistory } from 'vue-router';
 
-const routes: Array<RouteRecordRaw> = [
+/* login.html 路由  */
+export const login = [
     {
         path:'/ui/login/QRCode',
         name:'QRCode',
@@ -16,14 +13,5 @@ const routes: Array<RouteRecordRaw> = [
     }
 ];
 
-//决定路由模式
-const isPro: boolean = process.env.NODE_ENV === "prodution";
-const router = createRouter({
-    //history是路由模式(线上线下)
-    // history: createWebHashHistory(),
-    history: createWebHashHistory(),
-    routes
-});
 
-export default router;
 

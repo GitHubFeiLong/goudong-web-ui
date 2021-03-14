@@ -4,7 +4,6 @@
 html,body {
     margin:0px;
     padding:0px;
-    background-color: yellow;
 }
 /* bootstrap 的 row 占据整行 */
 .container-fluid {

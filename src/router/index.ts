@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Home from '../views/Home.vue';
+import { login } from './login';
+
 
 let routes: Array<RouteRecordRaw> = [
-];
+  ...login,
+]
 
-// routes = routes.concat((IndexRoutes as Array<Object>));
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 
