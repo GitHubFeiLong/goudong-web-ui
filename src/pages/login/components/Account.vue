@@ -12,6 +12,9 @@
             <span></span>
         </div>
         <a href="" class="forget-password">忘记密码</a>
+        <div id="login-btn">
+            <a href="">登    录</a>
+        </div>
     </div>
     <QuickLogin/>
 </template>
@@ -85,7 +88,7 @@
             label{
                 background-image:url('~@/assets/imgs/pwd-icons-new.png');
             }
-            .username-password(30px);
+            .username-password(33px);
         }
         #password-div{
             // background-color: red;
@@ -96,7 +99,7 @@
                     background-position: -50px 30px;
                 }
             }
-            .username-password(90px);
+            .username-password(93px);
         }
         .forget-password{
             position: absolute;
@@ -115,5 +118,27 @@
             }
         }
         
+        #login-btn {
+            position: absolute;
+            width:306px;
+            height: 33px;
+            background-color: #e4393c;
+            border: 1px solid #e85356;
+            margin: auto;
+            left: 0;
+            bottom:33px;
+            right: 0;
+            a{
+                display: block;
+                width:100%;
+                height:31px;
+                text-align: center;
+                line-height: 31px;
+                color: #fff !important;
+                font-size: 20px;
+                font-family: 'Microsoft YaHei';
+                text-decoration: none;
+            }
+        }
     }
 </style>
