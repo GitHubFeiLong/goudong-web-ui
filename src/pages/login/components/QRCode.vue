@@ -1,10 +1,12 @@
+/* 扫码登录模板 */
 <template>
     <div id="qr-code">
-        <div class="qr-top">
-            <div class="qr-outer">
+        <!-- 鼠标移入@mouseenter 移出@mouseleave -->
+        <div class="qr-top" @mouseenter="qrTopMouseover" @mouseleave="qrTopMouseleave">
+            <div :class="qr_outer">
                 <img src="../../../assets/imgs/qr-code.png" alt="扫码登录二维码" class="qr-inner">
             </div>
-            <img src="../../../assets/imgs/phone-orange.png" alt="手机图片" class="qr-phone">
+            <img src="../../../assets/imgs/phone-orange.png" alt="手机图片" :class="qr_phone" >
         </div>
         <div class="qr-bottom">
             <p class="text-info">打开<a href="">手机京东</a>&nbsp;&nbsp;&nbsp;&nbsp;扫描二维码</p>
@@ -26,63 +28,42 @@
                 </div>
             </div>
         </div>
+        <QuickLogin/>
     </div>
-    <div class="qr-quick-login">
-        <div class="qq-wechat">
-            <div class="qq">
-                <b></b><sapn>QQ</sapn>
-            </div>
-            <i class="cutting-line"></i>
-           <div class="wechat">
-               <b></b><sapn>微信</sapn>
-           </div>
-        </div>
-        <div class="regist">
-            <a href=""><b></b><span>立即注册</span></a>
-        </div>
-    </div>
+    
 </template>
 
 <script>
-    import {defineComponent} from 'vue'
+    import {defineComponent, reactive} from 'vue'
+    import QuickLogin from './QuickLogin';
     export default defineComponent({
-
+        name:'QRCode',
+        components:{
+             QuickLogin 
+        },
+        data(){
+            return {
+                qr_phone: 'qr-phone',
+                qr_outer:'qr-outer',
+            }
+        },
+        methods:{
+            qrTopMouseover(){
+                this.qr_phone = 'qr-phone';
+                this.qr_outer = 'qr-outer';
+            },
+            qrTopMouseleave(){
+                this.qr_phone = 'qr-phone-leave';
+                this.qr_outer = 'qr-outer qr-outer-leave';
+            }
+        }
     });
 </script>
 
 <style lang="less" scoped>
-    .QQWechat(@url,@span-width, @left){
-        width:50%;
-        height:18px;
-        position: relative;
-        margin:auto;
-        &:hover{
-            cursor: pointer;
-            color:#E4393C;
-            text-decoration:underline;
-        }
-        b{
-            width:19px;
-            height:18px;
-            display: inline-block;
-            position: absolute;
-            margin: auto;
-            top: 0;
-            bottom: 0;
-            background-image:@url
-        }
-        sapn{
-            display: inline-block;
-            position: absolute;
-            width: @span-width;
-            height: 14px;
-            margin: auto;
-            left: @left;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
-    }
+    // 二维码鼠标移入移出动画过度时长
+    @qr-top-time:0.4s;
+    
 
     #qr-code{
         width:100%;
@@ -104,6 +85,7 @@
                 margin-left: 20px;
                 border: 1px solid #f4f4f4;
                 display: inline-block;
+                transition: margin-left 0.4s;
                 .qr-inner{
                     width: 147px;
                     height:147px;
@@ -116,12 +98,23 @@
                     bottom: 0;
                 }
             }
+            .qr-outer-leave{
+                margin-left: 87px;
+                transition: margin-left @qr-top-time;
+            }
             .qr-phone{
                 width:141px;
                 height:168px;
                 display: inline-block;
                 position: absolute;
                 right: -4px;
+                transition: opacity @qr-top-time,display @qr-top-time;
+                opacity: 1;
+            }
+            .qr-phone-leave{
+                width:0px;
+                transition: opacity @qr-top-time,display @qr-top-time;
+                opacity: 0;
             }
         }
         .qr-bottom{
@@ -184,59 +177,5 @@
             
         }
     }
-    .qr-quick-login{
-        height:51px;
-        display: flex;
-        justify-content:space-between;
-        .qq-wechat{
-            width: 155px;
-            height: 51px;
-            padding-left: 20px;
-            padding-right: 20px;
-            display: flex;
-            justify-content: space-between;
-            color:#666;
-            font-size: 12px;
-            position: relative;
-            .qq{
-                width:50%;
-                position: relative;
-                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 18px, 15px);
-            }
-            .wechat{
-                padding-left: 10px;
-                .QQWechat(url('~@/assets/imgs/QQ-weixin_02.png'), 25px, 35px);
-            }
-            .cutting-line{
-                display: inline-block;
-                width: 1px;
-                height: 12px;
-                background-color: #d4d4d4;
-                position: absolute;
-                margin: auto;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
-        }
-        .regist{
-            width:118px;
-            height: 51px;
-            position: relative;
-            padding: 17px 20px 20px 20px;
-            b{
-                width: 18px;
-                height: 18px;
-                background-image: url('~@/assets/imgs/regist.png');
-                display: inline-block;
-            }
-            span{
-                display: inline-block;
-                position: absolute;
-                left: 41px;
-                color: #b61d1d !important;
-            }
-        }
-    }
+    
 </style>    

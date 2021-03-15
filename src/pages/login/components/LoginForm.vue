@@ -1,3 +1,4 @@
+/* 登录方式块 */
 <template>
     <div id="login-form">
         <Hint :hint="hint"/>
@@ -15,7 +16,7 @@
     export default {
         components:{
             Hint,
-            QRCode
+            QRCode,
         },
         data () {
             return {
@@ -53,7 +54,7 @@
     }
     #login-form{
         width:346px;
-        height:437.89px;
+        // height:437.89px;
         background-color:#fff;
         position: absolute;
         right: 0;
