@@ -3,13 +3,13 @@
     <div id="account">
         <div id="username-div">
             <label for="username" class="label-username"></label>
-            <input type="text" id="username" name="username" placeholder="邮箱/用户名/登录手机">
-            <span></span>
+            <input v-model='username' type="text" id="username" name="username" placeholder="邮箱/用户名/登录手机">
+            <span v-show='username.length>0' @click='cleanUsername'></span>
         </div>
         <div id="password-div">
             <label for="password"></label>
-            <input type="text" id="password" name="password" placeholder="密码">
-            <span></span>
+            <input v-model='password' type="password" id="password" name="password" placeholder="密码">
+            <span v-show='password.length>0' @click='cleanPassword'></span>
         </div>
         <a href="" class="forget-password">忘记密码</a>
         <div id="login-btn">
@@ -20,16 +20,37 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent } from 'vue'
+    import { defineComponent, ref, watch } from 'vue'
     import QuickLogin from './QuickLogin.vue'
     export default defineComponent ({
         components:{
             QuickLogin
+        },
+        setup(){
+            let username = ref('');
+            let password = ref('');
+
+            function cleanUsername () {
+                username.value='';
+            }
+            function cleanPassword () {
+                password.value='';
+            }
+            return {
+                username,
+                password,
+                cleanUsername,
+                cleanPassword,
+            }
         }
     })
 </script>
 
 <style lang='less' scoped>
+    /* 密码框去掉可见样式（眼睛） */
+    input[type="password"]::-ms-reveal{
+        display:none;
+    }
     /* 
         输入框：用户名和密码的公共样式
         @margin-top 向上偏移量
@@ -60,7 +81,6 @@
             }
         }
         span{
-            display: none;
             width:14px;
             height:14px;
             margin: auto;
@@ -72,7 +92,7 @@
             background-position: -26px 30px;
             &:hover{
                 cursor: pointer;
-                background-position: -50px 30px;
+                background-position: -51px 30px;
             }
         }
     }
@@ -94,8 +114,8 @@
             // background-color: red;
             label{
                 background-image:url('~@/assets/imgs/pwd-icons-new.png');
-                background-position: -47px 0px;
-                &:checked{
+                background-position: -48px 0px;
+                &:focus{
                     background-position: -50px 30px;
                 }
             }

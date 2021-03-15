@@ -4,9 +4,9 @@
         <!-- 鼠标移入@mouseenter 移出@mouseleave -->
         <div class="qr-top" @mouseenter="qrTopMouseover" @mouseleave="qrTopMouseleave">
             <div :class="qr_outer">
-                <img src="../../../assets/imgs/qr-code.png" alt="扫码登录二维码" class="qr-inner">
+                <img src="@/assets/imgs/qr-code.png" alt="扫码登录二维码" class="qr-inner">
             </div>
-            <img src="../../../assets/imgs/phone-orange.png" alt="手机图片" :class="qr_phone" >
+            <img src="@/assets/imgs/phone-orange.png" alt="手机图片" :class="qr_phone" >
         </div>
         <div class="qr-bottom">
             <p class="text-info">打开<a href="">手机京东</a>&nbsp;&nbsp;&nbsp;&nbsp;扫描二维码</p>
@@ -63,8 +63,6 @@
 <style lang="less" scoped>
     // 二维码鼠标移入移出动画过度时长
     @qr-top-time:0.4s;
-    
-
     #qr-code{
         width:100%;
         height: 293px;

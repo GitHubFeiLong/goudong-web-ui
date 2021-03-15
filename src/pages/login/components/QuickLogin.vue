@@ -2,7 +2,7 @@
 <template>
     <div class="qr-quick-login">
         <div class="qq-wechat">
-            <div class="qq">
+            <div class="qq" @click='qq'>
                 <b></b>
                 <sapn class="span">QQ</sapn>
             </div>
@@ -24,6 +24,14 @@
     import {defineComponent} from 'vue';
     export default defineComponent ({
         name:'QuickLogin',
+        setup(){
+            function qq () {
+                var A=window.open("http://www.goudong.shop/oauth/qq/login","TencentLogin","width=500,height=650,menubar=0,scrollbars=1,resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+            }
+            return {
+                qq
+            }
+        }
     })
 </script>
 

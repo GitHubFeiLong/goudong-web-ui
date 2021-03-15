@@ -76,6 +76,10 @@
             .account-method{
                 .method()
             }
+            .router-link-active{
+                color:#e4393c !important;
+                font-weight: 700;
+            }
         }
     }
 </style>
