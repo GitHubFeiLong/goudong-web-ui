@@ -66,6 +66,7 @@
             right: 0;
             top: 0;
             bottom: 0;
+            line-height: 14px;
         }
         &:hover{
             cursor: pointer;
@@ -81,6 +82,8 @@
         height:51px;
         display: flex;
         justify-content:space-between;
+        background-color: #fcfcfc;
+        border-top: 1px solid #f4f4f4;
         .qq-wechat{
             width: 155px;
             height: 51px;

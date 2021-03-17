@@ -1,3 +1,4 @@
+const path = require("path");
 module.exports = {
     // 关闭ESlint
     lintOnSave: false,
@@ -12,5 +13,13 @@ module.exports = {
           // 模板文件
           template: 'src/pages/index/index.html',        
         },    
-      }
+    },
+    // pluginOptions: {
+    //     "style-resources-loader": {
+    //         preProcessor: "less",
+    //         patterns: [
+    //             path.resolve(__dirname, "./src/assets/index.less")
+    //         ]
+    //      }
+    //  }
 }

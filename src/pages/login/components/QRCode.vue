@@ -3,7 +3,8 @@
     <div id="qr-code">
         <!-- 鼠标移入@mouseenter 移出@mouseleave -->
         <div class="qr-top" @mouseenter="qrTopMouseover" @mouseleave="qrTopMouseleave">
-            <div :class="qr_outer">
+            <div :class="qr_outer" class='const-out'>
+                <div id="qr-timeout" v-show="showQR"></div>
                 <img src="@/assets/imgs/qr-code.png" alt="扫码登录二维码" class="qr-inner">
             </div>
             <img src="@/assets/imgs/phone-orange.png" alt="手机图片" :class="qr_phone" >
@@ -33,30 +34,61 @@
     
 </template>
 
-<script>
-    import {defineComponent, reactive} from 'vue'
-    import QuickLogin from './QuickLogin';
+<script lang="ts">
+    import {defineComponent, ref, onMounted, watch} from 'vue'
+    import QuickLogin from './QuickLogin.vue';
     export default defineComponent({
         name:'QRCode',
         components:{
              QuickLogin 
         },
-        data(){
+        setup(){
+            // class 值
+            let qr_phone = ref('qr-phone');
+            let qr_outer = ref('qr-outer');
+            // 显示超时二维码蒙版
+            let showQR = ref(false);
+            // 鼠标移入事件触发回调函数
+            const qrTopMouseover = () =>{
+                if (showQR.value) {
+                    return;
+                }
+                qr_phone.value = 'qr-phone';
+                qr_outer.value = 'qr-outer';
+            }
+            // 鼠标移出事件触发回调函数
+            const qrTopMouseleave = () =>{
+                if (showQR.value) {
+                    return;
+                }
+                qr_phone.value = 'qr-phone-leave';
+                qr_outer.value = 'qr-outer qr-outer-leave';
+            }
+
+            // 二维码时间过期，样式回归初始值
+            const qrTimeout = () => {
+                setInterval(()=>{
+                    showQR.value = !showQR.value;
+                }, 3000)
+            }
+
+            // 生命周期函数
+            onMounted(()=>{
+                qrTimeout();
+                console.log('3.0中的onMounted')
+            })
+            watch(showQR, (showQR, prevShowQR) => {
+                console.log(showQR, prevShowQR);
+            })
             return {
-                qr_phone: 'qr-phone',
-                qr_outer:'qr-outer',
+                qr_phone,
+                qr_outer,
+                showQR,
+                qrTopMouseover,
+                qrTopMouseleave,
+                qrTimeout
             }
         },
-        methods:{
-            qrTopMouseover(){
-                this.qr_phone = 'qr-phone';
-                this.qr_outer = 'qr-outer';
-            },
-            qrTopMouseleave(){
-                this.qr_phone = 'qr-phone-leave';
-                this.qr_outer = 'qr-outer qr-outer-leave';
-            }
-        }
     });
 </script>
 
@@ -75,7 +107,7 @@
             height:190px;
             background-color: #fff;
             position: relative;
-            padding-top: 28px;
+            padding-top: 20px;
             .qr-outer{
                 width:171px;
                 height:163px;
@@ -116,11 +148,10 @@
             }
         }
         .qr-bottom{
-            height: 100px;
+            height: 93px;
             width:100%;
             position: relative;
             background-color: #fff;
-            padding-top:13px;
             .text-info{
                 display: inline-block;
                 width: 100%;
@@ -176,4 +207,13 @@
         }
     }
     
+    #qr-timeout{
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 21;
+        position: absolute;
+        opacity: 0.6;
+    }
+
 </style>    
