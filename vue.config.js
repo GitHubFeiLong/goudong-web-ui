@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require('webpack')
 module.exports = {
     // 关闭ESlint
     lintOnSave: false,
@@ -14,6 +15,15 @@ module.exports = {
           template: 'src/pages/index/index.html',        
         },    
     },
+    configureWebpack: {
+         plugins: [
+            new webpack.ProvidePlugin({
+              $:"jquery",
+              jQuery:"jquery",
+              "windows.jQuery":"jquery"
+            })
+          ]
+      },
     // pluginOptions: {
     //     "style-resources-loader": {
     //         preProcessor: "less",

@@ -3,12 +3,12 @@
     <div id="account">
         <div id="username-div">
             <label for="username" class="label-username"></label>
-            <input v-model='username' type="text" id="username" name="username" placeholder="邮箱/用户名/登录手机">
+            <input @focus="usernameFocus($event)" @blur="usernameBlur" v-model='username' type="text" id="username" name="username" placeholder="邮箱/用户名/登录手机">
             <span v-show='username.length>0' @click='cleanUsername'></span>
         </div>
         <div id="password-div">
             <label for="password"></label>
-            <input v-model='password' type="password" id="password" name="password" placeholder="密码">
+            <input @focus="passwordFocus($event)" @blur="passwordBlur($event)" v-model='password' type="password" id="password" name="password" placeholder="密码">
             <span v-show='password.length>0' @click='cleanPassword'></span>
         </div>
         <a href="" class="forget-password">忘记密码</a>
@@ -20,7 +20,9 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent, ref, watch } from 'vue'
+    import { defineComponent, ref, watch } from 'vue';
+    // 申明jquery
+    declare var $: (selector: string) => any;
     import QuickLogin from './QuickLogin.vue'
     export default defineComponent ({
         components:{
@@ -38,13 +40,58 @@
             function cleanPassword () {
                 password.value='';
             }
+            // 用户名输入框得到焦点
+            function usernameFocus (e:any) {
+                // e.target 是你当前点击的元素
+                // e.currentTarget 是你绑定事件的元素
+        
+                // 获得点击元素的前一个元素
+                // e.currentTarget.previousElementSibling.innerHTML
+        
+                // 获得点击元素的第一个子元素
+                // e.currentTarget.firstElementChild
+        
+                // 获得点击元素的下一个元素
+                // e.currentTarget.nextElementSibling
+        
+                // 获得点击元素中id为string的元素
+                // e.currentTarget.getElementById("string")
+        
+                // 获得点击元素的string属性
+                // e.currentTarget.getAttributeNode('string')
+        
+                // 获得点击元素的父级元素
+                // e.currentTarget.parentElement
+        
+                // 获得点击元素的前一个元素的第一个子元素的HTML值
+                // e.currentTarget.previousElementSibling.firstElementChild.innerHTML
+                $(e.currentTarget.previousElementSibling).css('background-position', '0px -48px');
+                console.log();
+            }
+            // 用户名输入框失去焦点事件
+            function usernameBlur (e:any) {
+                $(e.currentTarget.previousElementSibling).css('background-position', '0px 0px');
+            }
+            // 密码框得到焦点
+            function passwordFocus (e:any) {
+                $(e.currentTarget.previousElementSibling).css('background-position', '-48px -48px');
+            }
+            // 密码框失去焦点
+            function passwordBlur (e:any) {
+                $(e.currentTarget.previousElementSibling).css('background-position', '-48px 0px');
+            }
             return {
                 username,
                 password,
                 cleanUsername,
                 cleanPassword,
+                usernameFocus,
+                usernameBlur,
+                passwordFocus,
+                passwordBlur
             }
-        }
+        },
+        
     })
 </script>
 
@@ -65,6 +112,7 @@
         left: 0;
         right: 0;
         border: 1px solid #bdbdbd;
+         
         label{
             width:39px;
             height:100%;
@@ -117,10 +165,8 @@
             label{
                 background-image:url('~@/assets/imgs/pwd-icons-new.png');
                 background-position: -48px 0px;
-                &:focus{
-                    background-position: -50px 30px;
-                }
             }
+           
             .username-password(93px);
         }
         .forget-password{

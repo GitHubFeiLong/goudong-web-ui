@@ -28,7 +28,7 @@
             width:@main-width;
             height:100%;
             margin: auto;
-            background-image: url("~@/assets/imgs/login-bg.png");
+            background-image: url("~@/assets/imgs/login-bg1.png");
             position: relative;
         }
     }  
