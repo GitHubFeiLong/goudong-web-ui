@@ -78,7 +78,6 @@
         
     }
     .qr-quick-login{
-        background-color:#fff;
         height:51px;
         display: flex;
         justify-content:space-between;

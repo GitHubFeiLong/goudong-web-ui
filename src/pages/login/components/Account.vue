@@ -30,9 +30,11 @@
             let username = ref('');
             let password = ref('');
 
+            // 清除用户名
             function cleanUsername () {
                 username.value='';
             }
+            // 清除密码
             function cleanPassword () {
                 password.value='';
             }
