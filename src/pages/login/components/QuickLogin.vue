@@ -7,10 +7,10 @@
                 <sapn class="span">QQ</sapn>
             </div>
             <i class="cutting-line"></i>
-           <div class="wechat" @click='wechat'>
-               <b></b>
-               <sapn class="span">微信</sapn>
-           </div>
+            <div class="wechat" @click='wechat'>
+                <b></b>
+                <sapn class="span">微信</sapn>
+            </div>
         </div>
         <div class="regist">
             <div class="regist-inner" @click="regist">
@@ -82,7 +82,7 @@
             .span{
                 text-decoration: underline;
             }
-         }
+        }
         
     }
     .qr-quick-login{

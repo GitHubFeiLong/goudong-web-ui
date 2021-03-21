@@ -17,7 +17,7 @@
 </script>
 
 <style lang="less" scoped>
-    @import url('~@/assets/index.less');
+    @import url('~@/assets/less/indexVariable.less');
     #body{
         height: 475px;
         width: 100%;

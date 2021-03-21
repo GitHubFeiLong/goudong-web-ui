@@ -45,6 +45,8 @@
 </script>
 
 <style lang="less" scoped>
+    @import url('~@/assets/less/indexVariable.less');
+
     @font-color:#999;
     #header{
         height: 119px;
@@ -55,7 +57,7 @@
             display: flex;
 
             .center {
-                width:990px;
+                width: @main-width;
                 height:100%;
                 margin: auto;
                 display: flex;

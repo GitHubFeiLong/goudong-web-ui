@@ -22,12 +22,12 @@ module.exports = {
             // 提取出来的通用 chunk 和 vendor chunk。
             // chunks: ['chunk-vendors', 'chunk-common', 'index']
         }, 
-        // regist: {          
-        //   entry: 'src/pages/regist/main.ts',          
-        //   template: 'src/pages/regist/regist.html',
-        //   filename: 'regist.html',
-        //   title:'注册页'        
-        // },     
+        regist: {          
+          entry: 'src/pages/regist/registMain.ts',          
+          template: 'src/pages/regist/regist.html',
+          filename: 'regist.html',
+          title:'Regist Page',  
+        },     
         index: {        
           // page 的入口文件  
           entry: 'src/pages/index/main.ts',          

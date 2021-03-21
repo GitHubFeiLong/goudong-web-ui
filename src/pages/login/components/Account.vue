@@ -122,7 +122,6 @@
         left: 0;
         right: 0;
         border: 1px solid #bdbdbd;
-         
         label{
             width:39px;
             height:100%;
@@ -176,7 +175,6 @@
                 background-image:url('~@/assets/imgs/pwd-icons-new.png');
                 background-position: -48px 0px;
             }
-           
             .username-password(93px);
         }
         .forget-password{

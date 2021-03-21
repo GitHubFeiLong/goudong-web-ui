@@ -44,7 +44,7 @@
     export default defineComponent({
         name:'QRCode',
         components:{
-             QuickLogin 
+            QuickLogin 
         },
         setup(){
             // class 值
