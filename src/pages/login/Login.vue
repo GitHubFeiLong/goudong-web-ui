@@ -6,18 +6,28 @@
     </div>
 </template>
 
-<script>
-    import Header from './components/Header';
-    import Body from './components/Body';
-    import Footer from './components/Footer';
+<script lang='ts'>
+    import {defineComponent, onMounted} from 'vue';
 
-    export default {
+     // 引入工具ts
+    import * as NotDone from '../../utils/notDone'
+
+    import Header from './components/Header.vue';
+    import Body from './components/Body.vue';
+    import Footer from './components/Footer.vue';
+
+    export default defineComponent ({
         components:{
             Header,
             Body,
             Footer,
+        },
+        setup () {
+            onMounted (() => {
+                (window as any)['notDone'] = (NotDone as any).notDone;
+            }) 
         }
-    }
+    })
 </script>
 
 <style>

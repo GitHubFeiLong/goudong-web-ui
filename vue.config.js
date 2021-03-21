@@ -10,7 +10,7 @@ module.exports = {
     pages: {//配置多页面入口        
         login: {          
             // page 的入口
-            entry: 'src/pages/login/main.ts',          
+            entry: 'src/pages/login/loginMain.ts',          
             // 模板来源
             template: 'src/pages/login/login.html',
             // 在 dist/index.html 的输出
@@ -43,7 +43,11 @@ module.exports = {
               jQuery:"jquery",
               "windows.jQuery":"jquery"
             })
-          ]
+         ],
+        resolve: {
+            extensions: ['.js', '.ts', '.vue', '.json']
+        }
       },
+      
     
 }

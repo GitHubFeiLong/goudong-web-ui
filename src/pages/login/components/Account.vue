@@ -24,8 +24,6 @@
     // 申明jquery
     declare var $: (selector: string) => any;
     import QuickLogin from './QuickLogin.vue'
-    // 引入工具ts
-    import * as NotDone from '/src/utils/notDone.ts'
     export default defineComponent ({
         components:{
             QuickLogin
@@ -84,11 +82,11 @@
             }
             // 登录
             function login () {
-                (NotDone as any).notDone()
+                (window as any).notDone()
             }
             // 忘记密码
             function forgetPassword () {
-                (NotDone as any).notDone()
+                (window as any).notDone()
             }
             return {
                 username,

@@ -25,9 +25,6 @@
     // 引入子组件
     import Hint from './Hint.vue';
 
-    // 引入工具ts
-    import * as NotDone from '/src/utils/notDone.ts'  // 使用 Tools.*
-
     // 暴露出去一个定义好的组件
     export default defineComponent({
         components:{
@@ -35,9 +32,9 @@
         },
         setup () {
             let hint = ref(` 依据《网络安全法》，为保障您的账户安全和正常使用，请尽快完成手机号验证！ 新版
-            <a href='javascript::' onClick='notDone()'>《京东隐私政策》</a>已上线，将更有利于保护您的个人隐私。`);
+            <a href='javascript:' onClick='notDone()'>《京东隐私政策》</a>已上线，将更有利于保护您的个人隐私。`);
             function notDone(){
-                (NotDone as any).notDone();
+                (window as any).notDone()
             }
             return {
                 hint,

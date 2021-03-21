@@ -22,8 +22,6 @@
 
 <script lang="ts">
     import {defineComponent} from 'vue';
-    // 引入工具ts
-    import * as NotDone from '/src/utils/notDone.ts'
     export default defineComponent ({
         name:'QuickLogin',
         setup(){
@@ -31,10 +29,10 @@
                 var A=window.open("http://www.goudong.shop/oauth/qq/login","TencentLogin","width=500,height=650,menubar=0,scrollbars=1,resizable=1,status=1,titlebar=0,toolbar=0,location=1");
             }
             function wechat () {
-                (NotDone as any).notDone()
+                (window as any).notDone()
             }
             function regist () {
-                (NotDone as any).notDone()
+                (window as any).notDone()
             }
             return {
                 qq,
