@@ -11,9 +11,9 @@
             <input @focus="passwordFocus($event)" @blur="passwordBlur($event)" v-model='password' type="password" id="password" name="password" placeholder="密码">
             <span v-show='password.length>0' @click='cleanPassword'></span>
         </div>
-        <a href="" class="forget-password">忘记密码</a>
+        <a href="" class="forget-password" @click.prevent="forgetPassword">忘记密码</a>
         <div id="login-btn">
-            <a href="">登    录</a>
+            <a href="" @click.prevent="login">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
         </div>
     </div>
     <QuickLogin/>
@@ -24,6 +24,8 @@
     // 申明jquery
     declare var $: (selector: string) => any;
     import QuickLogin from './QuickLogin.vue'
+    // 引入工具ts
+    import * as NotDone from '/src/utils/notDone.ts'
     export default defineComponent ({
         components:{
             QuickLogin
@@ -80,6 +82,14 @@
             function passwordBlur (e:any) {
                 $(e.currentTarget.previousElementSibling).css('background-position', '-48px 0px');
             }
+            // 登录
+            function login () {
+                (NotDone as any).notDone()
+            }
+            // 忘记密码
+            function forgetPassword () {
+                (NotDone as any).notDone()
+            }
             return {
                 username,
                 password,
@@ -88,7 +98,9 @@
                 usernameFocus,
                 usernameBlur,
                 passwordFocus,
-                passwordBlur
+                passwordBlur,
+                login,
+                forgetPassword
             }
         },
         

@@ -3,8 +3,8 @@
     <div id="login-form">
         <Hint :hint="hint"/>
         <div id="login-methods">
-            <router-link class="qr-code-method" to="/ui/login/QRCode"> <div class="middle-wire">扫码登录</div> </router-link>
-            <router-link class="account-method" to="/ui/login/Account"><div>账户登录</div></router-link>
+            <router-link class="qr-code-method" to="/QRCode"> <div class="middle-wire">扫码登录</div> </router-link>
+            <router-link class="account-method" to="/Account"><div>账户登录</div></router-link>
         </div>
         <router-view></router-view>
     </div>
@@ -12,11 +12,9 @@
 
 <script>
     import Hint from './Hint';
-    import QRCode from './QRCode';
     export default {
         components:{
             Hint,
-            QRCode,
         },
         data () {
             return {

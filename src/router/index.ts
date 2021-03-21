@@ -3,7 +3,7 @@ import { login } from './login';
 
 
 let routes: Array<RouteRecordRaw> = [
-  ...login,
+  // ...login,
 ]
 
 const router = createRouter({

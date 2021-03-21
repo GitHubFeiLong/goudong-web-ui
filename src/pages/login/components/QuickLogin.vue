@@ -7,13 +7,13 @@
                 <sapn class="span">QQ</sapn>
             </div>
             <i class="cutting-line"></i>
-           <div class="wechat">
+           <div class="wechat" @click='wechat'>
                <b></b>
                <sapn class="span">微信</sapn>
            </div>
         </div>
         <div class="regist">
-            <div class="regist-inner">
+            <div class="regist-inner" @click="regist">
                 <b></b><span class="span">立即注册</span>
             </div>
         </div>
@@ -22,14 +22,24 @@
 
 <script lang="ts">
     import {defineComponent} from 'vue';
+    // 引入工具ts
+    import * as NotDone from '/src/utils/notDone.ts'
     export default defineComponent ({
         name:'QuickLogin',
         setup(){
             function qq () {
                 var A=window.open("http://www.goudong.shop/oauth/qq/login","TencentLogin","width=500,height=650,menubar=0,scrollbars=1,resizable=1,status=1,titlebar=0,toolbar=0,location=1");
             }
+            function wechat () {
+                (NotDone as any).notDone()
+            }
+            function regist () {
+                (NotDone as any).notDone()
+            }
             return {
-                qq
+                qq,
+                wechat,
+                regist
             }
         }
     })
@@ -96,7 +106,7 @@
             .qq{
                 width:50%;
                 position: relative;
-                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 18px, 15px);
+                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 25px, 15px);
             }
             .wechat{
                 padding-left: 10px;

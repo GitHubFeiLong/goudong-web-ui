@@ -40,6 +40,7 @@
 <script lang="ts">
     import {defineComponent, ref, onMounted, watch} from 'vue'
     import QuickLogin from './QuickLogin.vue';
+    
     export default defineComponent({
         name:'QRCode',
         components:{

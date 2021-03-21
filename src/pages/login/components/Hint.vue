@@ -3,18 +3,35 @@
     <div class="row" id="header-hint"> 
         <p class="hint">
             <i class='header-i'></i>
-            <font v-html="hint"></font>
+            <span v-html="hint"></span>
         </p>
     </div>
 </template>
 
-<script>
-    export default {
+<script lang='ts'>
+    import {defineComponent, onMounted} from 'vue';
+    // 引入工具ts
+    import * as NotDone from '/src/utils/notDone.ts'  // 使用 Tools.*;
+    export default defineComponent({
         props:{
             hint:String
+        },
+        setup () {
+            const notDone = () => {
+                (NotDone as any).notDone();
+            };
+            onMounted (() => {
+                window.notDone = notDone;
+            }) 
+           
+            return {
+                notDone,
+            }
         }
-    }
+
+    });
 </script>
+
 <style>
     a{
         color:#333 !important;

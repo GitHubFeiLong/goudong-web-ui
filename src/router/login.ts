@@ -1,31 +1,29 @@
 
 /* login.html 路由  */
-import { createRouter, createWebHistory, RouteRecordRaw, createWebHashHistory } from 'vue-router';
-import Login from '@/pages/login/Login.vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
+import QRCode from "@/pages/login/components/QRCode.vue";
+import Account from "@/pages/login/components/Account.vue";
 export const login = [
     {
-        path:'/login',
-        name:"登录页",
-        children:[
-            {
-                path:'/ui/login/QRCode',
-                name:'QRCode',
-                component: () => import("@/pages/login/components/QRCode.vue"),
-            },
-            {
-                path:'/ui/login/Account',
-                name:'Account',
-                component: () => import("@/pages/login/components/Account.vue"),
-            }
-        ]
+        path:'',
+        redirect:'/QRCode',
     },
+    {
+        path:'/QRCode',
+        name:'QRCode',
+        component: QRCode,
+    },
+    {
+        path:'/Account',
+        name:'Account',
+        component: Account,
+    }
 ];
 
 const router = createRouter({
-    // history: createWebHistory(process.env.BASE_URL),
     history: createWebHashHistory(),
-    login,
-  });
+    routes: login,
+});
   
   export default router;
 
