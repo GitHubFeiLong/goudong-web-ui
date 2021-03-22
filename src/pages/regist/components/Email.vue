@@ -230,7 +230,7 @@
             }
             #email-num-input{
                 width: 230px;
-                height: 48px;
+                height: 50px;
                 border: 0;
                 padding-left: 20px;
                 font-size: 14px;
