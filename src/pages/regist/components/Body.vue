@@ -18,7 +18,7 @@
                 </div>
             </div>
             <Email v-if="isShowEmail" />
-            <SetInfo v-else="isShowEmail" />
+            <SetInfo v-else />
         </div>
     </div>
 </template>
@@ -112,6 +112,9 @@
                     }
                     .finish{
                         background-position: 0px 0px;
+                    }
+                    .finish ~ p{
+                        color: #3b4;
                     }
                     .current{
                         background-position: 0px -200px;

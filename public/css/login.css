@@ -18,3 +18,14 @@ a{
     text-decoration: none;
     color: #333;
 }
+input:focus{
+    outline:none;
+}
+button:focus{
+    outline: none;
+}
+/*  */
+.btn-no-hover{
+    pointer-events:none;
+    background: rgb(244, 245, 246) !important;
+}

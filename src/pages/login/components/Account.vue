@@ -3,12 +3,12 @@
     <div id="account">
         <div id="username-div">
             <label for="username" class="label-username"></label>
-            <input @focus="usernameFocus($event)" @blur="usernameBlur" v-model='username' type="text" id="username" name="username" placeholder="邮箱/用户名/登录手机">
+            <input @focus="usernameFocus($event)" @blur="usernameBlur" v-model='username' type="text" id="username" name="username" placeholder="邮箱/用户名/登录手机" maxlength="20">
             <span v-show='username.length>0' @click='cleanUsername'></span>
         </div>
         <div id="password-div">
             <label for="password"></label>
-            <input @focus="passwordFocus($event)" @blur="passwordBlur($event)" v-model='password' type="password" id="password" name="password" placeholder="密码">
+            <input @focus="passwordFocus($event)" @blur="passwordBlur($event)" v-model='password' type="password" id="password" name="password" placeholder="密码" maxlength="20">
             <span v-show='password.length>0' @click='cleanPassword'></span>
         </div>
         <a href="" class="forget-password" @click.prevent="forgetPassword">忘记密码</a>
@@ -135,9 +135,6 @@
             padding:10px 0 7px 50px;
             border:0;
             position: absolute;
-            &:focus{
-                outline:none;
-            }
         }
         span{
             width:14px;
