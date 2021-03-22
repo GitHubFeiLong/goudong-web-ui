@@ -21,7 +21,7 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent, ref, watch } from 'vue';
+    import { defineComponent, ref, watch,toRefs } from 'vue';
     import Hint from './Hint.vue';
 
     import HintEntity from '../entity/HintEntity';
@@ -30,10 +30,15 @@
     import * as Validate from '@/utils/validate';
     
     export default defineComponent ({
+        props:{
+        },
+        emits:{
+            'hindenEmail':null,
+        },
         components:{
             Hint
         },
-        setup () {
+        setup (props, context) {
             // 提示信息
             let info = '验证完成后，你可以使用该邮箱登录或找回密码';
             let color = '#c5c5c5';
@@ -142,6 +147,7 @@
                     authHint.value.backgroundPosition = '-17px -100px';
                 } else {
                     // 匹配成功,修改样式
+                    context.emit('hindenEmail')
                 }
             }
             // 监视邮箱值
@@ -199,9 +205,10 @@
     })
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
+    @import url('~@/assets/less/registVariable.less');
     #email{
-        width: 400px;
+        width: @inner-main-width;
         height: 246px;
         background: #fff;
         position: relative;
@@ -344,6 +351,9 @@
             color: #fff;
             font-size: 16px;
             font-family: "Microsoft YaHei","Hiragino Sans GB";
+            &:hover{
+                background-color:#c81623;
+            }
         }
     }
 </style>

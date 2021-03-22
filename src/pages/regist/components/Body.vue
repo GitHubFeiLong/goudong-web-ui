@@ -4,12 +4,12 @@
             <div id="body-info">
                 <div class="step step1">
                     <span :class="circleOne">{{stepSpan1Val}}</span>
-                    <p>验证邮箱</p>
+                    <p class='p1-class-success'>验证邮箱</p>
                 </div>
-                <div class="step-line step-line1"></div>
+                <div :class="lineStep1Class"></div>
                 <div class="step step2">
                     <span :class="circleTwo">{{stepSpan2Val}}</span>
-                    <p>填写账号信息</p>
+                    <p :class='p2Class'>填写账号信息</p>
                 </div>
                 <div class="step-line step-line2"></div>
                 <div class="step step3">
@@ -17,8 +17,8 @@
                     <p>注册成功</p>
                 </div>
             </div>
-            <Email v-if="isShowEmail" />
-            <SetInfo v-else />
+            <Email v-if="isShowEmail" @hindenEmail="hindenEmail" />
+            <UserInfo v-else />
         </div>
     </div>
 </template>
@@ -26,14 +26,16 @@
 <script lang='ts'>
     import { defineComponent, ref } from 'vue'
     import Email from './Email.vue';
-    import SetInfo from './SetInfo.vue';
+    import UserInfo from './UserInfo.vue';
 
     export default defineComponent ({
         components:{
             Email,
-            SetInfo
+            UserInfo
         },
         setup () {
+            let p2Class = ref('');
+            let lineStep1Class = ref('step-line step-line1');
             let stepSpan1Val = ref('1');
             let stepSpan2Val = ref('2');
             let stepSpan3Val = ref('3');
@@ -53,14 +55,35 @@
                 finish:false,
                 current:false,    
             });
+            
+            // 邮箱验证成功
+            const hindenEmail = () => {
+                // 第一个步骤
+                stepSpan1Val.value = '';
+                circleOne.value.finish = true;
+                circleOne.value.current = false;
+
+                // 1 2 中间的线
+                lineStep1Class.value += ' step-line-success ';
+                // 第二个步骤
+                p2Class.value = 'p-class-success';
+                circleTwo.value.current = true;
+
+                // 将Email隐藏
+                isShowEmail.value = false;
+                
+            }
             return {
+                p2Class,
+                lineStep1Class,
                 stepSpan1Val,
                 stepSpan2Val,
                 stepSpan3Val,
                 isShowEmail,
                 circleOne,
                 circleTwo,
-                circleThree
+                circleThree,
+                hindenEmail
             }
         }
     })
@@ -110,6 +133,9 @@
                         font-size: 12px;
                         color: #999;
                     }
+                    .p-class-success{
+                        color: #3b4;
+                    }
                     .finish{
                         background-position: 0px 0px;
                     }
@@ -136,6 +162,10 @@
                 }
                 .step-line2{
                     right:50px;
+                }
+                // 执行成功的过度线
+                .step-line-success {
+                    background-position: 0px -130px;
                 }
             }
         }

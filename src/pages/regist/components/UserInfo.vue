@@ -1,5 +1,7 @@
 <template>
-    
+    <div id="userinfo">
+        
+    </div>
 </template>
 
 <script lang='ts'>
@@ -8,5 +10,8 @@
     })
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
+    #userinfo{
+        width:
+    }
 </style>
