@@ -286,6 +286,7 @@
             line-height: 54px;
             font-size: 14px;
             color: #333;
+            margin-top: -15px;
         }
         #email-auth-code{
             width: 398px;
@@ -294,6 +295,7 @@
             font-size: 14px;
             color: #333; 
             position: relative;
+            margin-top: -15px;
             .border{
                 width: 281px;
                 height: 100%;

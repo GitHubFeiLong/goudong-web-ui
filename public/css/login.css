@@ -29,3 +29,8 @@ button:focus{
     pointer-events:none;
     background: rgb(244, 245, 246) !important;
 }
+
+/* 密码框去掉可见样式（眼睛） */
+input[type="password"]::-ms-reveal{
+    display:none;
+}
