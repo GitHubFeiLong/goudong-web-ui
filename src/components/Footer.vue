@@ -61,6 +61,7 @@ export default defineComponent({});
             color: #666 !important;
             &:hover {
                 color: #e4393c !important;
+                text-decoration: underline;
                 cursor: pointer;
             }
         }
