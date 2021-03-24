@@ -14,11 +14,11 @@
                 <div class="step-line step-line2"></div>
                 <div class="step step3">
                     <span :class="circleThree">{{stepSpan3Val}}</span>
-                    <p>注册成功</p>
+                    <p :class='p3Class'>注册成功</p>
                 </div>
             </div>
             <Email v-if="isShowEmail" @hindenEmail="hindenEmail" />
-            <UserInfo v-else />
+            <UserInfo v-else @hindenUserInfo="hindenUserInfo"/>
         </div>
     </div>
 </template>
@@ -35,6 +35,7 @@
         },
         setup () {
             let p2Class = ref('');
+            let p3Class = ref('');
             let lineStep1Class = ref('step-line step-line1');
             let stepSpan1Val = ref('1');
             let stepSpan2Val = ref('2');
@@ -71,10 +72,26 @@
 
                 // 将Email隐藏
                 isShowEmail.value = false;
-                
+            }
+            // 用户名输入成功
+            const hindenUserInfo = () => {
+                // 第二个步骤
+                stepSpan2Val.value = '';
+                circleTwo.value.finish = true;
+                circleTwo.value.current = false;
+
+                // 1 2 中间的线
+                lineStep1Class.value += ' step-line-success ';
+                // 第三个步骤
+                p3Class.value = 'p-class-success';
+                circleThree.value.current = true;
+
+                // 将Email隐藏
+                isShowEmail.value = false;
             }
             return {
                 p2Class,
+                p3Class,
                 lineStep1Class,
                 stepSpan1Val,
                 stepSpan2Val,
@@ -83,7 +100,8 @@
                 circleOne,
                 circleTwo,
                 circleThree,
-                hindenEmail
+                hindenEmail,
+                hindenUserInfo
             }
         }
     })
@@ -92,8 +110,8 @@
 <style lang='less' scoped>
     @import url('~@/assets/less/registVariable.less');
     #body {
-        height:406.16px;
-        margin-top: 85px;
+        height:636px;
+        padding-top: 85px;
         background-color:#fff;
         display: flex;
         justify-content: center;
@@ -101,7 +119,7 @@
             width: @main-width;
             height: 100%;
             display: flex;
-            justify-content: start;
+            justify-content: flex-start;
             flex-direction: column;
             align-items: center;
             #body-info{
@@ -114,17 +132,17 @@
                 // 步骤
                 .step {
                     span {
-                        width:24px;
-                        height:24px;
+                        width:25px;
+                        height:25px;
                         display: block;
                         background: #fff;
-                        line-height: 24px;
+                        line-height: 25px;
                         text-align: center;
                         font-size: 12px;
                         font-weight: 700;
                         color: #ccc;
                         background-image: url('~@/assets/imgs/reg-icon.png');
-                        background-position: -45px -200px;
+                        background-position: -44px -199px;
                         margin:0 auto;
                     }
                     p{
@@ -143,7 +161,7 @@
                         color: #3b4;
                     }
                     .current{
-                        background-position: 0px -200px;
+                        background-position: 1px -199px;
                         color:#fff;
                     }
 

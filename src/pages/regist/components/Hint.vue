@@ -7,13 +7,11 @@
 
 <script lang='ts'>
     import { defineComponent} from 'vue';
-    import HintEntity from '../entity/HintEntity';
-    // 申明jquery
-    declare var $: (selector: string) => any;
+    import * as HintEntity from '@/pojo/HintEntity';
     
     export default defineComponent ({
         props:{
-            hint:HintEntity
+            hint:HintEntity.HintEntity
         },
     })
 </script>

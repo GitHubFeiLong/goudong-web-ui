@@ -1,4 +1,5 @@
-import * as HintConst from '@/const/HintConst';
+import * as HintEntity from '@/pojo/HintEntity';
+
 /**
  * 邮箱验证
  * @param value 待验证的值
@@ -28,15 +29,16 @@ function validateEmail(value:string,callback:any):boolean{
 function validateUsername(value:string, callback:any):boolean{
     // 中文,英文,数字,下划线,中线
     const reg =/^([\u4E00-\u9FA5\uF900-\uFA2Da-zA-Z0-9]+[-_]?){4,20}$/;
-    if(value==''||value==undefined||value==null || value.length < 4 || value.length > 20){
-        callback(new Error(HintConst.USERNAME_HINT_0));
+    if(value==''||value==undefined||value==null){
+        callback(new Error(HintEntity.USERNAME_HINT_0.info));
         return false;
     }
+   
     if (reg.test(value)){
         callback();
         return true;
     }
-    callback(new Error(HintConst.USERNAME_HINT_1));
+    callback(new Error(HintEntity.USERNAME_HINT_1.info));
     return false;
 }
 
@@ -53,24 +55,24 @@ const general = /^(?=[a-zA-Z]*\d)(?=\d*[a-zA-Z])|(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\
     const strong  = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])/
     // 基本条件
     if(value==''||value==undefined||value==null || value.length < 8 || value.length > 20){
-        callback(new Error(HintConst.PASSWORD_HINT_0));
+        callback(new Error(HintEntity.PASSWORD_HINT_0.info));
         return false;
     }
     // 弱密码匹配（弱也可以注册）
     if (/^\d{8,20}$/.test(value) || /^[a-zA-Z]{8,20}$/.test(value) ||  /^[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]{8,20}$/.test(value) ) {
-        callback(new Error(HintConst.PASSWORD_HINT_1));
+        callback(new Error(HintEntity.PASSWORD_HINT_1.info));
         return true;
     }
 
     // 强
     if (strong.test(value)) {
-        callback(new Error(HintConst.PASSWORD_HINT_2));
+        callback(new Error(HintEntity.PASSWORD_HINT_2.info));
         return true;
     }
 
     // 一般
     if (general.test(value)){
-        callback(new Error(HintConst.PASSWORD_HINT_3));
+        callback(new Error(HintEntity.PASSWORD_HINT_3.info));
         return true;
     }
 

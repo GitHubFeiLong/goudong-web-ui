@@ -24,7 +24,7 @@
     import { defineComponent, ref, watch,toRefs } from 'vue';
     import Hint from './Hint.vue';
 
-    import HintEntity from '../entity/HintEntity';
+    import * as HintEntity from '@/pojo/HintEntity';
 
     // 验证
     import * as Validate from '@/utils/validate';
@@ -43,9 +43,9 @@
             let info = '验证完成后，你可以使用该邮箱登录或找回密码';
             let color = '#c5c5c5';
             let backgroundPosition = '0px -100px';
-            let hint = ref(new HintEntity(info, color, backgroundPosition));
+            let hint = ref(HintEntity.EMAIL_HINT_0);
             let getAuthCodeNum = ref(2);
-            let authHint = ref(new HintEntity(`该邮箱还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px'));
+            let authHint = ref(new HintEntity.HintEntity(`该邮箱还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px'));
             // 显示下一步（true）
             let showEmailButton = ref(true)
             let email= ref('');
@@ -93,9 +93,7 @@
             const emailCallback = (e:Error) => {
                 // 不通过
                 if (e) {
-                    hint.value.info = '格式错误';
-                    hint.value.color = '#f91';
-                    hint.value.backgroundPosition = '-17px -100px';
+                    hint.value = HintEntity.EMAIL_HINT_1;
                     console.log(hint)
                 } else {
                     // 通过了验证,修改样式
@@ -126,9 +124,7 @@
                         timer.value = '';
                         btnVal.value = '重新获取';
                         getAuthCodeNum.value --;
-                        authHint.value.info = `该邮箱还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`;
-                        authHint.value.color = '#c5c5c5';
-                        authHint.value.backgroundPosition = '0px -100px';
+                        authHint.value = new HintEntity.HintEntity(`该邮箱还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`,'#c5c5c5','0px -100px');
                     }
                 }, 1000)
             }
@@ -142,9 +138,7 @@
             const clickNextStep = () => {
                 // 匹配错误
                 if (false) {
-                    authHint.value.info = '验证码输入错误,请重新输入';
-                    authHint.value.color = '#f91';
-                    authHint.value.backgroundPosition = '-17px -100px';
+                    authHint.value = HintEntity.EMAIL_CODE_HINT_0;
                 } else {
                     // 匹配成功,修改样式
                     context.emit('hindenEmail')
@@ -320,6 +314,7 @@
                     font-size: 14px;
                     line-height: 52px;
                     float: left;
+                    position: absolute;
                 }
                 &:hover{
                     border: 1px solid #666;
@@ -335,6 +330,8 @@
                 color: #333;
                 padding: 0;
                 float: right;
+                position: absolute;
+                border-radius: 0;
                 cursor: pointer;
                 &:hover{
                     border: 1px solid #666;
