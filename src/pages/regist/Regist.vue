@@ -16,7 +16,6 @@
 <script lang='ts'>
     import {defineComponent, onMounted, ref} from 'vue';
     import Header from '@/components/RegistHeader.vue';
-    // import Header from './components/Header.vue';
     import Body from './components/Body.vue';
     import Footer from '@/components/Footer.vue';
 

@@ -125,6 +125,7 @@
             justify-content: flex-start;
             flex-direction: column;
             align-items: center;
+            border-bottom: solid 1px #e6e6e6;
             #body-info{
                 width:400px;
                 height:55px;

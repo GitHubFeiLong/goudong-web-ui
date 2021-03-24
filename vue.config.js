@@ -27,7 +27,13 @@ module.exports = {
           template: 'src/pages/regist/regist.html',
           filename: 'regist.html',
           title:'Regist Page',  
-        },     
+        }, 
+        forgotPwd: {          
+          entry: 'src/pages/forgotPwd/forgotPwdMain.ts',          
+          template: 'src/pages/forgotPwd/forgotPwd.html',
+          filename: 'forgotPwd.html',
+          title:'forgot password',  
+        },    
         index: {        
           // page 的入口文件  
           entry: 'src/pages/index/main.ts',          
