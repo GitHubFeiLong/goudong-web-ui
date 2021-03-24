@@ -18,7 +18,7 @@
                 </div>
             </div>
             <Email v-if="isShowEmail" @hindenEmail="hindenEmail" />
-            <UserInfo v-else @hindenUserInfo="hindenUserInfo"/>
+            <UserInfo v-else-if="isShowUserInfo" @hindenUserInfo="hindenUserInfo"/>
         </div>
     </div>
 </template>
@@ -41,6 +41,7 @@
             let stepSpan2Val = ref('2');
             let stepSpan3Val = ref('3');
             let isShowEmail = ref(true);
+            let isShowUserInfo = ref(true);
             // 第一个
             let circleOne = ref({
                 finish:false,
@@ -72,6 +73,7 @@
 
                 // 将Email隐藏
                 isShowEmail.value = false;
+                isShowUserInfo.value = true;
             }
             // 用户名输入成功
             const hindenUserInfo = () => {
@@ -87,7 +89,7 @@
                 circleThree.value.current = true;
 
                 // 将Email隐藏
-                isShowEmail.value = false;
+                isShowUserInfo.value = false;
             }
             return {
                 p2Class,
@@ -97,6 +99,7 @@
                 stepSpan2Val,
                 stepSpan3Val,
                 isShowEmail,
+                isShowUserInfo,
                 circleOne,
                 circleTwo,
                 circleThree,

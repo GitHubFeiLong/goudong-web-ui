@@ -5,7 +5,7 @@
             <div class="header-info">欢迎注册</div>
             <div class="go-login">
                 已有账号？
-                <a href="">请登录></a>
+                <a href="/login">请登录></a>
             </div>
         </div>
     </div>

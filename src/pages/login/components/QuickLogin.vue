@@ -32,7 +32,7 @@
                 (window as any).notDone()
             }
             function regist () {
-                (window as any).notDone()
+                window.location.href = '/regist'
             }
             return {
                 qq,
