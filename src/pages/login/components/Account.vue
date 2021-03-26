@@ -86,7 +86,7 @@
             }
             // 忘记密码
             function forgetPassword () {
-                (window as any).notDone()
+                window.location.href = '/forgotPwd'
             }
             return {
                 username,
