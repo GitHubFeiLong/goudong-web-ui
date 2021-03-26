@@ -1,13 +1,22 @@
 <template>
     <Menu/>
+    <Header :title='HeaderTitle'/>
 </template>
 
 <script lang='ts'>
-    import { defineComponent } from 'vue'
+    import { defineComponent, ref} from 'vue'
     import Menu from '@/components/Menu.vue'
+    import Header from '@/components/RegistHeader.vue'
     export default defineComponent ({
         components:{
-            Menu
+            Menu,
+            Header
+        },
+        setup(){
+            let HeaderTitle = ref('找回密码');
+            return {
+                HeaderTitle
+            }
         }
     })
 </script>

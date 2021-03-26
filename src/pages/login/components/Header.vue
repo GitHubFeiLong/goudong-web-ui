@@ -45,7 +45,7 @@
 </script>
 
 <style lang="less" scoped>
-    @import url('~@/assets/less/indexVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
 
     @font-color:#999;
     #header{
@@ -57,7 +57,7 @@
             display: flex;
 
             .center {
-                width: @main-width;
+                width: @login-main-width;
                 height:100%;
                 margin: auto;
                 display: flex;

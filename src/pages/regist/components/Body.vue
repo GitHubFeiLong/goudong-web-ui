@@ -111,7 +111,7 @@
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/less/registVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
     #body {
         height:636px;
         padding-top: 85px;
@@ -119,7 +119,7 @@
         display: flex;
         justify-content: center;
         #body-main{
-            width: @main-width;
+            width: @regist-main-width;
             height: 100%;
             display: flex;
             justify-content: flex-start;

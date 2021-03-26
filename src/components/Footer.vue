@@ -40,7 +40,7 @@ export default defineComponent({});
 </script>
 
 <style lang="less" scoped>
-    @import url('~@/assets/less/indexVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
     #fotter {
         height: 86px;
         width: 100%;
@@ -48,7 +48,7 @@ export default defineComponent({});
         flex-direction: column;
         align-items: center;
         div {
-            width: @main-width;
+            width: @login-main-width;
             height: 18px;
             line-height: 18px;
             font: 12px/150% Arial, Verdana, "\5b8b\4f53";

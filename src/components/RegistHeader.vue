@@ -27,7 +27,7 @@
 </script>
 
 <style lang='less'>
-    @import url('~@/assets/less/registVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
     #header {
         height:110px;
         background-color:#fff;
@@ -35,7 +35,7 @@
         justify-content: center;
         background: url('~@/assets/imgs/headbg.jpg') repeat-x left bottom;
         #header-main{
-            width: @main-width;
+            width: @regist-main-width;
             height: 100%;
             .big-logo{
                 width: 160px;

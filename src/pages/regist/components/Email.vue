@@ -200,9 +200,9 @@
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/less/registVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
     #email{
-        width: @inner-main-width;
+        width: @regist-inner-main-width;
         height: 246px;
         background: #fff;
         position: relative;

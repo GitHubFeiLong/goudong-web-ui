@@ -17,7 +17,7 @@
 </script>
 
 <style lang="less" scoped>
-    @import url('~@/assets/less/indexVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
     #body{
         height: 475px;
         width: 100%;
@@ -25,7 +25,7 @@
         display: flex;
         #body-main{
             // width:990px;
-            width:@main-width;
+            width:@login-main-width;
             height:100%;
             margin: auto;
             background-image: url("~@/assets/imgs/login-bg1.png");

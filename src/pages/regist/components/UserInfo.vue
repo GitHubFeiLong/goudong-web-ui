@@ -241,9 +241,9 @@
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/less/registVariable.less');
+    @import url('~@/assets/less/globalVariable.less');
     #userinfo{
-        width: @inner-main-width;
+        width: @regist-inner-main-width;
         height: 344px;
         display: flex;
         justify-content: space-around;

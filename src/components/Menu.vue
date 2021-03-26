@@ -78,7 +78,7 @@
         display: flex;
         justify-content: center;
         #menu-main {
-            width: 1210px;
+            width: @regist-main-width;
             height:30px;
             display: flex;
             font: 12px/150% tahoma,arial,Microsoft YaHei,Hiragino Sans GB,"\u5b8b\u4f53",sans-serif;
