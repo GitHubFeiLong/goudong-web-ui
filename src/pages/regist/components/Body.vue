@@ -118,6 +118,8 @@
         background-color:#fff;
         display: flex;
         justify-content: center;
+        // 文字不能被选中
+        user-select: none;
         #body-main{
             width: @regist-main-width;
             height: 100%;

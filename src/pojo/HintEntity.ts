@@ -17,6 +17,7 @@ export class HintEntity {
 // 注册输入邮箱
 export const EMAIL_HINT_0 = new HintEntity('验证完成后，你可以使用该邮箱登录或找回密码', '#c5c5c5', '0px -100px');
 export const EMAIL_HINT_1 = new HintEntity('格式错误', '#f91', '-17px -100px');
+export const EMAIL_HINT_2 = new HintEntity('请输入邮箱', '#f91', '-17px -100px');
 // 邮箱验证码
 export const EMAIL_CODE_HINT_0 = new HintEntity('验证码输入错误,请重新输入', '#f91', '-17px -100px');
 

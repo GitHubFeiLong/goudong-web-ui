@@ -67,14 +67,20 @@
             }
             // 点击获取验证码
             const clickGetAuth = () => {
+                if (email.value.length == 0) {
+                    showHint.value = true;
+                    hint.value = HintEntity.EMAIL_HINT_2
+                }
                 // 邮箱格式正确才显示
                 if (emailSure.value) {
                     showEmailButton.value = false;
                 }
+                
             }
             // 邮箱输入框获取焦点
             const emailFocus = () => {
                 showHint.value = !emailSure.value;
+                hint.value = HintEntity.EMAIL_HINT_0;
             }
             // 邮箱输入框失去焦点
             const emailBlur = () => {
