@@ -13,6 +13,12 @@ export class HintEntity {
         this.color = color;
         this.backgroundPosition = backgroundPosition;
     }
+    /*
+        比较两个对象是否一致
+    */
+    equals (hint:HintEntity) {
+        return this.info === hint.info;
+    }
 }
 // 注册输入邮箱
 export const EMAIL_HINT_0 = new HintEntity('验证完成后，你可以使用该邮箱登录或找回密码', '#c5c5c5', '0px -100px');

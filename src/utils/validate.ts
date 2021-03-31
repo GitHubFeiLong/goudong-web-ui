@@ -3,22 +3,21 @@ import * as HintEntity from '@/pojo/HintEntity';
 /**
  * 邮箱验证
  * @param value 待验证的值
- * @param callback 回调函数
  */
-function validateEmail(value:string,callback:any):boolean{
-    const reg =/^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/;
-    if(value==''||value==undefined||value==null){
-        callback(new Error('请输入邮箱'));
-        return false;
-    } else {
-        if (!reg.test(value)){
-            callback(new Error('请输入正确的邮箱'));
-            return false;
+function validateEmail(value:string):Promise<String|void>{
+    
+    return new Promise((resolve, reject) => {
+        const reg =/^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/;
+        if(value==''||value==undefined||value==null){
+            reject('请输入邮箱')
         } else {
-            callback();
-            return true;
+            if (!reg.test(value)){
+                reject('请输入正确的邮箱')
+            }
+            resolve();
         }
-    }
+    });
+    
 }
 
 /**

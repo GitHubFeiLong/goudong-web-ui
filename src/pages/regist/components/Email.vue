@@ -7,6 +7,7 @@
             <span class='clean-icon succes-icon' v-show="email.length>0 && emailSure"></span>
             <Hint :hint="hint" v-show="showHint"/>
         </div>
+        <PuzzleVerify/>
         <div id="email-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证</div>
         <div id="email-auth-code" v-else>
             <div class="border">
@@ -23,6 +24,7 @@
 <script lang='ts'>
     import { defineComponent, ref, watch,toRefs } from 'vue';
     import Hint from './Hint.vue';
+    import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
     import * as HintEntity from '@/pojo/HintEntity';
 
@@ -36,7 +38,8 @@
             'hindenEmail':null,
         },
         components:{
-            Hint
+            Hint,
+            PuzzleVerify
         },
         setup (props, context) {
             // 提示信息
@@ -80,17 +83,25 @@
             // 邮箱输入框获取焦点
             const emailFocus = () => {
                 showHint.value = !emailSure.value;
-                hint.value = HintEntity.EMAIL_HINT_0;
+                if (HintEntity.EMAIL_HINT_2.equals(hint.value)) {
+                    hint.value = HintEntity.EMAIL_HINT_2;
+                }
+                
             }
             // 邮箱输入框失去焦点
             const emailBlur = () => {
                 // 判断是否显示下面的提示信息
                 if (email.value.length > 0) {
                     // 正则验证邮箱是否正确的格式
-                    let flag = Validate.validateEmail(String(email.value), emailCallback);
-                    emailSure.value = flag;
-                    // 邮箱正确
-                    showHint.value = !flag;
+                    Validate.validateEmail(String(email.value)).then((value) => {
+                        emailSure.value = true;
+                        showHint.value = false;
+                        hint.value = HintEntity.EMAIL_HINT_0;
+                    }, (reason) => {
+                        emailSure.value = false;
+                        showHint.value = true;
+                        hint.value = HintEntity.EMAIL_HINT_1;
+                    });
                 } else {
                     showHint.value = false;
                 }
@@ -153,12 +164,18 @@
             // 监视邮箱值
             watch(email, (cur, pre) => {
                 if (email.value.length == 0) {
-                    hint.value.info = info;
-                    hint.value.color = color;
-                    hint.value.backgroundPosition = backgroundPosition;
+                    hint.value = HintEntity.EMAIL_HINT_0;
                     emailSure.value = false;
                 } else {
-                    emailSure.value = Validate.validateEmail(String(email.value), emailCallback);
+                    Validate.validateEmail(String(email.value)).then((value) => {
+                        emailSure.value = true;
+                        showHint.value = false;
+                        hint.value = HintEntity.EMAIL_HINT_0;
+                    }, (reason) => {
+                        emailSure.value = false;
+                        showHint.value = true;
+                        hint.value = HintEntity.EMAIL_HINT_1;
+                    });
                 }
             })
             // 监视邮箱格式是否正确
