@@ -72,7 +72,8 @@
 
         //三、给文档注册鼠标移动事件
         document.onmousemove = function(e){
-
+            console.log('三、给文档注册鼠标移动事件');
+            
             var e = e || window.event;
             //1.获取鼠标移动后的水平位置
             var moveX = e.clientX;
@@ -116,7 +117,7 @@
 
         //四、给文档注册鼠标松开事件
         document.onmouseup = function(e){
-
+            console.log('四、给文档注册鼠标松开事件');
             //如果鼠标松开时，滑到了终点，则验证通过
             if(success){
                 return;
