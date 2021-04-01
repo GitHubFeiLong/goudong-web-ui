@@ -7,7 +7,7 @@
         </div>
         <div class='puzzle-body'></div>
         <div class='puzzle-footer'>
-            <div draggable="true" ref="CIRCLE" id="puzzle-circle" class="puzzle-circle" @mousedown="onmousedown($event)" @mousemove="onmousemove" @mouseup="onmouseup">
+            <div ref="CIRCLE" id="puzzle-circle" class="puzzle-circle" @mousedown="onmousedown($event)" @mousemove="onmousemove($event)" @mouseup="onmouseup">
                 <span class="iconfont icon-arrow-right"></span>
             </div>
             向右滑动完成拼图
@@ -17,42 +17,63 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent, onMounted, ref} from 'vue'    
+    import { defineComponent, onMounted, ref, watch} from 'vue'    
     declare var $: (selector: string) => any;
     var aa ;
     export default defineComponent ({
         setup(props, context){
             const CIRCLE = ref(null);
-            // document.getElementById('puzzle-circle').getBoundingClientRect().x
-            // let circleX = $('.puzzle-circle').getBoundingClientRect().x
-            // let circleY = $('.puzzle-circle').getBoundingClientRect().y
-            // console.log('circleX, circleY', circleX, circleY);
-            // document.querySelector('.puzzle-circle').getBoundingClientRect().y
+            let isMouseUp = ref(true);
+            let isMouseDown = ref(false);
+
             // 按下事件
             function onmousedown(e:any){
-                console.log('onmousedown', e);
-                // 1.获取点坐标
-                let x = e.clientX;
-                let y = e.clientY;
-
-                console.log('x',x);
+                isMouseUp.value = false;
+                isMouseDown.value = true;
+                // console.log('onmousedown', e);
+                // // 1.获取点坐标
+                // let x = e.clientX;
+                // let y = e.clientY;
+                
+                // console.log('circleX', circleX,'circleY', circleY);
+                // console.log('x',x);
+                // (CIRCLE.value as any).style.left = x - circleX  + "px";
             }
             // 鼠标移动事件
-            function onmousemove(){
-                // console.log('onmousemove');
+            function onmousemove(e:any){
+                if (isMouseDown.value) {
+                    // 1.获取点坐标
+                    let x = e.clientX;
+                    let y = e.clientY;
+                    
+                    // console.log('circleX', circleX,'circleY', circleY);
+                    console.log('x',x);
+                    (CIRCLE.value as any).style.left = x - circleX  + "px";
+                }
+                
             }
             // 鼠标松手
             const onmouseup = () => {
+                isMouseUp.value = true;
+                isMouseDown.value = false;
                 console.log('onmouseup');
             }
+            // 元素的X
+            let circleX = 0;
+            // 元素的Y
+            let circleY = 0;
             onMounted(()=>{
-                // let circleX = $('.puzzle-circle').getBoundingClientRect().x
-                // let circleY = $('.puzzle-circle').getBoundingClientRect().y
-                // console.log('circleX, circleY', circleX, circleY);
-                // let dom:any = document.getElementById('puzzle-circle')
-                let dom:any = CIRCLE.value
-                console.log(dom.getBoundingClientRect());
-                // console.log((CIRCLE.value as window).getBoundingClientRect());
+                circleX = (CIRCLE.value as any).getBoundingClientRect().x;
+                circleY = (CIRCLE.value as any).getBoundingClientRect().y;
+            });
+
+            watch(isMouseUp, (now, old)=>{
+                if (now) {
+                    (CIRCLE.value as any).style.transition = "1s";
+                    (CIRCLE.value as any).style.left = "0px";
+                } else {
+                     (CIRCLE.value as any).style.transition = "";
+                }
             })
             return{
                 CIRCLE,
@@ -135,6 +156,7 @@
                 left:0;
                 margin:auto 0;
                 cursor:pointer;
+                transition:1s left linear;
                 .icon-arrow-right{
                     text-align:center;
                     line-height:50px;
