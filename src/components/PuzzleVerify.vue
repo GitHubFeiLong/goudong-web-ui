@@ -6,8 +6,8 @@
             <a href="#"><span class='iconfont icon-refresh'></span>&nbsp;换一张</a>
         </div>
         <div class='puzzle-body'></div>
-        <div class='puzzle-footer'>
-            <div ref="CIRCLE" id="puzzle-circle" class="puzzle-circle" @mousedown="onmousedown($event)" @mousemove="onmousemove($event)" @mouseup="onmouseup">
+        <div class='puzzle-footer' ref="FOOTER">
+            <div ref="CIRCLE" id="puzzle-circle" class="puzzle-circle"  @mousedown="onmousedown($event)">
                 <span class="iconfont icon-arrow-right"></span>
             </div>
             向右滑动完成拼图
@@ -17,69 +17,98 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent, onMounted, ref, watch} from 'vue'    
+    import { defineComponent, onMounted, ref, watch, reactive} from 'vue'    
     declare var $: (selector: string) => any;
     var aa ;
     export default defineComponent ({
         setup(props, context){
+            // 滑块的圆
             const CIRCLE = ref(null);
+            // 长条
+            const FOOTER = ref(null);
+            // 滑块圆的总宽
+            const CIRCLE_WIDTH = 52;
+             // 长条的总宽
+            const FOOTER_WIDTH = 364;
+            
             let isMouseUp = ref(true);
             let isMouseDown = ref(false);
-
+            let moveX = 0;
             // 按下事件
             function onmousedown(e:any){
                 isMouseUp.value = false;
                 isMouseDown.value = true;
-                // console.log('onmousedown', e);
-                // // 1.获取点坐标
-                // let x = e.clientX;
-                // let y = e.clientY;
-                
-                // console.log('circleX', circleX,'circleY', circleY);
-                // console.log('x',x);
-                // (CIRCLE.value as any).style.left = x - circleX  + "px";
-            }
-            // 鼠标移动事件
-            function onmousemove(e:any){
-                if (isMouseDown.value) {
-                    // 1.获取点坐标
-                    let x = e.clientX;
-                    let y = e.clientY;
-                    
-                    // console.log('circleX', circleX,'circleY', circleY);
-                    console.log('x',x);
-                    (CIRCLE.value as any).style.left = x - circleX  + "px";
+                document.onmousemove = function(e1){
+                    if (isMouseDown.value) {
+                        // 1.获取点坐标
+                        let x = e1.clientX;
+                        let y = e1.clientY;
+                        // 大于长条的最大值
+                        if (x >= totalX) {
+                            (CIRCLE.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px"; 
+                            moveX = FOOTER_WIDTH - CIRCLE_WIDTH;
+                        } else if (x <= footerX) { // 小于长条的最小值
+                            (CIRCLE.value as any).style.left = "0px";  
+                            moveX = 0;
+                        } else { // 中间值
+                            (CIRCLE.value as any).style.left = x - circleX  + "px";
+                            moveX = x - circleX;
+                        }
+
+                        
+                        
+                    }
                 }
-                
+                document.onmouseup = function(e2){
+                    isMouseUp.value = true;
+                    isMouseDown.value = false;
+                    // 1.获取点坐标
+                    let x = e2.clientX;
+                    let y = e2.clientY;
+                    if (x >= totalX) {
+                        // (CIRCLE.value as any).style.transition = "1s"
+                    }
+
+                }
             }
-            // 鼠标松手
-            const onmouseup = () => {
-                isMouseUp.value = true;
-                isMouseDown.value = false;
-                console.log('onmouseup');
-            }
-            // 元素的X
+           
+            // 滑块元素的X
             let circleX = 0;
-            // 元素的Y
+            // 滑块元素的Y
             let circleY = 0;
+            // 滚动的长条
+            let footerX = 0
+            // let 滑块
+            let totalX = 0;
             onMounted(()=>{
                 circleX = (CIRCLE.value as any).getBoundingClientRect().x;
                 circleY = (CIRCLE.value as any).getBoundingClientRect().y;
+                footerX = (FOOTER.value as any).getBoundingClientRect().x;
+                totalX = footerX + FOOTER_WIDTH - CIRCLE_WIDTH;
             });
 
             watch(isMouseUp, (now, old)=>{
+                // 鼠标松开
                 if (now) {
-                    (CIRCLE.value as any).style.transition = "1s";
-                    (CIRCLE.value as any).style.left = "0px";
+                    console.log(moveX,FOOTER_WIDTH - CIRCLE_WIDTH);
+                    // 最右边
+                    if (moveX == FOOTER_WIDTH - CIRCLE_WIDTH) {
+                        (CIRCLE.value as any).style.transition = ".5s left ease .5s";
+                        (CIRCLE.value as any).style.left = "0px";
+                        (FOOTER.value as any).style.backgroundColor = '#ff5b57';
+                    } else {
+                        (CIRCLE.value as any).style.transition = "1s";
+                        (CIRCLE.value as any).style.left = "0px";
+                    }
+                    
                 } else {
                      (CIRCLE.value as any).style.transition = "";
                 }
             })
             return{
                 CIRCLE,
+                FOOTER,
                 onmousedown,
-                onmousemove,
-                onmouseup,
             }
         }
     })
@@ -156,7 +185,7 @@
                 left:0;
                 margin:auto 0;
                 cursor:pointer;
-                transition:1s left linear;
+                // transition:1s left linear;
                 .icon-arrow-right{
                     text-align:center;
                     line-height:50px;
