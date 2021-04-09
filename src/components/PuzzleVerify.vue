@@ -5,7 +5,9 @@
             <span>完成拼图验证</span>
             <a href="#"><span class='iconfont icon-refresh'></span>&nbsp;换一张</a>
         </div>
-        <div class='puzzle-body'></div>
+        <div class='puzzle-body'>
+            <img ref="IMAGE" src="~@/assets/imgs/login-bg1.png" width="100%" height="100%">
+        </div>
         <div class='puzzle-footer' ref="FOOTER">
             <div ref="CIRCLE" id="puzzle-circle" class="puzzle-circle"  @mousedown="onmousedown($event)">
                 <span class="iconfont icon-arrow-right"></span>
@@ -14,6 +16,13 @@
         </div>
         <i class='puzzle-arrows'></i>
     </div>
+    <canvas ref="CONVAS">
+
+    </canvas>
+
+    <canvas id="canvas"></canvas>
+        <img id="source" src="https://mdn.mozillademos.org/files/5397/rhino.jpg"
+       width="300" height="227">
 </template>
 
 <script lang='ts'>
@@ -22,10 +31,15 @@
     var aa ;
     export default defineComponent ({
         setup(props, context){
+            // 图片image
+            const IMAGE = ref(null);
             // 滑块的圆
             const CIRCLE = ref(null);
             // 长条
             const FOOTER = ref(null);
+            // convas
+            const CONVAS = ref(null);
+
             // 滑块圆的总宽
             const CIRCLE_WIDTH = 52;
              // 长条的总宽
@@ -85,6 +99,13 @@
                 circleY = (CIRCLE.value as any).getBoundingClientRect().y;
                 footerX = (FOOTER.value as any).getBoundingClientRect().x;
                 totalX = footerX + FOOTER_WIDTH - CIRCLE_WIDTH;
+
+                // 测试
+                var canvas = (CONVAS.value as any);
+                var ctx = canvas.getContext("2d");
+                var image = (IMAGE.value as any);
+                console.log("ctx",ctx);
+                ctx.drawImage(image, 120.5, 20, 10, 10, 10, 10, 10, 10);
             });
 
             watch(isMouseUp, (now, old)=>{
@@ -106,12 +127,19 @@
                 }
             })
             return{
+                IMAGE,
                 CIRCLE,
                 FOOTER,
+                CONVAS,
                 onmousedown,
             }
         }
     })
+    var canvas = document.getElementById("canvas");
+var ctx = (canvas as any).getContext("2d");
+var image = document.getElementById('source');
+
+(ctx as any).drawImage(image, 33, 71, 104, 124, 21, 20, 87, 104);
 </script>
 
 <style lang='less' scoped>
@@ -155,10 +183,14 @@
         }
         .puzzle-body{
             height:141.55px;
-            border-radius: 3px;
-            background-image:url('~@/assets/imgs/login-bg1.png');
             background-size:100%;
             margin-bottom: 10px;
+            img{
+                width:100%;
+                height:100%;
+                border-radius: 3px;
+
+            }
         }
         .puzzle-footer{
             height:40px;
@@ -209,5 +241,9 @@
             border-right:1px solid #eee;
             border-bottom:1px solid #eee;
         }
+    }
+    canvas{
+        width:50.55px;
+        height:50.55px;
     }
 </style>
