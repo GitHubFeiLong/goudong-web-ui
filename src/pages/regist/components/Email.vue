@@ -7,7 +7,8 @@
             <span class='clean-icon succes-icon' v-show="email.length>0 && emailSure"></span>
             <Hint :hint="hint" v-show="showHint"/>
         </div>
-        <PuzzleVerify/>
+        <!--滑块验证-->
+        <PuzzleVerify v-show="showPuzzle"/>
         <div id="email-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证</div>
         <div id="email-auth-code" v-else>
             <div class="border">
@@ -62,6 +63,8 @@
             let intervalId = ref(0);
             // 按钮class
             let btnClass = ref('btn-no-hover');
+            //
+            let showPuzzle = ref(false);
             // 清除email值
             const cleanEmail = () => {
                 showHint.value = false;
@@ -76,7 +79,10 @@
                 }
                 // 邮箱格式正确才显示
                 if (emailSure.value) {
-                    showEmailButton.value = false;
+                    // 1. 滑块验证
+                    showPuzzle.value = true;
+                    // 2. 验证码验证
+                    // showEmailButton.value = false;
                 }
                 
             }
@@ -208,6 +214,7 @@
                 hint,
                 authHint,
                 showHint,
+                showPuzzle,
                 showEmailButton,
                 email,
                 emailSure,
@@ -222,6 +229,11 @@
     })
 </script>
 
+<style>
+    #puzzle-warp{
+        margin-top:-170px;
+    }
+</style>
 <style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less');
     #email{
@@ -233,6 +245,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+       
         input::-webkit-input-placeholder{
             color:rgb(204, 204, 204);
         }
@@ -305,6 +318,9 @@
             color: #333;
             margin-top: -15px;
         }
+        // #puzzleVerify{
+        //     margin-top:-170px;
+        // }
         #email-auth-code{
             width: 398px;
             height: 52px;
