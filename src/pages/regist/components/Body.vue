@@ -11,7 +11,7 @@
                     <span :class="circleTwo">{{stepSpan2Val}}</span>
                     <p :class='p2Class'>填写账号信息</p>
                 </div>
-                <div class="step-line step-line2"></div>
+                <div :class="lineStep2Class"></div>
                 <div class="step step3">
                     <span :class="circleThree">{{stepSpan3Val}}</span>
                     <p :class='p3Class'>注册成功</p>
@@ -19,6 +19,7 @@
             </div>
             <Email v-if="isShowEmail" @hindenEmail="hindenEmail" />
             <UserInfo v-else-if="isShowUserInfo" @hindenUserInfo="hindenUserInfo"/>
+            <RegistSuccess v-else :username='username'/>
         </div>
     </div>
 </template>
@@ -27,21 +28,25 @@
     import { defineComponent, ref } from 'vue'
     import Email from './Email.vue';
     import UserInfo from './UserInfo.vue';
+    import RegistSuccess from './RegistSuccess.vue';
 
     export default defineComponent ({
         components:{
             Email,
-            UserInfo
+            UserInfo,
+            RegistSuccess
         },
         setup () {
             let p2Class = ref('');
             let p3Class = ref('');
             let lineStep1Class = ref('step-line step-line1');
+            let lineStep2Class = ref('step-line step-line2')
             let stepSpan1Val = ref('1');
             let stepSpan2Val = ref('2');
             let stepSpan3Val = ref('3');
             let isShowEmail = ref(true);
             let isShowUserInfo = ref(true);
+            let username = ref('');
             // 第一个
             let circleOne = ref({
                 finish:false,
@@ -76,7 +81,7 @@
                 isShowUserInfo.value = true;
             }
             // 用户名输入成功
-            const hindenUserInfo = () => {
+            const hindenUserInfo = (uname:string) => {
                 // 第二个步骤
                 stepSpan2Val.value = '';
                 circleTwo.value.finish = true;
@@ -87,14 +92,19 @@
                 // 第三个步骤
                 p3Class.value = 'p-class-success';
                 circleThree.value.current = true;
+                 // 2 3 中间的线
+                lineStep2Class.value += ' step-line-success ';
 
-                // 将Email隐藏
+                // 将用户名隐藏
                 isShowUserInfo.value = false;
+                username.value = uname;
+                console.log(uname);
             }
             return {
                 p2Class,
                 p3Class,
                 lineStep1Class,
+                lineStep2Class,
                 stepSpan1Val,
                 stepSpan2Val,
                 stepSpan3Val,
@@ -104,7 +114,8 @@
                 circleTwo,
                 circleThree,
                 hindenEmail,
-                hindenUserInfo
+                hindenUserInfo,
+                username
             }
         }
     })

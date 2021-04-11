@@ -124,6 +124,7 @@
             let sy = 0;
             onMounted(()=>{
                 randomSXY();
+                console.log(context);
             });
 
             // 上次的索引
@@ -181,6 +182,8 @@
                         (STATUSTXT.value as any).style.zIndex = 10;
                         (STATUS.value as any).style.width = "100%";
                         (CIRCLE.value as any).style.display = "none";
+                        // 调用父组件的事件
+                        context.emit("successPuzzle");
                     } else {
                         // 修改图片的地址
                         setTimeout(()=>{

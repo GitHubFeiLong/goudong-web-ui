@@ -188,8 +188,8 @@
                 let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value;
                 isClickBtn.value = true;
                 if (result) {
-                    // 触发父组件的方法
-                    context.emit('hindenUserInfo');
+                    // 触发父组件的方法，将用户名回传
+                    context.emit('hindenUserInfo', username.value);
                 } else if (!result && !usernameSure.value) {
                     // 用户名不正确
                     if (username.value.length == 0) {

@@ -8,12 +8,12 @@
             <Hint :hint="hint" v-show="showHint"/>
         </div>
         <!--滑块验证-->
-        <PuzzleVerify v-show="showPuzzle"/>
+        <PuzzleVerify v-show="showPuzzle" @successPuzzle="successPuzzle"/>
         <div id="email-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证</div>
         <div id="email-auth-code" v-else>
             <div class="border">
                 <label for="auth-code-input">邮箱验证码</label>
-                <input type="text" id="auth-code-input" placeholder="输入验证码"  autocomplete="off" maxlength="6">
+                <input v-model="authCode" type="text" id="auth-code-input" placeholder="输入验证码"  autocomplete="off" maxlength="6">
             </div>
             <button :class="btnClass" @click="repeatGetAuth">{{timer}}{{btnVal}}</button>
             <Hint :hint="authHint"/>
@@ -63,13 +63,22 @@
             let intervalId = ref(0);
             // 按钮class
             let btnClass = ref('btn-no-hover');
-            //
+            // 是否显示滑块验证
             let showPuzzle = ref(false);
+            //
+            let authCode = ref("");
             // 清除email值
             const cleanEmail = () => {
                 showHint.value = false;
                 email.value = '';
                 emailSure.value = false;
+            }
+            // 绑定事件监听，父子组件通信
+            const successPuzzle = () => {
+                console.log("successPuzzle 调用了");
+                showPuzzle.value = false;
+                // 验证码验证
+                showEmailButton.value = false;
             }
             // 点击获取验证码
             const clickGetAuth = () => {
@@ -81,8 +90,6 @@
                 if (emailSure.value) {
                     // 1. 滑块验证
                     showPuzzle.value = true;
-                    // 2. 验证码验证
-                    // showEmailButton.value = false;
                 }
                 
             }
@@ -131,14 +138,10 @@
                 timer.value = 5;
                 btnVal.value = 's后重新获取';
                 btnClass.value = 'btn-no-hover';
-
-                authHint.value.info = `验证码已发送,${timer.value}秒内输入有效`;
-                authHint.value.color = '#c5c5c5';
-                authHint.value.backgroundPosition = '0px -100px';
-
+                authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
                 intervalId.value = setInterval(() => {
-                    console.log(timer.value)
                     timer.value--;
+                    authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
                     if (timer.value == 0) {
                         // 清除定时器
                         clearInterval(intervalId.value);  
@@ -159,9 +162,12 @@
 
             //  点击下一步
             const clickNextStep = () => {
-                // 匹配错误
-                if (false) {
-                    authHint.value = HintEntity.EMAIL_CODE_HINT_0;
+                // 为空
+                if (authCode.value == "") {
+                    authHint.value = HintEntity.EMAIL_CODE_HINT_1;
+                } else if (authCode.value != '123123') {  // 匹配错误
+                    console.log(authCode.value);
+                    authHint.value = HintEntity.EMAIL_CODE_HINT_2;
                 } else {
                     // 匹配成功,修改样式
                     context.emit('hindenEmail')
@@ -224,6 +230,8 @@
                 clickGetAuth,
                 repeatGetAuth,
                 clickNextStep,
+                successPuzzle,
+                authCode,
             }
         }
     })
