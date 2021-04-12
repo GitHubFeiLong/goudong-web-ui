@@ -1,7 +1,7 @@
 /* 
     公共样式
 */
-html,body {
+* {
     margin:0px;
     padding:0px;
 }

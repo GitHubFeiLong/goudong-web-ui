@@ -124,7 +124,7 @@
 <style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less');
     #body {
-        height:636px;
+        height:600px;
         padding-top: 85px;
         background-color:#fff;
         display: flex;

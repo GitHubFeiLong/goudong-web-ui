@@ -25,6 +25,7 @@
         position: absolute;
         width: 100%;
         bottom: -21px;
+        text-align:left;
         .hint-icon{
             width: 16px;
             height: 16px;

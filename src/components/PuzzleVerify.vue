@@ -1,9 +1,9 @@
 <template>
     <div id="puzzle-warp">
-        <i class='puzzle-close'></i>
+        <i class='puzzle-close' @click="closeImage"></i>
         <div class='puzzle-header'>
             <span>完成拼图验证</span>
-            <a href="#"><span class='iconfont icon-refresh'></span>&nbsp;换一张</a>
+            <a href="javascript::" @click.prevent="changeImage"><span class='iconfont icon-refresh'></span>&nbsp;换一张</a>
         </div>
         <div class='puzzle-body'>
             <div id="shade" ref="SHADE"></div>
@@ -26,7 +26,6 @@
 <script lang='ts'>
     import { defineComponent, onMounted, ref, watch, reactive} from 'vue'    
     declare var $: (selector: string) => any;
-    var aa ;
     export default defineComponent ({
         setup(props, context){
             // 图片image
@@ -208,7 +207,20 @@
                     (STATUS.value as any).style.transition = "";
                 }
             })
+
+            // 关闭验证码
+            const closeImage = () => {
+                context.emit("closePuzzle");
+                console.log("关闭验证码123");
+                
+            }
             
+            // 更换图片
+            const changeImage = () => {
+                console.log("更换图片");
+                randomSXY();
+            }
+
             return{
                 IMAGE,
                 CIRCLE,
@@ -220,6 +232,8 @@
                 bodyImage,
                 statusTxt,
                 onmousedown,
+                closeImage,
+                changeImage,
             }
         }
     })
@@ -250,6 +264,7 @@
             right:10px;
             top:10px;
             background-position: -53px -119px;
+            cursor:pointer;
             transform: scale(.9);
         }
         .puzzle-header{

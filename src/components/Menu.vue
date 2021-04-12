@@ -15,7 +15,7 @@
                 <ul>
                     <li class="li1">
                         <a href="/login">你好，请登录</a>&nbsp;
-                        <a href="/regist">免费注册</a>
+                        <a href="/regist" >免费注册</a>
                     </li>
                     <li class='split-li'></li>
                     <li class="li2">
@@ -134,6 +134,7 @@
                             padding: 0 8px;
                         }
                     }
+
                     .split-li{
                         width: 1px;
                         height: 12px;
@@ -146,6 +147,9 @@
                     .li1{
                         width: 127.5px;
                         margin-right: 10px;
+                        a:nth-child(2){
+                            color: @a-hover-color-01;
+                        }
                     }
                     .li2{
                         width:64px;

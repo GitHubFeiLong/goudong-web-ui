@@ -13,7 +13,7 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent } from 'vue'
+    import {defineComponent, onMounted} from 'vue'
     export default defineComponent ({
         props:{
             username:String,
@@ -22,6 +22,9 @@
             const goShopping = () => {
                 window.location.href = '/index'
             }
+            onMounted(()=>{
+                setTimeout(goShopping, 5000)
+            });
             return {
                 goShopping
             }

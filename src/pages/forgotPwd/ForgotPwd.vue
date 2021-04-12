@@ -1,16 +1,22 @@
 <template>
     <Menu/>
     <Header :title='HeaderTitle'/>
+    <Body/>
+    <Footer/>
 </template>
 
 <script lang='ts'>
     import { defineComponent, ref} from 'vue'
     import Menu from '@/components/Menu.vue'
     import Header from '@/components/RegistHeader.vue'
+    import Footer from '@/components/Footer.vue';
+    import Body from './components/Body.vue';
     export default defineComponent ({
         components:{
             Menu,
-            Header
+            Header,
+            Body,
+            Footer
         },
         setup(){
             let HeaderTitle = ref('找回密码');

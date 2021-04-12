@@ -2,14 +2,17 @@
     <div id="email">
         <div id="email-number">
             <label for="email-num-input">中国 0086</label>
-            <input v-model="email" @focus="emailFocus" @blur="emailBlur" type="text" id="email-num-input" placeholder="建议使用常用邮箱"  autocomplete="off">
+            <input ref="emailRef" v-model="email" @focus="emailFocus" @blur="emailBlur" type="text" id="email-num-input" placeholder="建议使用常用邮箱"  autocomplete="off">
             <span class='clean-icon normal-icon' v-show="email.length>0 && !emailSure" @click="cleanEmail"></span>
             <span class='clean-icon succes-icon' v-show="email.length>0 && emailSure"></span>
             <Hint :hint="hint" v-show="showHint"/>
         </div>
         <!--滑块验证-->
-        <PuzzleVerify v-show="showPuzzle" @successPuzzle="successPuzzle"/>
-        <div id="email-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证</div>
+        <PuzzleVerify v-if="showPuzzle" @successPuzzle="successPuzzle" @closePuzzle="closePuzzle"/>
+
+        <div id="email-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证
+            <Hint :hint="authHint" v-show="showHint2"/>
+        </div>
         <div id="email-auth-code" v-else>
             <div class="border">
                 <label for="auth-code-input">邮箱验证码</label>
@@ -53,7 +56,10 @@
             // 显示下一步（true）
             let showEmailButton = ref(true)
             let email= ref('');
+            // 邮箱输入框的提示是否显示
             let showHint = ref(false);
+            // 是否显示 完成验证
+            let showHint2 = ref(false);
             // 邮箱是否正确
             let emailSure = ref(false);
             // 倒计时
@@ -65,8 +71,12 @@
             let btnClass = ref('btn-no-hover');
             // 是否显示滑块验证
             let showPuzzle = ref(false);
-            //
+            // 用户输入的验证码
             let authCode = ref("");
+            // email输入框
+            let emailRef = ref<HTMLElement | null>(null);
+            // 滑块验证是否正确
+            let puzzleSure = ref(false);
             // 清除email值
             const cleanEmail = () => {
                 showHint.value = false;
@@ -76,10 +86,20 @@
             // 绑定事件监听，父子组件通信
             const successPuzzle = () => {
                 console.log("successPuzzle 调用了");
-                showPuzzle.value = false;
-                // 验证码验证
-                showEmailButton.value = false;
+                puzzleSure.value = true;
+                // 延迟关闭滑块验证码
+                setTimeout(()=>{
+                    showPuzzle.value = false;
+                    // 验证码验证
+                    showEmailButton.value = false;
+                }, 1000);
             }
+
+            // 关闭滑块验证事件监听
+            const closePuzzle = () => {
+                showPuzzle.value = false;
+            }
+
             // 点击获取验证码
             const clickGetAuth = () => {
                 if (email.value.length == 0) {
@@ -90,6 +110,7 @@
                 if (emailSure.value) {
                     // 1. 滑块验证
                     showPuzzle.value = true;
+                    puzzleSure.value = false;
                 }
                 
             }
@@ -159,18 +180,30 @@
             const repeatGetAuth = () => {
                 authCodeTimer();
             }
-
             //  点击下一步
             const clickNextStep = () => {
-                // 为空
-                if (authCode.value == "") {
-                    authHint.value = HintEntity.EMAIL_CODE_HINT_1;
-                } else if (authCode.value != '123123') {  // 匹配错误
-                    console.log(authCode.value);
-                    authHint.value = HintEntity.EMAIL_CODE_HINT_2;
-                } else {
-                    // 匹配成功,修改样式
-                    context.emit('hindenEmail')
+                // 邮箱为空时
+                if (email.value == "") {
+                    showHint.value = true;
+                    hint.value = HintEntity.EMAIL_HINT_2;
+                    // 得到焦点
+                    emailRef.value && emailRef.value.focus();
+                    return;
+                } 
+                // 邮箱正确
+                if (emailSure.value) {
+                    if (!puzzleSure.value) { // 滑块验证未验证通过时
+                        showHint2.value = true;
+                        authHint.value = HintEntity.EMAIL_CODE_HINT_3;
+                        // 得到焦点
+                        emailRef.value && emailRef.value.focus();
+                    } else if (authCode.value != '123123') {  // 匹配错误
+                        console.log(authCode.value);
+                        authHint.value = HintEntity.EMAIL_CODE_HINT_2;
+                    } else {
+                        // 匹配成功,修改样式
+                        context.emit('hindenEmail')
+                    }
                 }
             }
             // 监视邮箱值
@@ -220,17 +253,20 @@
                 hint,
                 authHint,
                 showHint,
+                showHint2,
                 showPuzzle,
                 showEmailButton,
                 email,
                 emailSure,
                 emailFocus,
                 emailBlur,
+                emailRef,
                 cleanEmail,
                 clickGetAuth,
                 repeatGetAuth,
                 clickNextStep,
                 successPuzzle,
+                closePuzzle,
                 authCode,
             }
         }
@@ -325,6 +361,7 @@
             font-size: 14px;
             color: #333;
             margin-top: -15px;
+            position:relative;
         }
         // #puzzleVerify{
         //     margin-top:-170px;

@@ -28,6 +28,7 @@ export const EMAIL_HINT_2 = new HintEntity('请输入邮箱', '#f91', '-17px -10
 export const EMAIL_CODE_HINT_0 = new HintEntity('验证码输入错误,请重新输入', '#f91', '-17px -100px');
 export const EMAIL_CODE_HINT_1 = new HintEntity('请输入验证码', '#f91', '-17px -100px');
 export const EMAIL_CODE_HINT_2 = new HintEntity('验证码已过期或错误，请重新获取验证码', '#f91', '-17px -100px');
+export const EMAIL_CODE_HINT_3 = new HintEntity('请完成验证', '#f91', '-17px -100px');
 
 // 注册输入用户名
 export const USERNAME_HINT_0 = new HintEntity('支持中文、英文、数字、“-”、“_”的组合，4-20个字符', '#c5c5c5', '0px -100px');

@@ -9,7 +9,7 @@ function validateEmail(value:string):Promise<String|void>{
     return new Promise((resolve, reject) => {
         const reg =/^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/;
         if(value==''||value==undefined||value==null){
-            reject('请输入邮箱')
+            reject(HintEntity.EMAIL_HINT_2.info)
         } else {
             if (!reg.test(value)){
                 reject('请输入正确的邮箱')
