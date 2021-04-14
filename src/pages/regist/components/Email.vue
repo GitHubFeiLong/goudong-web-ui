@@ -425,7 +425,7 @@
         }
         #email-next-step{
             border: 0;
-            width: 398px;
+            width: 400px;
             height: 54px;
             background-color: #e2231a;
             cursor: pointer;

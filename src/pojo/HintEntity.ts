@@ -34,6 +34,7 @@ export const EMAIL_CODE_HINT_3 = new HintEntity('请完成验证', '#f91', '-17p
 export const USERNAME_HINT_0 = new HintEntity('支持中文、英文、数字、“-”、“_”的组合，4-20个字符', '#c5c5c5', '0px -100px');
 export const USERNAME_HINT_1 = new HintEntity('格式错误，仅支持汉字、字母、数字、“-”、“_”的组合', '#f91', '-17px -100px');
 export const USERNAME_HINT_01 = new HintEntity('请输入账户名', '#f91', '-17px -100px');
+export const USERNAME_HINT_2 = new HintEntity('请输入用户名/邮箱/已验证手机号', '#f91', '-17px -100px');
 // 注册输入密码
 export const PASSWORD_HINT_0 = new HintEntity('请将密码设置为8-20位，并且由字母，数字和符号两种以上组合', '#c5c5c5', '0px -100px');
 export const PASSWORD_HINT_01 = new HintEntity('请将密码设置为8-20位，并且由字母，数字和符号两种以上组合', '#f91', '-17px -100px');
