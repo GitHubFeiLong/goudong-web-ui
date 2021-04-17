@@ -240,7 +240,7 @@
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/fonts/font01/iconfont.css');
+    @import url('~@/assets/fonts/iconfont.css');
     #puzzle-warp{
         width:364px;
         height:216.5px;

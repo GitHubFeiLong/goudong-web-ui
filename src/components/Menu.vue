@@ -59,7 +59,7 @@
 
 <style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less'); 
-    @import url('~@/assets/fonts/font01/iconfont.css');
+    @import url('~@/assets/fonts/iconfont.css');
     // 未点击样式
     a:link{
         color:@a-link-color-01;

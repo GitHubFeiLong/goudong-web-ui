@@ -1,10 +1,31 @@
 {
-  "id": "",
-  "name": "",
+  "id": "2493047",
+  "name": "goudong-web-ui",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "1066119",
+      "name": "成功",
+      "font_class": "Success-Small",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "21156",
+      "name": "点击",
+      "font_class": "dianji",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "586085",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
     {
       "icon_id": "20633279",
       "name": "arrow-right",
@@ -36,7 +57,7 @@
     {
       "icon_id": "20633283",
       "name": "home",
-      "font_class": "home",
+      "font_class": "home1",
       "unicode": "e605",
       "unicode_decimal": 58885
     },

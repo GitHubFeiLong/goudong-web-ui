@@ -34,7 +34,7 @@
 
 <style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less');
-    @import url('~@/assets/fonts/font01/iconfont.css');
+    @import url('~@/assets/fonts/iconfont.css');
     #regist-success{
         width: @regist-inner-main-width;
         height:230px;

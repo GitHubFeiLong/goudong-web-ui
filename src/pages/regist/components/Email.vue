@@ -352,7 +352,6 @@
         }
         #email-button{
             border: solid 1px #ddd;
-            border-color: #666;
             width: 398px;
             height: 54px;
             cursor: pointer;
@@ -362,10 +361,11 @@
             color: #333;
             margin-top: -15px;
             position:relative;
+            &:hover{
+                border: 1px solid #666;
+            }
         }
-        // #puzzleVerify{
-        //     margin-top:-170px;
-        // }
+        
         #email-auth-code{
             width: 398px;
             height: 52px;
