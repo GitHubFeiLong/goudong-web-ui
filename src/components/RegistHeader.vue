@@ -26,7 +26,7 @@
     })
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less');
     #header {
         height:110px;
