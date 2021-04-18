@@ -7,6 +7,8 @@
     import {defineComponent, ref} from 'vue';
     export default defineComponent({
         setup(){
+          // 当前的状态
+
           let dialogStyle = ref({width:"0", height:"0"});
           const show = () => {
             dialogStyle.value = {width: "100%", height: "100%"}
@@ -14,6 +16,7 @@
           const hidden = () => {
             dialogStyle.value = {width: "0", height: "0"}
           }
+
           return {
             dialogStyle,
             hidden

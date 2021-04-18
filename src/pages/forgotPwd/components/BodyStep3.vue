@@ -30,7 +30,7 @@
   </div>
 </template>
 <script lang='ts'>
-  import { defineComponent, ref, onMounted, watch } from 'vue'
+  import { defineComponent, ref, onMounted, watch, inject } from 'vue'
 
   // 按钮点击邮箱验证弹框
   import EmailPopUp from "@/pages/forgotPwd/components/EmailPopUp.vue";

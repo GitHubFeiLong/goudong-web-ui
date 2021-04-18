@@ -1,9 +1,9 @@
 <!--邮箱弹窗-->
 <template>
-  <div class="email-pop-up"></div>
+  <div class="email-pop-up" @click="closeDialog"></div>
 </template>
 <script lang='ts'>
-  import { defineComponent, ref, onMounted, watch } from 'vue'
+  import {defineComponent, ref, onMounted } from 'vue'
   // 提示信息
   export default defineComponent ({
     components:{
@@ -12,10 +12,12 @@
 
       onMounted(()=>{
         // 遮罩组件显示
-
       });
+      // 关闭遮罩
+      const closeDialog = () => {
+      }
       return {
-
+        closeDialog,
       }
     }
   })
