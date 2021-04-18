@@ -3,6 +3,7 @@
     <Header :title='HeaderTitle'/>
     <Body/>
     <Footer/>
+    <Dialog/>
 </template>
 
 <script lang='ts'>
@@ -11,12 +12,14 @@
     import Header from '@/components/RegistHeader.vue'
     import Footer from '@/components/Footer.vue';
     import Body from './components/Body.vue';
+    import Dialog from "@/components/Dialog.vue";
     export default defineComponent ({
         components:{
             Menu,
             Header,
             Body,
-            Footer
+            Footer,
+            Dialog
         },
         setup(){
             let HeaderTitle = ref('找回密码');
@@ -27,6 +30,11 @@
     })
 </script>
 
+<style>
+  #app{
+    position: relative;
+  }
+</style>
 <style lang='less' scoped>
 
 </style>
