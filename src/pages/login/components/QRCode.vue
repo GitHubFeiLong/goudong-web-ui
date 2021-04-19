@@ -34,17 +34,17 @@
         </div>
         <QuickLogin/>
     </div>
-    
+
 </template>
 
 <script lang="ts">
     import {defineComponent, ref, onMounted, watch} from 'vue'
     import QuickLogin from './QuickLogin.vue';
-    
+
     export default defineComponent({
         name:'QRCode',
         components:{
-            QuickLogin 
+            QuickLogin
         },
         setup(){
             // class 值
@@ -68,7 +68,7 @@
                 qrHomingFunc();
             }
 
-            // 二维码居中，手机img消失(样式class值改变)            
+            // 二维码居中，手机img消失(样式class值改变)
             const qrHomingFunc = () => {
                 qr_phone.value = 'qr-phone-leave';
                 qr_outer.value = 'qr-outer qr-outer-leave';
@@ -93,12 +93,12 @@
             // 生命周期函数
             onMounted(()=>{
                 qrTimeout();
-                
+
             })
             watch(showQRMasking, (showQRMasking, prevShowQRMasking) => {
                 // 二维码过期，显示蒙版，图标归位
                 if (showQRMasking) {
-                    qrHomingFunc()       
+                    qrHomingFunc()
                     return;
                 }
                 qrMoveFunc();
@@ -129,7 +129,7 @@
         border-bottom: 1px solid #f4f4f4;
         .qr-top{
             width:100%;
-            height:190px;
+            height:170px;
             background-color: #fff;
             position: relative;
             padding-top: 20px;
@@ -224,7 +224,7 @@
                 height:25px;
                 display: flex;
                 justify-content:center;
-                margin-top: 5px;
+                margin-top: 15px;
                 div:first-child{
                     left: 1px;
                 }
@@ -257,8 +257,8 @@
                     }
                 }
             }
-            
+
         }
     }
 
-</style>    
+</style>

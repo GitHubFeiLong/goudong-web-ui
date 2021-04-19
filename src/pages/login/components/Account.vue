@@ -132,7 +132,8 @@
         }
         input{
             width:100%;
-            padding:10px 0 7px 50px;
+            height: 100%;
+            padding:10px 0 10px 50px;
             box-sizing: border-box;
             border:0;
             position: absolute;

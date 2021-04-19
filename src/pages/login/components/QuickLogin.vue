@@ -44,7 +44,7 @@
 </script>
 
 <style lang="less" scoped>
-    /* 
+    /*
         QQ，微信 快捷登录公共样式
         @url:图标地址
         @span-width：文字宽度
@@ -83,7 +83,7 @@
                 text-decoration: underline;
             }
         }
-        
+
     }
     .qr-quick-login{
         height:51px;
@@ -92,7 +92,7 @@
         background-color: #fcfcfc;
         border-top: 1px solid #f4f4f4;
         .qq-wechat{
-            width: 155px;
+            width: 110px;
             height: 51px;
             padding-left: 20px;
             padding-right: 20px;
@@ -104,11 +104,11 @@
             .qq{
                 width:50%;
                 position: relative;
-                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 25px, 15px);
+                .QQWechat(url('~@/assets/imgs/QQ-weixin_01.png'), 25px, 25px);
             }
             .wechat{
-                padding-left: 10px;
-                .QQWechat(url('~@/assets/imgs/QQ-weixin_02.png'), 25px, 35px);
+                padding-left: 25px;
+                .QQWechat(url('~@/assets/imgs/QQ-weixin_02.png'), 25px, 50px);
             }
             .cutting-line{
                 display: inline-block;
@@ -124,13 +124,14 @@
             }
         }
         .regist{
-            width:118px;
+            width:80px;
             height: 51px;
             position: relative;
             padding: 17px 20px 20px 20px;
             .regist-inner{
                 width: 80px;
                 height: 20px;
+
                 b{
                     width: 18px;
                     height: 18px;
@@ -142,6 +143,7 @@
                     position: absolute;
                     left: 41px;
                     color: #b61d1d !important;
+                    font-size: 14px;
                 }
                 &:hover{
                     cursor:pointer;
@@ -150,7 +152,7 @@
                     }
                 }
             }
-            
+
         }
     }
 </style>
