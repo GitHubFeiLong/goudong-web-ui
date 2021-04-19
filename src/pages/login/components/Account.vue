@@ -44,25 +44,25 @@
             function usernameFocus (e:any) {
                 // e.target 是你当前点击的元素
                 // e.currentTarget 是你绑定事件的元素
-        
+
                 // 获得点击元素的前一个元素
                 // e.currentTarget.previousElementSibling.innerHTML
-        
+
                 // 获得点击元素的第一个子元素
                 // e.currentTarget.firstElementChild
-        
+
                 // 获得点击元素的下一个元素
                 // e.currentTarget.nextElementSibling
-        
+
                 // 获得点击元素中id为string的元素
                 // e.currentTarget.getElementById("string")
-        
+
                 // 获得点击元素的string属性
                 // e.currentTarget.getAttributeNode('string')
-        
+
                 // 获得点击元素的父级元素
                 // e.currentTarget.parentElement
-        
+
                 // 获得点击元素的前一个元素的第一个子元素的HTML值
                 // e.currentTarget.previousElementSibling.firstElementChild.innerHTML
                 $(e.currentTarget.previousElementSibling).css('background-position', '0px -48px');
@@ -101,7 +101,7 @@
                 forgetPassword
             }
         },
-        
+
     })
 </script>
 
@@ -110,7 +110,7 @@
     input[type="password"]::-ms-reveal{
         display:none;
     }
-    /* 
+    /*
         输入框：用户名和密码的公共样式
         @margin-top 向上偏移量
     */
@@ -133,6 +133,7 @@
         input{
             width:100%;
             padding:10px 0 7px 50px;
+            box-sizing: border-box;
             border:0;
             position: absolute;
         }
@@ -185,12 +186,12 @@
             right: 0;
             color:#666 !important;
             &:hover{
-                color:#E4393C !important;  
+                color:#E4393C !important;
                 cursor: pointer;
                 text-decoration: underline;
             }
         }
-        
+
         #login-btn {
             position: absolute;
             width:306px;

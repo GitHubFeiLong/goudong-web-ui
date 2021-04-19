@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid"> 
+    <div class="container-fluid">
         <Header :title='HeaderTitle' >
             <template #header>
                 <div class="go-login">
@@ -43,6 +43,18 @@
     })
 </script>
 
-<style>
-    
+<style lang="less" scoped>
+  .go-login{
+      height:21px;
+      font-size: 16px;
+      float: right;
+      margin-top: 55px;
+      color: #999;
+    a{
+      color:#e22;
+      &:hover{
+         text-decoration: underline;
+      }
+    }
+  }
 </style>
