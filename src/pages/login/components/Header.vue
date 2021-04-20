@@ -5,8 +5,8 @@
         <div class="row" id="header-body">
             <div class="center">
                 <div id="logo">
-                    <img class="big-logo" src="../../../assets/imgs/logo-20200504-b.png" alt="大logo" @click="notDone">
-                    <img class="text-logo" src="../../../assets/imgs/logo-text.png"   alt="登录文字">
+                    <img class="big-logo" src="@/assets/imgs/logo-20200504-b.png" alt="大logo" @click="notDone">
+                    <img class="text-logo" src="@/assets/imgs/logo-text.png"   alt="登录文字">
                 </div>
                 <a id="questionnaire" href="http://www.baidu.com" @click.prevent="notDone">
                     <b></b>登录页面，调查问卷
@@ -14,7 +14,7 @@
             </div>
         </div>
         <Hint :hint="hint"/>
-    </div> 
+    </div>
 </template>
 
 <!--lang="ts" 可以写ts代码-->
@@ -89,6 +89,10 @@
                     bottom: 10px;
                     line-height: 18px;
                     text-align: right;
+                    &:hover{
+                      color: #E4393C !important;
+                      text-decoration: underline;
+                    }
                     b{
                         width: 18px;
                         height: 14px;
@@ -102,7 +106,7 @@
                 }
             }
         }
-        
+
     }
-    
+
 </style>

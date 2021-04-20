@@ -1,6 +1,6 @@
 <!-- 提示模板 -->
 <template>
-    <div class="row" id="header-hint"> 
+    <div class="row" id="header-hint">
         <p class="hint">
             <i class='header-i'></i>
             <span v-html="hint"></span>
@@ -26,11 +26,11 @@
     });
 </script>
 
-<style>
+<!--<style>
     a{
         color:#333 !important;
     }
-</style>
+</style>-->
 <style lang="less" scoped>
 @font-color:#999;
 #header-hint{

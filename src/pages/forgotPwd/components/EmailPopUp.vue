@@ -1,6 +1,7 @@
 <!--邮箱弹窗-->
 <template>
   <div class="email-pop-up" @click="closeDialog"></div>
+  <div class="dialog-mask" :style="dialogStyle" @click="hidden"></div>
 </template>
 <script lang='ts'>
   import {defineComponent, ref, onMounted } from 'vue'
@@ -9,15 +10,24 @@
     components:{
     },
     setup (props, content) {
-
+      let dialogStyle = ref({width:"0", height:"0"});
       onMounted(()=>{
         // 遮罩组件显示
       });
       // 关闭遮罩
       const closeDialog = () => {
       }
+      const show = () => {
+        dialogStyle.value = {width: "100%", height: "100%"}
+      }
+      const hidden = () => {
+        dialogStyle.value = {width: "0", height: "0"}
+      }
+
       return {
         closeDialog,
+        dialogStyle,
+        hidden
       }
     }
   })

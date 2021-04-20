@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid"> 
+    <div class="container-fluid">
         <Header/>
         <Body/>
         <Footer/>
@@ -25,11 +25,11 @@
         setup () {
             onMounted (() => {
                 (window as any)['notDone'] = (NotDone as any).notDone;
-            }) 
+            })
         }
     })
 </script>
 
 <style>
-    
+
 </style>

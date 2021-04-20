@@ -122,12 +122,14 @@
         left: 0;
         right: 0;
         border: 1px solid #bdbdbd;
+        box-sizing: border-box;
         label{
             width:39px;
             height:100%;
             position: absolute;
             z-index: 10;
             border-right: 1px solid #bdbdbd;
+            box-sizing: border-box;
             background-image:url('~@/assets/imgs/pwd-icons-new.png');
         }
         input{
