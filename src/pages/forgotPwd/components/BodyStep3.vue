@@ -23,23 +23,29 @@
     <div class="step-1-body">
       <img src="~@/assets/imgs/auth-ico.png">
       <p>为确认是您本人操作，请选择以下任一方式完成身份认证</p>
-      <button @click="emailFunc">使用 邮箱验证码</button>
+      <button @click="dialogFormVisible = true">使用 邮箱验证码</button>
     </div>
-    <EmailPopUp/>
     <BodyFoot/>
   </div>
+  <!--弹框-->
+  <el-dialog class="email-dialog" v-model="dialogFormVisible" width="500px" height="600px">
+    <div class="content">aaa</div>
+    <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </span>
+    </template>
+  </el-dialog>
 </template>
 <script lang='ts'>
   import { defineComponent, ref, onMounted, watch, inject } from 'vue'
 
-  // 按钮点击邮箱验证弹框
-  import EmailPopUp from "@/pages/forgotPwd/components/EmailPopUp.vue";
   // 提示信息
   import BodyFoot from "@/pages/forgotPwd/components/BodyFoot.vue";
   export default defineComponent ({
     components:{
       BodyFoot,
-      EmailPopUp,
     },
     setup (props, content) {
       // 当前的步骤状态
@@ -83,6 +89,38 @@
             break
         }
       })
+
+      let gridData =  [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }];
+        let dialogTableVisible = ref(false);
+        let dialogFormVisible =  ref(false);
+        let form = ref({
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        });
+      let formLabelWidth = ref('120px');
+
       return {
         stepStatus,
         step1Style,
@@ -95,6 +133,9 @@
         circle3,
         outer3,
         emailFunc,
+        dialogFormVisible,
+
+        gridData,dialogTableVisible,form,formLabelWidth
       }
     }
   })
@@ -207,5 +248,11 @@
         }
       }
     }
+  }
+  /*弹框样式*/
+  .el-dialog__body{
+     .content{
+       height: 600px;
+     }
   }
 </style>

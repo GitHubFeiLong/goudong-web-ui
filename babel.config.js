@@ -8,7 +8,7 @@ module.exports = {
       {
         rootPathPrefix: '~', // `~` 默认
         rootPathSuffix: 'src'
-      }
+      },
     ]
   ]
 };
