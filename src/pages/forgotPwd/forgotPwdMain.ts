@@ -6,5 +6,6 @@ import App from './ForgotPwd.vue'
 import store from "@/store/ForgotPwdStore";
 
 import '/public/css/login.css'
+import '@/assets/fonts/iconfont.css'
 
 createApp(App).use(store).use(ElementPlus).mount('#app');

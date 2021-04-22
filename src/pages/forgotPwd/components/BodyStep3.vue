@@ -29,13 +29,39 @@
   </div>
   <!--弹框-->
   <el-dialog class="email-dialog" v-model="dialogFormVisible" width="500px" height="600px">
-    <div class="content">aaa</div>
-    <template #footer>
+    <div class="content">
+      <div class="header">
+        <div class="icon">
+          <em class="iconfont icon-phone_icon"></em>
+        </div>
+        <p>手机短信验证码</p>
+      </div>
+      <div class="body">
+        <p class="phone-p">当前手机号152xxxx716</p>
+        <div class="verify-div">
+          <div class="verify-left-div">
+            <input v-model="username" type="text"  placeholder="请输入手机验证码"  autocomplete="off" maxlength="6">
+          </div>
+          <div class="verify-right-div">
+            <div class="message-div">
+              <button class="message-button"><span class="iconfont icon-duanxin"></span>获取短信验证码</button>
+            </div>
+            <div class="voice-div">
+              <button class="voice-button"><span class="iconfont icon-dianhua"></span>获取语音验证码</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fotter">
+
+      </div>
+    </div>
+    <!--<template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
         </span>
-    </template>
+    </template>-->
   </el-dialog>
 </template>
 <script lang='ts'>
@@ -252,7 +278,106 @@
   /*弹框样式*/
   .el-dialog__body{
      .content{
-       height: 600px;
+       width: 402px;
+       box-sizing: border-box;
+       position: relative;
+       margin: auto;
+       /*height: 600px;*/
+       .header{
+         width: 100%;
+         height: 90px;
+         text-align: center;
+         margin-bottom: 15px;
+         font: 700 16px/30px Microsoft YaHei;
+         .icon{
+           width: 50px;
+           height: 50px;
+           border-radius: 50%;
+           background-color: #ccc;
+           color: #fff;
+           margin: auto;
+           line-height: 50px;
+           margin-bottom: 10px;
+         }
+       }
+       .body{
+         .phone-p{
+           font: 12px/18px Microsoft YaHei;
+           margin-bottom: 20px;
+         }
+         .verify-div{
+           width: 100%;
+           height: 52px;
+           display: flex;
+           div{
+             border: 1px solid #ddd;
+           }
+           .verify-left-div{
+             width: 193px;
+             height: 50px;
+             input{
+               position: relative;
+               border: 0;
+               font-size: 14px;
+               z-index: 2;
+               width: 144px;
+               height: 20px;
+               line-height: 20px;
+               padding: 15px 0 15px 15px;
+               text-align: left;
+               background: transparent;
+               font-family: Microsoft YaHei;
+             }
+           }
+           .verify-right-div{
+             margin-left: 10px;
+             width: 192px;
+             height: 52px;
+             display: flex;
+             div{
+               border: unset;
+               top: 0;
+               height: 52px;
+               line-height: 52px;
+               overflow: hidden;
+               font-size: 12px;
+               transition: width .1s linear;
+               text-align: center;
+             }
+             button{
+               background-color: #fff;
+               border: none;
+               overflow: hidden;
+               white-space: nowrap;
+               span{
+                 margin: 0 10px;
+               }
+             }
+             .message-div {
+               width: 150px;
+               .message-button{
+                  width: 100%;
+                  height: 100%;
+               }
+             }
+             .voice-div {
+               width: 46px;
+               .voice-button{
+                 width: 100%;
+                 height: 100%;
+                 font-size: 13px;
+                 span{
+                   margin: 0 10px;
+                 }
+               }
+             }
+
+
+
+
+           }
+         }
+       }
      }
   }
 </style>

@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2127151",
+      "name": "电话 (1)",
+      "font_class": "dianhua",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "1463622",
+      "name": "相机",
+      "font_class": "camera",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "2116287",
+      "name": "手机",
+      "font_class": "phone_icon",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "1374722",
+      "name": "短信",
+      "font_class": "duanxin",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "17827355",
+      "name": "短信",
+      "font_class": "duanxin1",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
       "icon_id": "1066119",
       "name": "成功",
       "font_class": "Success-Small",
