@@ -4,7 +4,7 @@
             <template #header>
                 <div class="go-login">
                     已有账号？
-                    <a href="/login">请登录></a>
+                    <a href="/login.html">请登录></a>
                 </div>
             </template>
         </Header>

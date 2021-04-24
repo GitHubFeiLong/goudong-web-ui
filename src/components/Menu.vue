@@ -10,12 +10,12 @@
                 <span class="iconfont icon-dingwei"></span>
                 <a href="#">重庆</a>
             </div>
-            
+
             <div id="menu-detail">
                 <ul>
                     <li class="li1">
-                        <a href="/login">你好，请登录</a>&nbsp;
-                        <a href="/regist" >免费注册</a>
+                        <a href="/login.html">你好，请登录</a>&nbsp;
+                        <a href="/regist.html" >免费注册</a>
                     </li>
                     <li class='split-li'></li>
                     <li class="li2">
@@ -58,7 +58,7 @@
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/less/globalVariable.less'); 
+    @import url('~@/assets/less/globalVariable.less');
     @import url('~@/assets/fonts/iconfont.css');
     // 未点击样式
     a:link{
@@ -93,7 +93,7 @@
                     height: 16px;
                     display: inline-block;
                     line-height: 30px;
-                } 
+                }
                 a {
                     margin-left:5px;
                 }
@@ -107,7 +107,7 @@
                     height: 16px;
                     display: inline-block;
                     line-height: 30px;
-                } 
+                }
                 a {
                     margin-left:3px;
                 }
@@ -180,7 +180,7 @@
                         span{
                             font-size:6px;
                         }
-                        
+
                     }
                     .li6{
                         width:82px;
@@ -215,7 +215,7 @@
                     color: @a-hover-color-01;
                 }
             }
-            
+
         }
     }
 </style>
