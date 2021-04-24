@@ -21,9 +21,7 @@
     components:{
     },
     setup (props, content) {
-
       return {
-
       }
     }
   })

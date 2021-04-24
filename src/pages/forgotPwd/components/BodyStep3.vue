@@ -23,12 +23,12 @@
     <div class="step-1-body">
       <img src="~@/assets/imgs/auth-ico.png">
       <p>为确认是您本人操作，请选择以下任一方式完成身份认证</p>
-      <button @click="dialogFormVisible = true">使用 邮箱验证码</button>
+      <button @click="dialogVisible = true">使用 邮箱验证码</button>
     </div>
     <BodyFoot/>
   </div>
   <!--弹框-->
-  <el-dialog class="email-dialog" v-model="dialogFormVisible" width="500px" height="600px">
+  <el-dialog class="email-dialog" v-model="dialogVisible" width="500px" height="600px">
     <div class="content">
       <div class="header">
         <div class="icon">
@@ -39,9 +39,11 @@
       <div class="body">
         <p class="phone-p">当前手机号152xxxx716</p>
         <div class="verify-div">
-          <div class="verify-left-div">
-            <input v-model="username" type="text"  placeholder="请输入手机验证码"  autocomplete="off" maxlength="6">
+          <div :class="verifyLeftDivClass">
+            <input v-model="phoneVerifyCode" @focus="phoneVerifyCodeFocus($event)" @blur="phoneVerifyCodeBlur($event)" type="text"  placeholder="请输入手机验证码"  autocomplete="off" maxlength="6">
+            <em v-show="phoneVerifyCode.length > 0" @click="phoneVerifyCode=''; showHint=false" class="iconfont icon-fork"></em>
           </div>
+          <!--按钮-->
           <div class="verify-right-div">
             <div class="message-div">
               <button class="message-button"><span class="iconfont icon-duanxin"></span>获取短信验证码</button>
@@ -51,17 +53,17 @@
             </div>
           </div>
         </div>
+        <!--提示信息-->
+        <div class="hint"><Hint :hint="hint" v-show="showHint"/></div>
+        <!--下一步按钮-->
+        <div class="next-step-div">
+          <button @click="clickDialogNextStep">下一步</button>
+        </div>
       </div>
       <div class="fotter">
-
+        <QA :qa="dialogQA"/>
       </div>
     </div>
-    <!--<template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-        </span>
-    </template>-->
   </el-dialog>
 </template>
 <script lang='ts'>
@@ -69,9 +71,16 @@
 
   // 提示信息
   import BodyFoot from "@/pages/forgotPwd/components/BodyFoot.vue";
+  // 输入框提示信息
+  import Hint from "@/components/Hint.vue";
+  import QA from "@/components/QA.vue";
+  import * as HintEntity from "@/pojo/HintEntity";
+  import * as QAEntity from "@/pojo/QAEntity";
   export default defineComponent ({
     components:{
       BodyFoot,
+      Hint,
+      QA,
     },
     setup (props, content) {
       // 当前的步骤状态
@@ -90,9 +99,33 @@
       let circle3 = ref({});
       let outer3 = ref({});
 
+      // 弹框是否显示
+      let dialogVisible =  ref(false);
+      // 弹框验证码输入左边的divclass
+      let verifyLeftDivClass = ref({'verify-left-div':true, 'verify-left-div-focus':false});
+      // 弹框验证码输入
+      let phoneVerifyCode = ref("");
+      // 弹框提示信息
+      let showHint = ref(false);
+      let hint = ref(HintEntity.EMAIL_CODE_HINT_2);
+
+      // 弹框问题
+      let dialogQA = new QAEntity.QAEntity("收不到短信验证码？", "请检查手机网络并且核实手机是否屏蔽系统短信，如均正常请重新获取或稍后再试。");
       // 邮箱验证按钮点击
       const emailFunc = () => {
 
+      }
+      // 弹框验证码得到焦点
+      const phoneVerifyCodeFocus = () => {
+        verifyLeftDivClass.value['verify-left-div-focus'] = true;
+      }
+      // 弹框验证码失去焦点
+      const phoneVerifyCodeBlur = () => {
+        verifyLeftDivClass.value['verify-left-div-focus'] = false;
+      }
+      // 弹框中点击下一步
+      const clickDialogNextStep = () => {
+        showHint.value = true;
       }
       // 监视当前的状态
       watch(stepStatus, (cur, pre) => {
@@ -116,36 +149,7 @@
         }
       })
 
-      let gridData =  [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }];
-        let dialogTableVisible = ref(false);
-        let dialogFormVisible =  ref(false);
-        let form = ref({
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        });
-      let formLabelWidth = ref('120px');
+
 
       return {
         stepStatus,
@@ -159,9 +163,15 @@
         circle3,
         outer3,
         emailFunc,
-        dialogFormVisible,
-
-        gridData,dialogTableVisible,form,formLabelWidth
+        verifyLeftDivClass,
+        phoneVerifyCodeFocus,
+        phoneVerifyCodeBlur,
+        phoneVerifyCode,
+        showHint,
+        hint,
+        dialogQA,
+        dialogVisible,
+        clickDialogNextStep,
       }
     }
   })
@@ -287,7 +297,7 @@
          width: 100%;
          height: 90px;
          text-align: center;
-         margin-bottom: 15px;
+         margin: 45px 0 15px 0;
          font: 700 16px/30px Microsoft YaHei;
          .icon{
            width: 50px;
@@ -298,6 +308,9 @@
            margin: auto;
            line-height: 50px;
            margin-bottom: 10px;
+           em{
+             font-size: 30px;
+           }
          }
        }
        .body{
@@ -309,12 +322,11 @@
            width: 100%;
            height: 52px;
            display: flex;
-           div{
-             border: 1px solid #ddd;
-           }
            .verify-left-div{
              width: 193px;
              height: 50px;
+             position: relative;
+             border: 1px solid #ddd;
              input{
                position: relative;
                border: 0;
@@ -328,19 +340,36 @@
                background: transparent;
                font-family: Microsoft YaHei;
              }
+             em {
+               position: absolute;
+               margin: auto;
+               top: 0;
+               bottom: 0;
+               right: 12px;
+               width: 20px;
+               height: 20px;
+               line-height: 20px;
+               font-size: 20px;
+               cursor: pointer;
+             }
+           }
+           /*左侧输入框得到焦点，div更改样式*/
+           .verify-left-div-focus {
+             border: 1px solid #666;
            }
            .verify-right-div{
              margin-left: 10px;
              width: 192px;
              height: 52px;
              display: flex;
+             font-size: 12px;
+             box-sizing: border-box;
              div{
                border: unset;
                top: 0;
                height: 52px;
                line-height: 52px;
                overflow: hidden;
-               font-size: 12px;
                transition: width .1s linear;
                text-align: center;
              }
@@ -349,34 +378,66 @@
                border: none;
                overflow: hidden;
                white-space: nowrap;
+               cursor: pointer;
                span{
                  margin: 0 10px;
                }
              }
              .message-div {
                width: 150px;
+               border: 1px solid #ddd;
                .message-button{
                   width: 100%;
                   height: 100%;
                }
+               &:hover{
+                 border: 1px solid #666;
+               }
              }
              .voice-div {
                width: 46px;
+               border-top: 1px solid #ddd;
+               border-right: 1px solid #ddd;
+               border-bottom: 1px solid #ddd;
                .voice-button{
                  width: 100%;
                  height: 100%;
-                 font-size: 13px;
+                 font-size: 12px;
                  span{
+                   font-size: 12px;
                    margin: 0 10px;
                  }
                }
+               &:hover{
+                 border: 1px solid #666;
+               }
              }
-
-
-
-
            }
          }
+         .hint{
+           width: 100%;
+           height: 16px;
+           margin: 5px 0 18px 0;
+         }
+         .next-step-div{
+           width: 100%;
+           height: 50px;
+           margin-bottom: 27px;
+           button{
+             width: 100%;
+             height: 100%;
+             background-color: #e2231a;
+             color: #fff;
+             border: unset;
+             cursor: pointer;
+             &:hover{
+               background-color: #c81623;
+             }
+           }
+         }
+       }
+       .fotter{
+         margin-bottom: 90px;
        }
      }
   }
