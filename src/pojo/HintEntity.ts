@@ -42,6 +42,9 @@ export const PASSWORD_HINT_02 = new HintEntity('请输入密码', '#f91', '-17px
 export const PASSWORD_HINT_1 = new HintEntity('有被盗风险,建议使用字母、数字和符号两种及以上组合', '#f91', '-17px -134px');
 export const PASSWORD_HINT_2 = new HintEntity('你的密码很安全','#c5c5c5', '-33px -134px');
 export const PASSWORD_HINT_3 = new HintEntity('安全强度适中，可以使用三种以上的组合来提高安全强度','#c5c5c5', '-33px -117px');
+// 修改密码 输入密码
+export const PASSWORD_HINT_4 = new HintEntity('登录密码由 8 ~ 20 位字符组成，包含至少两种以上字母、数字，符号两种以上组合，区分大小写', '#c5c5c5', '0px -100px');
+
 // 注册确认密码
 export const CONFIRM_PASSWORD_HINT_0 = new HintEntity('请再次输入密码','#c5c5c5', '0px -100px');
 export const CONFIRM_PASSWORD_HINT_1 = new HintEntity('您两次输入的密码不同，请重试', '#f91', '-17px -100px');

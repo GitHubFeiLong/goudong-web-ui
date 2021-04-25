@@ -20,12 +20,34 @@
         <div class="txt">完成</div>
       </div>
     </div>
-    <div class="step-1-body">
+    <!--验证用户-->
+    <div class="step-1-body" v-if="stepStatus == 1">
       <img src="~@/assets/imgs/auth-ico.png">
       <p>为确认是您本人操作，请选择以下任一方式完成身份认证</p>
       <button @click="dialogVisible = true">使用 邮箱验证码</button>
     </div>
-    <BodyFoot/>
+    <!--设置新密码-->
+    <div class="step-2-body" v-else-if="stepStatus == 2">
+      <p>设置新密码</p>
+      <div class="password-div" >
+        <input ref="pwdRef" v-model="newPassword" type="password" placeholder="请输入新密码">
+        <em @click="newPassword = ''; " v-show="newPassword.length > 0" class="iconfont icon-fork"></em>
+        <em ref="eyeRef" class="iconfont icon-icon-test icon-eye" @click="switchShowPwd()"></em>
+      </div>
+      <div class="hint"><Hint :hint="pwdHint"/></div>
+      <div class="submit-div">
+        <button :disabled="!pwdSure" @click="clickSubmitBtn()">提 交</button>
+      </div>
+    </div>
+    <!--修改密码成功-->
+    <div class="step-3-body" v-else>
+      <div class="header"><em class="iconfont icon-Success-Small"></em></div>
+      <p>登陆密码更新成功</p>
+      <div class="submit-div">
+        <button @click="clickGoLogin()">重新登录</button>
+      </div>
+    </div>
+    <BodyFoot v-if="stepStatus == 1"/>
   </div>
   <!--弹框-->
   <el-dialog class="email-dialog" v-model="dialogVisible" width="500px" height="600px">
@@ -57,7 +79,7 @@
         <div class="hint"><Hint :hint="hint" v-show="showHint"/></div>
         <!--下一步按钮-->
         <div class="next-step-div">
-          <button @click="clickDialogNextStep">下一步</button>
+          <button :disabled="phoneVerifyCode.length == 0" @click="clickDialogNextStep">下一步</button>
         </div>
       </div>
       <div class="fotter">
@@ -67,6 +89,7 @@
   </el-dialog>
 </template>
 <script lang='ts'>
+  declare var $: (selector: string) => any;
   import { defineComponent, ref, onMounted, watch, inject } from 'vue'
 
   // 提示信息
@@ -76,6 +99,7 @@
   import QA from "@/components/QA.vue";
   import * as HintEntity from "@/pojo/HintEntity";
   import * as QAEntity from "@/pojo/QAEntity";
+  import * as Validate from "@/utils/validate";
   export default defineComponent ({
     components:{
       BodyFoot,
@@ -126,7 +150,70 @@
       // 弹框中点击下一步
       const clickDialogNextStep = () => {
         showHint.value = true;
+
+        // 验证码正确，关闭弹框，跳转到第二部
+        showHint.value = false;
+        dialogVisible.value = false;
+        stepStatus.value = 2;
       }
+
+      // 步骤2
+      let newPassword = ref('');
+      // 密码框
+      let pwdRef = ref(null);
+      // 眼睛icon
+      let eyeRef = ref(null);
+      // 设置密码的提示信息
+      let pwdHint = ref(HintEntity.PASSWORD_HINT_4);
+      // 密码是否符合正则
+      let pwdSure = ref(false);
+      // 点击切换显示隐藏面膜
+      const switchShowPwd = () => {
+        let type = (pwdRef.value as any).getAttribute("type");
+        if (type === 'text') {
+          (pwdRef.value as any).setAttribute("type", "password");
+          // 修改眼睛为睁眼
+          (eyeRef.value as any).className="iconfont icon-icon-test icon-eye";
+        } else {
+          (pwdRef.value as any).setAttribute("type", "text");
+          // 修改眼睛为闭眼
+          (eyeRef.value as any).className="iconfont icon-biyan icon-eye";
+        }
+      }
+      // 监视密码
+      watch(newPassword, (cur, old) => {
+        Validate.validatePassword(cur, passwordCallback)
+      })
+      const passwordCallback = (e:Error) => {
+        if (e) {
+          let msg = e.message;
+          // 数量不够
+          if (msg === HintEntity.PASSWORD_HINT_0.info) {
+            pwdHint.value = HintEntity.PASSWORD_HINT_01;
+            pwdSure.value = false;
+          } else if (msg === HintEntity.PASSWORD_HINT_1.info) {
+            pwdHint.value = HintEntity.PASSWORD_HINT_1;
+            pwdSure.value = true;
+          } else if (msg === HintEntity.PASSWORD_HINT_3.info) {
+            pwdHint.value = HintEntity.PASSWORD_HINT_3;
+            pwdSure.value = true;
+          } else if (msg === HintEntity.PASSWORD_HINT_2.info) {
+            pwdHint.value = HintEntity.PASSWORD_HINT_2;
+            pwdSure.value = true;
+          }
+        }
+      }
+
+      // 提交密码
+      const clickSubmitBtn = () => {
+        stepStatus.value = 3;
+      }
+      // 第三步
+      // 去登录
+      const clickGoLogin = () => {
+        window.location.href = "/login.html";
+      }
+
       // 监视当前的状态
       watch(stepStatus, (cur, pre) => {
         console.log(cur, pre)
@@ -172,6 +259,14 @@
         dialogQA,
         dialogVisible,
         clickDialogNextStep,
+        pwdRef,
+        eyeRef,
+        newPassword,
+        switchShowPwd,
+        pwdHint,
+        pwdSure,
+        clickSubmitBtn,
+        clickGoLogin,
       }
     }
   })
@@ -281,6 +376,127 @@
         &:hover{
           cursor: pointer;
           border-color: #666;
+        }
+      }
+    }
+    .step-2-body{
+      width: 400px;
+      height: 218px;
+      top: 160px;
+      position: relative;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      p{
+        font: 700 16px/30px Microsoft YaHei;
+        color: #666;
+        margin-bottom: 15px;
+      }
+      .password-div{
+        width: 100%;
+        height: 50px;
+        border: 1px solid #ddd;
+        position: relative;
+        input{
+          position: relative;
+          border: 0;
+          font-size: 14px;
+          width: 306px;
+          height: 20px;
+          line-height: 20px;
+          padding: 15px 0 15px 15px;
+          text-align: left;
+          background: transparent;
+          font-family: Microsoft YaHei;
+        }
+        em{
+          width: 20px;
+          height: 20px;
+          font-weight: 600;
+          font-size: 20px;
+          color: #b0b0b0;
+          position: absolute;
+          margin: auto;
+          top: 0;
+          bottom: 0;
+          cursor: pointer;
+          &[class*=icon-fork]{
+            right: 45px;
+          }
+          &[class*=icon-eye]{
+            right: 12px;
+          }
+        }
+      }
+      .hint{
+        width: 100%;
+        height: 19px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+      }
+      .submit-div{
+        width: 100%;
+        height: 50px;
+        margin-top: 10px;
+        button{
+          width: 100%;
+          height: 100%;
+          border: none;
+          background-color: #e2231a;
+          color: #fff;
+          cursor: pointer;
+        }
+        button[disabled] {
+          cursor: not-allowed;
+          opacity: .5;
+        }
+      }
+    }
+    .step-3-body{
+      width: 400px;
+      height: 178px;
+      top: 160px;
+      position: relative;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      .header{
+        width: 80px;
+        height: 80px;
+        margin: auto;
+        margin-bottom: 5px;
+        em{
+          font-size: 80px;
+          line-height: 80px;
+          color: #3b4;
+        }
+      }
+      p{
+        margin: 0 auto 20px;
+        font: 14px/22px Microsoft YaHei;
+        color: #666;
+      }
+      .submit-div{
+        width: 100%;
+        height: 52px;
+        position: relative;
+        button{
+          width: 334px;
+          height: 100%;
+          position: absolute;
+          left: 0;
+          right: 0;
+          margin: auto;
+          border: none;
+          background-color: #e2231a;
+          color: #fff;
+          cursor: pointer;
+          line-height: 52px;
+          font-size: 14px;
+          text-align: center;
+          &:hover{
+            background-color: #c81623;
+          }
         }
       }
     }
@@ -432,6 +648,13 @@
              cursor: pointer;
              &:hover{
                background-color: #c81623;
+             }
+           }
+           button[disabled]{
+             opacity: .5;
+             cursor: not-allowed;
+             &:hover{
+               background-color: #e2231a;
              }
            }
          }
