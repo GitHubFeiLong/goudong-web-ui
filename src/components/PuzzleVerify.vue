@@ -20,11 +20,11 @@
         </div>
         <i class='puzzle-arrows'></i>
     </div>
-    
+
 </template>
 
 <script lang='ts'>
-    import { defineComponent, onMounted, ref, watch, reactive} from 'vue'    
+    import { defineComponent, onMounted, ref, watch, reactive} from 'vue'
     declare var $: (selector: string) => any;
     export default defineComponent ({
         setup(props, context){
@@ -56,8 +56,8 @@
                 require('@/assets/imgs/puzzle-verify.png'),
                 require('@/assets/imgs/puzzle-verify2.png'),
 
-            ] 
-            
+            ]
+
             let isMouseUp = ref(true);
             let isMouseDown = ref(false);
             // 鼠标移动距离
@@ -89,12 +89,12 @@
                         let y = e1.clientY;
                         // 大于长条的最大值
                         if (x >= totalX) {
-                            (CIRCLE.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px"; 
-                            (CONVAS.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px"; 
+                            (CIRCLE.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px";
+                            (CONVAS.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px";
                             moveX = FOOTER_WIDTH - CIRCLE_WIDTH;
                         } else if (x <= footerX) { // 小于长条的最小值
-                            (CIRCLE.value as any).style.left = "0px";  
-                            (CONVAS.value as any).style.left = "0px";  
+                            (CIRCLE.value as any).style.left = "0px";
+                            (CONVAS.value as any).style.left = "0px";
                             moveX = 0;
                         } else { // 中间值
                             (CIRCLE.value as any).style.left = x - circleX  + "px";
@@ -116,7 +116,7 @@
                     // console.log(x, y);
                 }
             }
-           
+
             // 裁剪滑块验证上图片距左上角x轴距离
             let sx = 0;
             // 裁剪滑块验证图片距左上角y轴距离
@@ -139,12 +139,12 @@
                 do {
                     newIndex = Math.floor(Math.random() * puzzImgs.length);
                 } while (oldIndex == newIndex)
-                
+
                 oldIndex = newIndex;
                  // 修改路径
                 image.src = puzzImgs[newIndex];
 
-               
+
                 image.onload = function(){
                     // 执行drawImage语句
                     ctx.drawImage(image, sx, sy, 46, 46, 0, 0, 50, 50)
@@ -154,7 +154,7 @@
                 // 滑块需要再减去convas的宽高。
                 let imageWidth = 363 -100;
                 let imageHeight = 141 -100;
-                
+
                 sx = Math.round(Math.random()*imageWidth) + 50;
                 sy = Math.round(Math.random()*imageHeight) + 50;
 
@@ -189,7 +189,7 @@
                             (CONVAS.value as any).style.left = "0px";
                             randomSXY();
                         }, 500);
-                        
+
 
                         // 滑块都重新放在左侧
                         statusTxt.value = "向右滑动完成拼图";
@@ -200,7 +200,7 @@
                         (STATUS.value as any).style.backgroundImage = "linear-gradient(to top, #ff5b57, #ff5b57)";
                         (STATUSTXT.value as any).style.color = '#10b2fa'
                     }
-                    
+
                 } else {
                     (STATUS.value as any).style.borderRadius = "40px";
                     (CIRCLE.value as any).style.transition = "";
@@ -212,9 +212,9 @@
             const closeImage = () => {
                 context.emit("closePuzzle");
                 console.log("关闭验证码123");
-                
+
             }
-            
+
             // 更换图片
             const changeImage = () => {
                 console.log("更换图片");
@@ -238,7 +238,11 @@
         }
     })
 </script>
-
+<style>
+  #puzzle-warp{
+    top: 299px;
+  }
+</style>
 <style lang='less' scoped>
     @import url('~@/assets/fonts/iconfont.css');
     #puzzle-warp{
@@ -255,6 +259,7 @@
         display: flex;
         flex-direction: column;
         z-index: 10;
+        box-sizing: unset;
         .puzzle-close{
             display:inline-block;
             width:12px;
@@ -366,6 +371,6 @@
             border-bottom:1px solid #eee;
         }
     }
-    
-    
+
+
 </style>

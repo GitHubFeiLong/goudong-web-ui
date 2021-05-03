@@ -7,10 +7,10 @@ module.exports = {
     productionSourceMap:true,
     // 关闭ESlint
     lintOnSave: false,
-    pages: {//配置多页面入口        
-        login: {          
+    pages: {//配置多页面入口
+        login: {
             // page 的入口
-            entry: 'src/pages/login/loginMain.ts',          
+            entry: 'src/pages/login/loginMain.ts',
             // 模板来源
             template: 'src/pages/login/login.html',
             // 在 dist/index.html 的输出
@@ -21,25 +21,31 @@ module.exports = {
             // 在这个页面中包含的块，默认情况下会包含
             // 提取出来的通用 chunk 和 vendor chunk。
             // chunks: ['chunk-vendors', 'chunk-common', 'index']
-        }, 
-        regist: {          
-          entry: 'src/pages/regist/registMain.ts',          
+        },
+        regist: {
+          entry: 'src/pages/regist/registMain.ts',
           template: 'src/pages/regist/regist.html',
           filename: 'regist.html',
-          title:'Regist Page',  
-        }, 
-        forgotPwd: {          
-          entry: 'src/pages/forgotPwd/forgotPwdMain.ts',          
+          title:'Regist Page',
+        },
+        forgotPwd: {
+          entry: 'src/pages/forgotPwd/forgotPwdMain.ts',
           template: 'src/pages/forgotPwd/forgotPwd.html',
           filename: 'forgotPwd.html',
-          title:'forgot password',  
-        },    
-        index: {        
-          // page 的入口文件  
-          entry: 'src/pages/index/main.ts',          
-          // 模板文件
-          template: 'src/pages/index/index.html',        
-        }, 
+          title:'forgot password',
+        },
+        bindPage: {
+          entry: 'src/pages/bindPage/bindPageMain.ts',
+          template: 'src/pages/bindPage/bindPage.html',
+          filename: 'bindPage.html',
+          title:'账号绑定',
+        },
+        index: {
+            // page 的入口文件
+            entry: 'src/pages/index/main.ts',
+            // 模板文件
+            template: 'src/pages/index/index.html',
+          },
     },
     // webpack 配置
     configureWebpack: {
@@ -54,6 +60,6 @@ module.exports = {
             extensions: ['.js', '.ts', '.vue', '.json']
         }
       },
-      
-    
+
+
 }

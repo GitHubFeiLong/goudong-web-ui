@@ -26,7 +26,7 @@
         name:'QuickLogin',
         setup(){
             function qq () {
-                var A=window.open("http://www.goudong.shop/oauth/qq/login","TencentLogin","width=500,height=650,menubar=0,scrollbars=1,resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+              window.location.href = "http://www.goudong.shop/oauth/qq/login";
             }
             function wechat () {
                 (window as any).notDone()
