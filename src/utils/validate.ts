@@ -5,7 +5,7 @@ import * as HintEntity from '@/pojo/HintEntity';
  * @param value 待验证的值
  */
 function validateEmail(value:string):Promise<String|void>{
-    
+
     return new Promise((resolve, reject) => {
         const reg =/^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/;
         if(value==''||value==undefined||value==null){
@@ -17,7 +17,6 @@ function validateEmail(value:string):Promise<String|void>{
             resolve();
         }
     });
-    
 }
 
 /**
@@ -32,7 +31,7 @@ function validateUsername(value:string, callback:any):boolean{
         callback(new Error(HintEntity.USERNAME_HINT_0.info));
         return false;
     }
-   
+
     if (reg.test(value)){
         callback();
         return true;
@@ -49,7 +48,7 @@ function validateUsername(value:string, callback:any):boolean{
 function validatePassword(value:string, callback:any):boolean{
     // 适中 包含(数字+字母)(数字+字符)(字母+字符) 比严格的要宽，所以先执行严格的正则
 const general = /^(?=[a-zA-Z]*\d)(?=\d*[a-zA-Z])|(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*\d)(?=\d*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])|(?=[a-zA-Z]*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*[a-zA-Z])/
-    
+
     // 强密码（三种都包含）
     const strong  = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])/
     // 基本条件
@@ -79,4 +78,23 @@ const general = /^(?=[a-zA-Z]*\d)(?=\d*[a-zA-Z])|(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\
     return false;
 }
 
-export { validateEmail, validateUsername, validatePassword }
+/**
+ * 手机号验证
+ * @param value 待验证的值
+ */
+function validatePhone(value:string):Promise<String|void>{
+
+  return new Promise((resolve, reject) => {
+    const reg =/^1([358][0-9]|4[01456879]|6[2567]|7[0135678]|9[012356789])[0-9]{8}$/;
+    if(value == '' || value == null){
+      reject(HintEntity.PHONE_HINT_02.info)
+    } else {
+      if (!reg.test(value)){
+        reject(HintEntity.PHONE_HINT_01.info)
+      }
+      resolve();
+    }
+  });
+}
+
+export { validateEmail, validateUsername, validatePassword, validatePhone }

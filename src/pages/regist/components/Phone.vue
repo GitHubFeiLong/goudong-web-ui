@@ -1,27 +1,27 @@
 <template>
-    <div id="email">
-        <div id="email-number">
-            <label for="email-num-input">中国 0086</label>
-            <input ref="emailRef" v-model="email" @focus="emailFocus" @blur="emailBlur" type="text" id="email-num-input" placeholder="建议使用常用邮箱"  autocomplete="off">
-            <span class='clean-icon normal-icon' v-show="email.length>0 && !emailSure" @click="cleanEmail"></span>
-            <span class='clean-icon succes-icon' v-show="email.length>0 && emailSure"></span>
+    <div id="phone">
+        <div id="phone-number">
+            <label for="phone-num-input">中国 0086</label>
+            <input ref="phoneRef" v-model="phone" @focus="phoneFocus" @blur="phoneBlur" type="text" id="phone-num-input" placeholder="建议使用常用手机号"  autocomplete="off" maxlength="11">
+            <span class='clean-icon normal-icon' v-show="phone.length>0 && !phoneSure" @click="cleanEmail"></span>
+            <span class='clean-icon succes-icon' v-show="phone.length>0 && phoneSure"></span>
             <Hint :hint="hint" v-show="showHint"/>
         </div>
         <!--滑块验证-->
         <PuzzleVerify v-if="showPuzzle" @successPuzzle="successPuzzle" @closePuzzle="closePuzzle"/>
 
-        <div id="email-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证
+        <div id="phone-button" v-if="showEmailButton" @click="clickGetAuth">点击按钮进行验证
             <Hint :hint="authHint" v-show="showHint2"/>
         </div>
-        <div id="email-auth-code" v-else>
+        <div id="phone-auth-code" v-else>
             <div class="border">
-                <label for="auth-code-input">邮箱验证码</label>
+                <label for="auth-code-input">手机验证码</label>
                 <input v-model="authCode" type="text" id="auth-code-input" placeholder="输入验证码"  autocomplete="off" maxlength="6">
             </div>
             <button :class="btnClass" @click="repeatGetAuth">{{timer}}{{btnVal}}</button>
             <Hint :hint="authHint"/>
         </div>
-        <div id="email-next-step" @click="clickNextStep">下一步</div>
+        <div id="phone-next-step" @click="clickNextStep">下一步</div>
     </div>
 </template>
 
@@ -39,7 +39,7 @@
         props:{
         },
         emits:{
-            'hindenEmail':null,
+            'hindenPhone':null,
         },
         components:{
             Hint,
@@ -47,21 +47,18 @@
         },
       setup: function (props, context) {
         // 提示信息
-        let info = '验证完成后，你可以使用该邮箱登录或找回密码';
-        let color = '#c5c5c5';
-        let backgroundPosition = '0px -100px';
-        let hint = ref(HintEntity.EMAIL_HINT_0);
+        let hint = ref(HintEntity.PHONE_HINT_00);
         let getAuthCodeNum = ref(2);
-        let authHint = ref(new HintEntity.HintEntity(`该邮箱还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px'));
+        let authHint = ref(new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px'));
         // 显示下一步（true）
         let showEmailButton = ref(true)
-        let email = ref('');
-        // 邮箱输入框的提示是否显示
+        let phone = ref('');
+        // 手机输入框的提示是否显示
         let showHint = ref(false);
         // 是否显示 完成验证
         let showHint2 = ref(false);
-        // 邮箱是否正确
-        let emailSure = ref(false);
+        // 手机是否正确
+        let phoneSure = ref(false);
         // 倒计时
         let timer: any = ref(5);
         let btnVal = ref('s后重新获取');
@@ -73,15 +70,15 @@
         let showPuzzle = ref(false);
         // 用户输入的验证码
         let authCode = ref("");
-        // email输入框
-        let emailRef = ref<HTMLElement | null>(null);
+        // phone输入框
+        let phoneRef = ref<HTMLElement | null>(null);
         // 滑块验证是否正确
         let puzzleSure = ref(false);
-        // 清除email值
+        // 清除phone值
         const cleanEmail = () => {
           showHint.value = false;
-          email.value = '';
-          emailSure.value = false;
+          phone.value = '';
+          phoneSure.value = false;
         }
         // 绑定事件监听，父子组件通信
         const successPuzzle = () => {
@@ -102,56 +99,42 @@
 
         // 点击获取验证码
         const clickGetAuth = () => {
-          if (email.value.length == 0) {
+          if (phone.value.length == 0) {
             showHint.value = true;
-            hint.value = HintEntity.EMAIL_HINT_2
+            hint.value = HintEntity.PHONE_HINT_02
           }
-          // 邮箱格式正确才显示
-          if (emailSure.value) {
+          // 手机格式正确才显示
+          if (phoneSure.value) {
             // 1. 滑块验证
             showPuzzle.value = true;
             puzzleSure.value = false;
           }
 
         }
-        // 邮箱输入框获取焦点
-        const emailFocus = () => {
-          showHint.value = !emailSure.value;
-          if (HintEntity.EMAIL_HINT_2.equals(hint.value)) {
-            hint.value = HintEntity.EMAIL_HINT_2;
+        // 手机输入框获取焦点
+        const phoneFocus = () => {
+          showHint.value = !phoneSure.value;
+          if (HintEntity.PHONE_HINT_02.equals(hint.value)) {
+            hint.value = HintEntity.PHONE_HINT_02;
           }
 
         }
-        // 邮箱输入框失去焦点
-        const emailBlur = () => {
+        // 手机输入框失去焦点
+        const phoneBlur = () => {
           // 判断是否显示下面的提示信息
-          if (email.value.length > 0) {
-            // 正则验证邮箱是否正确的格式
-            Validate.validateEmail(String(email.value)).then((value) => {
-              emailSure.value = true;
+          if (phone.value.length > 0) {
+            // 正则验证手机是否正确的格式
+            Validate.validatePhone(String(phone.value)).then((value) => {
+              phoneSure.value = true;
               showHint.value = false;
-              hint.value = HintEntity.EMAIL_HINT_0;
+              hint.value = HintEntity.PHONE_HINT_00;
             }, (reason) => {
-              emailSure.value = false;
+              phoneSure.value = false;
               showHint.value = true;
-              hint.value = HintEntity.EMAIL_HINT_1;
+              hint.value = HintEntity.PHONE_HINT_01;
             });
           } else {
             showHint.value = false;
-          }
-        }
-        // 邮箱验证的回调函数
-        const emailCallback = (e: Error) => {
-          // 不通过
-          if (e) {
-            hint.value = HintEntity.EMAIL_HINT_1;
-            console.log(hint)
-          } else {
-            // 通过了验证,修改样式
-            hint.value.info = info;
-            hint.value.color = color;
-            hint.value.backgroundPosition = backgroundPosition;
-            console.log(hint)
           }
         }
         // 定时器
@@ -171,7 +154,7 @@
               timer.value = '';
               btnVal.value = '重新获取';
               getAuthCodeNum.value--;
-              authHint.value = new HintEntity.HintEntity(`该邮箱还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
+              authHint.value = new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
             }
           }, 1000)
         }
@@ -182,50 +165,50 @@
         }
         //  点击下一步
         const clickNextStep = () => {
-          // 邮箱为空时
-          if (email.value == "") {
+          // 手机为空时
+          if (phone.value == "") {
             showHint.value = true;
-            hint.value = HintEntity.EMAIL_HINT_2;
+            hint.value = HintEntity.PHONE_HINT_02;
             // 得到焦点
-            emailRef.value && emailRef.value.focus();
+            phoneRef.value && phoneRef.value.focus();
             return;
           }
-          // 邮箱正确
-          if (emailSure.value) {
+          // 手机正确
+          if (phoneSure.value) {
             if (!puzzleSure.value) { // 滑块验证未验证通过时
               showHint2.value = true;
-              authHint.value = HintEntity.EMAIL_CODE_HINT_3;
+              authHint.value = HintEntity.PHONE_HINT_03;
               // 得到焦点
-              emailRef.value && emailRef.value.focus();
+              phoneRef.value && phoneRef.value.focus();
             } else if (authCode.value != '123123') {  // 匹配错误
               console.log(authCode.value);
               authHint.value = HintEntity.EMAIL_CODE_HINT_2;
             } else {
               // 匹配成功,修改样式
-              context.emit('hindenEmail')
+              context.emit('hindenPhone')
             }
           }
         }
-        // 监视邮箱值
-        watch(email, (cur, pre) => {
-          if (email.value.length == 0) {
-            hint.value = HintEntity.EMAIL_HINT_0;
-            emailSure.value = false;
+        // 监视手机值
+        watch(phone, (cur, pre) => {
+          if (phone.value.length == 0) {
+            hint.value = HintEntity.PHONE_HINT_00;
+            phoneSure.value = false;
           } else {
-            Validate.validateEmail(String(email.value)).then((value) => {
-              emailSure.value = true;
+            Validate.validatePhone(String(phone.value)).then((value) => {
+              phoneSure.value = true;
               showHint.value = false;
-              hint.value = HintEntity.EMAIL_HINT_0;
+              hint.value = HintEntity.PHONE_HINT_00;
             }, (reason) => {
-              emailSure.value = false;
+              phoneSure.value = false;
               showHint.value = true;
-              hint.value = HintEntity.EMAIL_HINT_1;
+              hint.value = HintEntity.PHONE_HINT_01;
             });
           }
         })
-        // 监视邮箱格式是否正确
-        watch(emailSure, () => {
-          if (!emailSure.value) {
+        // 监视手机格式是否正确
+        watch(phoneSure, () => {
+          if (!phoneSure.value) {
             // 不正确,显示按钮
             showEmailButton.value = true;
             console.log('showEmailButton', showEmailButton);
@@ -256,11 +239,11 @@
           showHint2,
           showPuzzle,
           showEmailButton,
-          email,
-          emailSure,
-          emailFocus,
-          emailBlur,
-          emailRef,
+          phone,
+          phoneSure,
+          phoneFocus,
+          phoneBlur,
+          phoneRef,
           cleanEmail,
           clickGetAuth,
           repeatGetAuth,
@@ -280,7 +263,7 @@
 </style>
 <style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less');
-    #email{
+    #phone{
         width: @regist-inner-main-width;
         height: 246px;
         background: #fff;
@@ -293,7 +276,7 @@
         input::-webkit-input-placeholder{
             color:rgb(204, 204, 204);
         }
-        #email-number {
+        #phone-number {
             position: relative;
             border: solid 1px #ddd;
             width: 398px;
@@ -309,7 +292,7 @@
                 line-height: 50px;
                 float: left;
             }
-            #email-num-input{
+            #phone-num-input{
                 width: 230px;
                 height: 50px;
                 border: 0;
@@ -350,7 +333,7 @@
                 }
             }
         }
-        #email-button{
+        #phone-button{
             border: solid 1px #ddd;
             width: 398px;
             height: 54px;
@@ -366,7 +349,7 @@
             }
         }
 
-        #email-auth-code{
+        #phone-auth-code{
             width: 398px;
             height: 52px;
             line-height: 54px;
@@ -423,7 +406,7 @@
             }
 
         }
-        #email-next-step{
+        #phone-next-step{
             border: 0;
             width: 400px;
             height: 54px;

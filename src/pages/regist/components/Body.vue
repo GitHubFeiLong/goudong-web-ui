@@ -4,7 +4,7 @@
             <div id="body-info">
                 <div class="step step1">
                     <span :class="circleOne">{{stepSpan1Val}}</span>
-                    <p class='p1-class-success'>验证邮箱</p>
+                    <p class='p1-class-success'>验证手机号</p>
                 </div>
                 <div :class="lineStep1Class"></div>
                 <div class="step step2">
@@ -17,7 +17,7 @@
                     <p :class='p3Class'>注册成功</p>
                 </div>
             </div>
-            <Email v-if="isShowEmail" @hindenEmail="hindenEmail" />
+            <Phone v-if="isShowPhone" @hindenPhone="hindenPhone" />
             <UserInfo v-else-if="isShowUserInfo" @hindenUserInfo="hindenUserInfo"/>
             <RegistSuccess v-else :username='username'/>
         </div>
@@ -26,13 +26,13 @@
 
 <script lang='ts'>
     import { defineComponent, ref } from 'vue'
-    import Email from './Email.vue';
+    import Phone from './Phone.vue';
     import UserInfo from './UserInfo.vue';
     import RegistSuccess from './RegistSuccess.vue';
 
     export default defineComponent ({
         components:{
-            Email,
+            Phone,
             UserInfo,
             RegistSuccess
         },
@@ -44,27 +44,27 @@
             let stepSpan1Val = ref('1');
             let stepSpan2Val = ref('2');
             let stepSpan3Val = ref('3');
-            let isShowEmail = ref(true);
+            let isShowPhone = ref(true);
             let isShowUserInfo = ref(true);
             let username = ref('');
             // 第一个
             let circleOne = ref({
                 finish:false,
-                current:true,    
+                current:true,
             });
             // 第二个
             let circleTwo = ref({
                 finish:false,
-                current:false,    
+                current:false,
             });
             // 第三个
             let circleThree = ref({
                 finish:false,
-                current:false,    
+                current:false,
             });
-            
+
             // 邮箱验证成功
-            const hindenEmail = () => {
+            const hindenPhone = () => {
                 // 第一个步骤
                 stepSpan1Val.value = '';
                 circleOne.value.finish = true;
@@ -77,7 +77,7 @@
                 circleTwo.value.current = true;
 
                 // 将Email隐藏
-                isShowEmail.value = false;
+                isShowPhone.value = false;
                 isShowUserInfo.value = true;
             }
             // 用户名输入成功
@@ -108,12 +108,12 @@
                 stepSpan1Val,
                 stepSpan2Val,
                 stepSpan3Val,
-                isShowEmail,
+                isShowPhone,
                 isShowUserInfo,
                 circleOne,
                 circleTwo,
                 circleThree,
-                hindenEmail,
+                hindenPhone,
                 hindenUserInfo,
                 username
             }
@@ -145,7 +145,7 @@
                 display: flex;
                 justify-content: space-between;
                 position: relative;
-            
+
                 // 步骤
                 .step {
                     span {

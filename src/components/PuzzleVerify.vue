@@ -238,11 +238,6 @@
         }
     })
 </script>
-<style>
-  #puzzle-warp{
-    top: 299px;
-  }
-</style>
 <style lang='less' scoped>
     @import url('~@/assets/fonts/iconfont.css');
     #puzzle-warp{

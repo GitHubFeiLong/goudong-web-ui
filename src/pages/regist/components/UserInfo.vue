@@ -20,6 +20,20 @@
             <Hint :hint="hintconfirmPassword" v-show="showHintConfirmPassword"/>
             <span class='clean-icon succes-icon' v-show="confirmPassword.length > 0 && confirmPasswordSure"></span>
         </div>
+
+        <div id="email-div">
+          <label for="confirm-password">邮 箱 验 证</label>
+          <input v-model="email" @blur="emailBlur" @focus="emailFocus" ref="emailRef" type="text" id="email-input" placeholder="请输入邮箱"  autocomplete="off">
+          <Hint :hint="hintEmail" v-show="showHintEmail"/>
+          <span class='clean-icon succes-icon' v-show="confirmPassword.length > 0 && confirmPasswordSure"></span>
+        </div>
+
+        <div id="email-code-div">
+          <label for="email-code-input">邮箱验证码</label>
+          <input v-model="emailCode" @blur="emailCodeBlur" @focus="emailCodeFocus" ref="emailCodeRef" type="text" id="email-code-input" placeholder="请输入邮箱验证码"  autocomplete="off" maxlength="6">
+          <Hint :hint="hintEmailCode" v-show="showHintEmailCode"/>
+          <span class='clean-icon succes-icon' v-show="confirmPassword.length > 0 && confirmPasswordSure"></span>
+        </div>
         <div id="next-step-button" @click="regist">立即注册</div>
     </div>
 </template>
@@ -44,6 +58,10 @@
             let password = ref('');
             // 二次输入密码
             let confirmPassword = ref('');
+            // 邮箱验证
+            let email = ref("");
+            // 邮箱验证码
+            let emailCode = ref("");
             // 用户名格式是否正确
             let usernameSure = ref(false);
             let passwordSure = ref(false);
@@ -54,11 +72,20 @@
             // 密码输入框验证提示
             let hintPassword = ref(HintEntity.PASSWORD_HINT_0);
             // 确认密码输入框验证提示
-            let hintconfirmPassword = ref(HintEntity.USERNAME_HINT_0);
+            let hintconfirmPassword = ref(HintEntity.CONFIRM_PASSWORD_HINT_0);
+            // 邮箱验证的提示
+            let hintEmail = ref(HintEntity.EMAIL_HINT_30);
+            // 邮箱验证码提示
+            let hintEmailCode = ref(HintEntity.EMAIL_CODE_HINT_4);
             // 显示用户的验证提示组件
             let showHintUsername = ref(false);
             // 显示密码的验证提示组件
             let showHintPassword = ref(false);
+            // 显示确认密码的验证提示组件
+            let showHintEmail = ref(false);
+            // 显示确认密码的验证提示组件
+            let showHintEmailCode = ref(false);
+
             // 显示确认密码的验证提示组件
             let showHintConfirmPassword = ref(false);
 
@@ -93,7 +120,7 @@
                     showHintUsername.value = false;
                 }
             }
-            
+
             // 用户名输入框失去雕件
             const usernameBlur = () => {
                 isClickBtn.value = false;
@@ -112,7 +139,7 @@
                     hintUsername.value = HintEntity.USERNAME_HINT_0;
                 }
             }
-            
+
             // 密码框失去焦点
             const passwordBlur = () => {
                 cpBlur();
@@ -172,7 +199,7 @@
                         confirmPasswordSure.value = false;
                     }
                 }
-                
+
             }
             // 确认密码得到焦点
             const cpFocus = () => {
@@ -181,6 +208,39 @@
                     confirmPasswordSure.value = false;
                     hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_0;
                 }
+            }
+
+            // 邮箱验证失去焦点
+            const emailBlur = () => {
+              if (email.value.length == 0) {
+                showHintEmail.value = false;
+                return false;
+              }
+              Validate.validateEmail(email.value).then(value => {
+                // 邮箱格式正确
+                showHintEmail.value = false;
+                console.log(value)
+              }, reason => {
+                // 格式错误
+                showHintEmail.value = true;
+                hintEmail.value = HintEntity.EMAIL_HINT_31;
+              })
+
+            }
+            // 确认密码得到焦点
+            const emailFocus = () => {
+            if (email.value.length === 0) {
+              showHintEmail.value = true;
+              hintEmail.value = HintEntity.EMAIL_HINT_30;
+            }
+          }
+
+            // 邮箱验证失去焦点
+            const emailCodeBlur = () => {
+
+            }
+            // 确认密码得到焦点
+            const emailCodeFocus = () => {
             }
 
             // 注册
@@ -205,32 +265,42 @@
                         hintPassword.value = HintEntity.PASSWORD_HINT_02;
                     }
                     // 得到焦点
-                    passwordRef.value && passwordRef.value.focus() 
+                    passwordRef.value && passwordRef.value.focus()
                 } else if (!result && !confirmPasswordSure.value) {
-                    // 
+                    //
                 }
-                  
+
             }
-            
+
             return {
                 username,
                 password,
                 confirmPassword,
+                email,
+                emailCode,
                 cleanUsername,
                 usernameSure,
                 confirmPasswordSure,
                 hintUsername,
                 hintconfirmPassword,
                 hintPassword,
+                hintEmail,
+                hintEmailCode,
                 showHintUsername,
                 showHintPassword,
                 showHintConfirmPassword,
+                showHintEmail,
+                showHintEmailCode,
                 usernameBlur,
                 usernameFocus,
                 passwordBlur,
                 passwordFocus,
                 cpBlur,
                 cpFocus,
+                emailBlur,
+                emailFocus,
+                emailCodeBlur,
+                emailCodeFocus,
                 regist,
                 usernamrRef,
                 passwordRef,
@@ -244,16 +314,16 @@
     @import url('~@/assets/less/globalVariable.less');
     #userinfo{
         width: @regist-inner-main-width;
-        height: 344px;
+        height: 516px;
         display: flex;
-        justify-content: space-around;
         flex-direction: column;
         margin-top: 30px;
-        #username-div,#password-div,#confirm-password-div {
+        #username-div,#password-div,#confirm-password-div,#email-div, #email-code-div{
             position: relative;
             border: solid 1px #ddd;
             width: 398px;
             height: 52px;
+            margin-bottom: 32px;
             label{
                 position: relative;
                 width:87px;
@@ -274,14 +344,14 @@
                 line-height: 48px;
                 font-family: Arial;
             }
-            
+
             .clean-icon{
                 width:16px;
                 height:16px;
                 margin: auto;
                 right: 15px;
                 top: 0;
-                bottom: 0;  
+                bottom: 0;
                 position: absolute;
                 background-image:url('~@/assets/imgs/icon.png');
             }
@@ -305,7 +375,11 @@
                 }
             }
         }
-
+        #email-code-div{
+          input{
+            width:152px;
+          }
+        }
         #next-step-button{
             border: 0;
             width: 398px;
