@@ -1,5 +1,8 @@
 import BindPageParam from "@/pojo/BindPageParam";
 
+/**
+ * 解析绑定账号页面的参数列表
+ */
 export function resolveBindPageParam() {
   let search = window.location.search;
   let paramStr = search.substring(1, search.length);

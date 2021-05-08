@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require('webpack')
+const baseUrl = require('./src/config/baseUrl.ts')
 module.exports = {
     // publicPath
     publicPath:'/',
@@ -62,18 +63,23 @@ module.exports = {
         port: 8080,
         https: false,
         hotOnly: false,
-        /* 使用代理 */
+        /* 使用代理 需要安装(npm i http-proxy-middleware)*/
         proxy: {
-            '/api': {
-                target: 'http://localhost:10003/api',
-                secure: false,  // 如果是https接口，需要配置这个参数
-                ws: true,//是否代理websockets
-                // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
-                changeOrigin: true,
-                pathRewrite: {
-                  '^/api': ''
-                }
+          '/api/oauth2': {
+            target: baseUrl.oauth2Url,
+            // 解决跨域问题
+            changeOrigin: true,
+            pathRewrite: {
+              "": ""
             }
+          },
+          '/api/message': {
+            target: baseUrl.messageUrl,
+            changeOrigin: true,
+            pathRewrite: {
+              "": ""
+            }
+          },
         }
     },
     // webpack 配置

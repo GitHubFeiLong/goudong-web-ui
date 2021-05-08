@@ -1,10 +1,11 @@
+<!--手机号验证-->
 <template>
   <div id="phone">
     <div id="phone-number">
       <label for="phone-num-input">中国 0086</label>
       <input @blur="phoneBlur" @focus="phoneFocus" autocomplete="off" id="phone-num-input" maxlength="11"
              placeholder="建议使用常用手机号" ref="phoneRef" type="text" v-model="phone">
-      <span @click="cleanEmail" class='clean-icon normal-icon'
+      <span @click="cleanPhone" class='clean-icon normal-icon'
             v-show="phone.length>0 && !phoneSure"></span>
       <span class='clean-icon succes-icon' v-show="phone.length>0 && phoneSure"></span>
       <Hint :hint="hint" v-show="showHint"/>
@@ -12,7 +13,7 @@
     <!--滑块验证-->
     <PuzzleVerify @closePuzzle="closePuzzle" @successPuzzle="successPuzzle" v-if="showPuzzle"/>
 
-    <div @click="clickGetAuth" id="phone-button" v-if="showEmailButton">点击按钮进行验证
+    <div @click="clickGetAuth" id="phone-button" v-if="showPhoneButton">点击按钮进行验证
       <Hint :hint="authHint" v-show="showHint2"/>
     </div>
     <div id="phone-auth-code" v-else>
@@ -26,19 +27,44 @@
     </div>
     <div @click="clickNextStep" id="phone-next-step">下一步</div>
   </div>
+
+  <!--弹框-->
+  <el-dialog class="phone-dialog" v-model="dialogVisible" width="420px">
+    <div class="content">
+      <div class="header">
+        <div class="img"></div>
+        <div class="txt">
+          <em></em>
+          已被以下账号占用<br>
+          请确认是否为您所有
+        </div>
+      </div>
+      <div class="body">
+
+      </div>
+      <div class="fotter">
+
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script lang='ts'>
   import {defineComponent, ref, watch, onMounted} from 'vue';
-  import axios from "axios";
-  import request from "@/utils/request";
+  import axios from "@/utils/Axios";
 
   import Hint from './Hint.vue';
   import PuzzleVerify from '@/components/PuzzleVerify.vue';
-
+  // 提示对象
   import * as HintEntity from '@/pojo/HintEntity';
   // 验证
   import * as Validate from '@/utils/validate';
+
+  // 接口地址
+  import * as MessageUrl from '@/pojo/MessageUrl';
+  import * as Oauth2Url from '@/pojo/Oauth2Url';
+  import {Url} from "@/pojo/Url";
+  import Result from "@/pojo/Result";
 
   export default defineComponent({
     props: {},
@@ -55,7 +81,7 @@
       let getAuthCodeNum = ref(2);
       let authHint = ref(new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px'));
       // 显示下一步（true）
-      let showEmailButton = ref(true)
+      let showPhoneButton = ref(true)
       let phone = ref('');
       // 手机输入框的提示是否显示
       let showHint = ref(false);
@@ -78,8 +104,11 @@
       let phoneRef = ref<HTMLElement | null>(null);
       // 滑块验证是否正确
       let puzzleSure = ref(false);
+      // 弹框是否显示
+      let dialogVisible =  ref(false);
+
       // 清除phone值
-      const cleanEmail = () => {
+      const cleanPhone = () => {
         showHint.value = false;
         phone.value = '';
         phoneSure.value = false;
@@ -92,8 +121,18 @@
         setTimeout(() => {
           showPuzzle.value = false;
           // 验证码验证
-          showEmailButton.value = false;
+          showPhoneButton.value = false;
         }, 1000);
+        // 检查手机号是否被使用
+        let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
+        console.log(getUserByPhone);
+        axios.get(getUserByPhone.url).then(response=>{
+          let result:Result = response.data;
+          if (result) {
+            dialogVisible.value = true;
+          }
+          console.log(response)
+        })
       }
 
       // 关闭滑块验证事件监听
@@ -143,13 +182,18 @@
       }
       // 定时器
       const authCodeTimer = () => {
-        timer.value = 5;
+        timer.value = 120;
         btnVal.value = 's后重新获取';
         btnClass.value = 'btn-no-hover';
         authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
+        // 请求接口，发送手机验证码
+        let phoneCode:Url = MessageUrl.phoneCode(phone.value);
+        axios.get(phoneCode.url).then(response=>{
+          console.log(response)
+        })
         intervalId = setInterval(() => {
           timer.value--;
-          authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
+          // authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
           if (timer.value == 0) {
             // 清除定时器
             clearInterval(intervalId);
@@ -184,12 +228,19 @@
             authHint.value = HintEntity.PHONE_HINT_03;
             // 得到焦点
             phoneRef.value && phoneRef.value.focus();
-          } else if (authCode.value != '123123') {  // 匹配错误
-            console.log(authCode.value);
-            authHint.value = HintEntity.EMAIL_CODE_HINT_2;
           } else {
-            // 匹配成功,修改样式
-            context.emit('hindenPhone')
+            // 将手机号和验证码 拿去请求查看是否正确
+            let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
+            axios.get(checkCode.url).then(response => {
+              console.log(response);
+              if (response.data.data) {
+                // 匹配成功,修改样式
+                  context.emit('hindenPhone')
+              } else {
+                // 匹配错误
+                authHint.value = HintEntity.EMAIL_CODE_HINT_2;
+              }
+            })
           }
         }
       }
@@ -214,14 +265,14 @@
       watch(phoneSure, () => {
         if (!phoneSure.value) {
           // 不正确,显示按钮
-          showEmailButton.value = true;
-          console.log('showEmailButton', showEmailButton);
+          showPhoneButton.value = true;
+          console.log('showPhoneButton', showPhoneButton);
         }
       })
 
       // 监视显示验证码输入框
-      watch(showEmailButton, () => {
-        if (!showEmailButton.value) {
+      watch(showPhoneButton, () => {
+        if (!showPhoneButton.value) {
           authCodeTimer()
         }
       })
@@ -233,19 +284,6 @@
         }
       })
 
-      onMounted(()=>{
-        request({
-          url:'/api/message/code/phone-code',
-          method:'get',
-
-        })
-        // axios.get('/api/message/code/phone-code').then((response)=>{
-        //   console.log(response)
-        // }).catch((response)=>{
-        //   console.error(response);
-        // })
-      })
-
       return {
         btnClass,
         timer,
@@ -255,19 +293,20 @@
         showHint,
         showHint2,
         showPuzzle,
-        showEmailButton,
+        showPhoneButton,
         phone,
         phoneSure,
         phoneFocus,
         phoneBlur,
         phoneRef,
-        cleanEmail,
+        cleanPhone,
         clickGetAuth,
         repeatGetAuth,
         clickNextStep,
         successPuzzle,
         closePuzzle,
         authCode,
+        dialogVisible,
       }
     }
   })
@@ -276,6 +315,9 @@
 <style>
   #puzzle-warp {
     margin-top: -170px;
+  }
+  .el-dialog__body{
+    padding-top: 0px !important;
   }
 </style>
 <style lang='less' scoped>
@@ -459,4 +501,42 @@
       }
     }
   }
+  .el-dialog{
+    border: 4px solid rgba(0,0,0,.1) !important;
+  }
+  .el-dialog__body{
+
+    .content {
+      width: 100%;
+      height: 290px;
+      .header{
+        margin-top: 15px;
+        height: 123px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        .img{
+          width: 50px;
+          height: 50px;
+          background-image: url("~@/assets/imgs/icon.png");
+          background-position: 190px 0px;
+        }
+        .txt{
+          margin-top: 10px;
+          text-align: center;
+          font-size: 16px;
+          color: #666;
+          line-height: 21px;
+        }
+      }
+      .body{
+        height: 80px;
+        padding: 14px 27px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
+  }
+
 </style>

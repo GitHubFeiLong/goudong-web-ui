@@ -1,3 +1,4 @@
+<!--用户详细信息-->
 <template>
     <div id="userinfo">
         <div id="username-div">
@@ -22,17 +23,17 @@
         </div>
 
         <div id="email-div">
-          <label for="confirm-password">邮 箱 验 证</label>
+          <label for="email-input">邮 箱 验 证</label>
           <input v-model="email" @blur="emailBlur" @focus="emailFocus" ref="emailRef" type="text" id="email-input" placeholder="请输入邮箱"  autocomplete="off">
           <Hint :hint="hintEmail" v-show="showHintEmail"/>
-          <span class='clean-icon succes-icon' v-show="confirmPassword.length > 0 && confirmPasswordSure"></span>
+          <span class='clean-icon succes-icon' v-show="email.length > 0 && emailSure"></span>
         </div>
 
         <div id="email-code-div">
           <label for="email-code-input">邮箱验证码</label>
           <input v-model="emailCode" @blur="emailCodeBlur" @focus="emailCodeFocus" ref="emailCodeRef" type="text" id="email-code-input" placeholder="请输入邮箱验证码"  autocomplete="off" maxlength="6">
+          <button>{{emailCodeBtnVal}}</button>
           <Hint :hint="hintEmailCode" v-show="showHintEmailCode"/>
-          <span class='clean-icon succes-icon' v-show="confirmPassword.length > 0 && confirmPasswordSure"></span>
         </div>
         <div id="next-step-button" @click="regist">立即注册</div>
     </div>
@@ -66,7 +67,9 @@
             let usernameSure = ref(false);
             let passwordSure = ref(false);
             // 确认密码是否正确
-            let confirmPasswordSure = ref(false)
+            let confirmPasswordSure = ref(false);
+            // 邮箱验证格式是否正确
+            let emailSure = ref(false);
             // 用户名输入框验证提示
             let hintUsername = ref(HintEntity.USERNAME_HINT_0);
             // 密码输入框验证提示
@@ -89,6 +92,8 @@
             // 显示确认密码的验证提示组件
             let showHintConfirmPassword = ref(false);
 
+            // 邮箱验证码中的按钮文字
+            let emailCodeBtnVal = ref("获取验证码");
             // 默认是空的,页面加载完毕,说明组件已经存在了,获取文本框元素
             let usernamrRef = ref<HTMLElement | null>(null)
             let passwordRef = ref<HTMLElement | null>(null)
@@ -219,19 +224,22 @@
               Validate.validateEmail(email.value).then(value => {
                 // 邮箱格式正确
                 showHintEmail.value = false;
+                emailSure.value = true;
                 console.log(value)
               }, reason => {
                 // 格式错误
                 showHintEmail.value = true;
                 hintEmail.value = HintEntity.EMAIL_HINT_31;
+                emailSure.value = false;
               })
 
             }
-            // 确认密码得到焦点
+            // 邮箱验证得到焦点
             const emailFocus = () => {
             if (email.value.length === 0) {
               showHintEmail.value = true;
               hintEmail.value = HintEntity.EMAIL_HINT_30;
+              emailSure.value = false;
             }
           }
 
@@ -281,6 +289,7 @@
                 cleanUsername,
                 usernameSure,
                 confirmPasswordSure,
+                emailSure,
                 hintUsername,
                 hintconfirmPassword,
                 hintPassword,
@@ -304,7 +313,8 @@
                 regist,
                 usernamrRef,
                 passwordRef,
-                cpasswordRef
+                cpasswordRef,
+                emailCodeBtnVal,
             }
         }
     })
@@ -373,11 +383,24 @@
                 label{
                     border-right: 1px solid #666;
                 }
+                button{
+                  border-left: 1px solid #666;
+                }
             }
         }
         #email-code-div{
           input{
             width:152px;
+          }
+          button{
+            position: relative;
+            display: inline-block;
+            width: 118px;
+            height: 100%;
+            background-color: #fff;
+            border: none;
+            border-left: 1px solid #ddd;
+            cursor: pointer;
           }
         }
         #next-step-button{
