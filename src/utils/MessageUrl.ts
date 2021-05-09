@@ -8,6 +8,12 @@ import {Url} from "@/pojo/Url";
 export const phoneCode =  (phone:string):Url => new Url("/api/message/code/phone-code/{phone}", "get", phone);
 
 /**
+ * 邮箱验证码
+ * @param email 邮箱
+ */
+export const emailCode =  (email:string):Url => new Url("/api/message/code/email-code/{phone}", "get", email);
+
+/**
  * 校验验证码是否正确
  * @param number 手机号或邮箱
  * @param code 验证码

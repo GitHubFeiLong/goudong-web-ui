@@ -31,12 +31,15 @@
           <input v-model="email" @blur="emailBlur" @focus="emailFocus" ref="emailRef" type="text" id="email-input" placeholder="请输入邮箱"  autocomplete="off">
           <Hint :hint="hintEmail" v-show="showHintEmail"/>
           <span class='clean-icon succes-icon' v-show="email.length > 0 && emailSure"></span>
+          <ul v-show="emailFormats.length > 0">
+            <li v-for="item in emailFormats" @click="checkEmail(item)">{{item}}</li>
+          </ul>
         </div>
 
         <div id="email-code-div">
           <label for="email-code-input">邮箱验证码</label>
           <input v-model="emailCode" @blur="emailCodeBlur" @focus="emailCodeFocus" ref="emailCodeRef" type="text" id="email-code-input" placeholder="请输入邮箱验证码"  autocomplete="off" maxlength="6">
-          <button>{{emailCodeBtnVal}}</button>
+          <button @click="getEmailCode" ref="emailCodeBtnRef">{{emailCodeBtnVal}}</button>
           <Hint :hint="hintEmailCode" v-show="showHintEmailCode"/>
         </div>
         <div id="next-step-button" @click="regist">立即注册</div>
@@ -52,6 +55,7 @@
     import Axios from '@/utils/Axios';
     import Result from '@/pojo/Result';
     import * as Oauth2Url from '@/utils/Oauth2Url';
+    import * as MessageUrl from '@/utils/MessageUrl';
 
     import {Url} from "@/pojo/Url";
     export default defineComponent ({
@@ -79,6 +83,8 @@
         let confirmPasswordSure = ref(false);
         // 邮箱验证格式是否正确
         let emailSure = ref(false);
+        // 邮箱验证码正确
+        let emailCodeSure = ref(false);
         // 用户名输入框验证提示
         let hintUsername = ref(HintEntity.USERNAME_HINT_0);
         // 密码输入框验证提示
@@ -107,11 +113,50 @@
         let usernamrRef = ref<HTMLElement | null>(null)
         let passwordRef = ref<HTMLElement | null>(null)
         let cpasswordRef = ref<HTMLElement | null>(null)
-
+        let emailRef = ref<HTMLElement | null>(null)
+        let emailCodeBtnRef = ref<HTMLElement>();
         let isClickBtn = ref(false);
 
         // 可以使用的用户名列表
         let usableUsernames = ref([]);
+        // 申明一个变量保存旧的用户名
+        let oldUsername:string = "";
+        // 邮箱格式
+        let emailFormats = ref();
+        emailFormats.value = [];
+        // 已知邮箱格式
+        let existsEmailFormats = ["qq", "163", "126", "Gmail", "Souhu", "Sina"];
+        const meetEmailFormat = (email:string) => {
+          let temp:any[] = [];
+          emailFormats.value = [];
+          if (email === "") {
+            return false;
+          }
+          // 没有@,追加所有格式
+          let reg1 = /[@]+/g;
+          if (!reg1.test(email)) {
+            existsEmailFormats.forEach(item => {
+              temp.push(email + "@" + item + ".com")
+            })
+            emailFormats.value = temp;
+            return false;
+          }
+
+          // @ 后的字符串，拿来循环匹配
+          let reg2 = /[\d\w]+@([a-zA-Z0-9]+.*)?/g
+          let boo = reg2.test(email)
+          if (boo) {
+            let reg2 = RegExp.$1;
+            existsEmailFormats.forEach(item => {
+              if (item.indexOf(reg2) != -1) {
+                let str = email.substring(0, email.indexOf("@"));
+                temp.push(str + "@" + item + ".com")
+              }
+            })
+            emailFormats.value = temp;
+          }
+        }
+
         // 清空用户名
         const cleanUsername = () => {
           username.value = '';
@@ -122,6 +167,7 @@
 
         // 验证用户名的回调函数
         const usernameCallback = (e: Error) => {
+          console.log("调用回调函数")
           if (e) {
             let msg = e.message;
             // 显示
@@ -134,17 +180,21 @@
           } else {
             // 隐藏
             showHintUsername.value = false;
-            // 当符合条件时，查寻用户名是否被使用
-            let checkUsername: Url = Oauth2Url.checkUsername(username.value)
-            Axios.get(checkUsername.url).then(response => {
+            if (username.value != oldUsername) {
+              // 当符合条件时，查寻用户名是否被使用
+              let checkUsername: Url = Oauth2Url.checkUsername(username.value)
+              Axios.get(checkUsername.url).then(response => {
 
-              let data:[] = response.data.data;
-              usableUsernames.value = data;
-            })
+                let data:[] = response.data.data;
+                usableUsernames.value = data;
+              })
+            }
+
           }
+          oldUsername = username.value;
         }
 
-        // 用户名输入框失去雕件
+        // 用户名输入框失去焦点
         const usernameBlur = () => {
           isClickBtn.value = false;
           if (username.value.length > 0) {
@@ -236,9 +286,12 @@
         }
 
         // 邮箱验证失去焦点
+        let oldEmail = ""; // 上一次邮箱
         const emailBlur = () => {
           if (email.value.length == 0) {
             showHintEmail.value = false;
+            // 临时存储本次邮箱
+            oldEmail = email.value;
             return false;
           }
           Validate.validateEmail(email.value).then(value => {
@@ -246,12 +299,31 @@
             showHintEmail.value = false;
             emailSure.value = true;
             console.log(value)
+            // 比较本次和上次是否一致，不一致才调用接口
+            if (email.value != oldEmail) {
+              let checkEmail = Oauth2Url.checkEmail(email.value);
+              Axios.get(checkEmail.url).then(response => {
+                let data:boolean = response.data.data;
+                console.log(data)
+                // 不可以使用
+                if (!data) {
+                  showHintEmail.value = true;
+                  hintEmail.value = HintEntity.EMAIL_HINT_32;
+                  emailSure.value = false;
+                }
+              })
+            }
+            // 临时存储本次邮箱
+            oldEmail = email.value;
           }, reason => {
             // 格式错误
             showHintEmail.value = true;
             hintEmail.value = HintEntity.EMAIL_HINT_31;
             emailSure.value = false;
+            // 临时存储本次邮箱
+            oldEmail = email.value;
           })
+
 
         }
         // 邮箱验证得到焦点
@@ -262,6 +334,17 @@
             emailSure.value = false;
           }
         }
+        // 监视邮箱
+        watch(email, () => {
+          meetEmailFormat(email.value);
+          console.log(emailFormats.value)
+        })
+        // 检查邮箱是否可用
+        const checkEmail = (item:string) => {
+          email.value = item;
+          emailFormats.value = [];
+          emailBlur();
+        }
 
         // 邮箱验证失去焦点
         const emailCodeBlur = () => {
@@ -271,14 +354,45 @@
         const emailCodeFocus = () => {
         }
 
+        // 获取邮箱验证码
+        const getEmailCode = () => {
+          if (email.value === "") {
+            hintEmail.value = HintEntity.EMAIL_HINT_2;
+            showHintEmail.value = true;
+            return false;
+          }
+          if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled")) {
+            let emailCodeInterface:Url = MessageUrl.emailCode(email.value);
+            Axios.get(emailCodeInterface.url).then(response => {
+              intervalEmailCodeBtnVal();
+            })
+          }
+        }
+
+        /**
+         * 定时修改按钮属性和值
+         */
+        const intervalEmailCodeBtnVal = () => {
+          (emailCodeBtnRef.value as HTMLElement).setAttribute("disabled", "disabled");
+          let time = 300;
+          let intervalId = setInterval(()=> {
+            time--;
+            if (time <= 0) {
+              (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled");
+              clearInterval(intervalId);
+            }
+            emailCodeBtnVal.value = time+"s后重新获取";
+          }, 1000);
+        }
+
         // 注册
         const regist = () => {
-          let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value;
+          let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCodeSure.value;
           isClickBtn.value = true;
           if (result) {
             // 触发父组件的方法，将用户名回传
             context.emit('hindenUserInfo', username.value);
-          } else if (!result && !usernameSure.value) {
+          } else if (!usernameSure.value) {
             // 用户名不正确
             if (username.value.length == 0) {
               showHintUsername.value = true;
@@ -286,7 +400,7 @@
             }
             // 得到焦点
             usernamrRef.value && usernamrRef.value.focus()
-          } else if (!result && !passwordSure.value) {
+          } else if (!passwordSure.value) {
             // 密码不正确
             if (password.value.length === 0) {
               showHintPassword.value = true;
@@ -294,8 +408,13 @@
             }
             // 得到焦点
             passwordRef.value && passwordRef.value.focus()
-          } else if (!result && !confirmPasswordSure.value) {
-            //
+          } else if (!confirmPasswordSure.value) {
+            // 确认密码得到焦点
+            cpasswordRef.value && cpasswordRef.value.focus();
+          } else if (!emailSure.value) {
+            (emailRef.value as HTMLElement).focus()
+          } else if (!emailCodeSure.value) {
+
           }
 
         }
@@ -334,8 +453,14 @@
           usernamrRef,
           passwordRef,
           cpasswordRef,
+          emailRef,
+
           emailCodeBtnVal,
           usableUsernames,
+          emailFormats,
+          getEmailCode,
+          emailCodeBtnRef,
+          checkEmail,
         }
       }
     })
@@ -450,6 +575,30 @@
             }
           }
         }
+        #email-div{
+        ul{
+          width: 398px;
+          height: auto;
+          z-index: 10;
+          position: absolute;
+          margin-left: -1px;
+          background: #fff;
+          border: solid 1px #ccc;
+          list-style: none;
+          li{
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+            padding-left: 130px;
+            color: #333;
+            padding-right: 12px;
+            text-align: right;
+            &:hover{
+              background: #f6f6f6;
+            }
+          }
+        }
+      }
         #email-code-div{
           input{
             width:152px;
@@ -462,7 +611,12 @@
             border: none;
             border-left: 1px solid #ddd;
             cursor: pointer;
-            padding-left: 25px;
+            width: 118px;
+            text-align: center;
+          }
+          button[disabled]{
+            background-color: #f4f5f6;
+            cursor: default;
           }
         }
         #next-step-button{

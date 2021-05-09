@@ -12,3 +12,10 @@ export const getUserByPhone =  (phone:string):Url => new Url("/api/oauth2/user/p
  * @param username 用户名
  */
 export const checkUsername =  (username:string):Url => new Url("/api/oauth2/user/check-username/{username}", "get", username);
+
+/**
+ * 检查邮箱是否能使用，true 表示可以使用
+ * @param email 邮箱
+ */
+export const checkEmail =  (email:string):Url => new Url("/api/oauth2/user/check-email/{email}", "get", email);
+
