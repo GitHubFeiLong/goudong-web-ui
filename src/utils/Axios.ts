@@ -49,7 +49,7 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
 /**
  * 响应拦截器
  */
-service.interceptors.response.use((response: AxiosResponse<Result>) => {
+service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   // 响应码
   const status = response.status
   const result = response.data;

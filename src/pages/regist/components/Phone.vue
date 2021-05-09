@@ -34,16 +34,23 @@
       <div class="header">
         <div class="img"></div>
         <div class="txt">
-          <em></em>
+          <em>{{phone}}</em>
           已被以下账号占用<br>
           请确认是否为您所有
         </div>
       </div>
       <div class="body">
-
+        <div class="one">
+          <img src="@/assets/imgs/no-img_mid.png">
+          <span>用户名：{{disposeUsername()}}(<a href="www.baidu.com">可登录</a>)</span>
+        </div>
+        <div class="two">
+          <el-radio v-model="myAccountRadio" label="MY_SELF">是我的</el-radio>
+          <el-radio v-model="myAccountRadio" label="NOT_MY_SELF">不是我的</el-radio>
+        </div>
       </div>
       <div class="fotter">
-
+        <button ref="goOnRegistRef" class="disabled" @click="goOnRegist">继续注册</button>
       </div>
     </div>
   </el-dialog>
@@ -61,10 +68,11 @@
   import * as Validate from '@/utils/validate';
 
   // 接口地址
-  import * as MessageUrl from '@/pojo/MessageUrl';
-  import * as Oauth2Url from '@/pojo/Oauth2Url';
+  import * as MessageUrl from '@/utils/MessageUrl';
+  import * as Oauth2Url from '@/utils/Oauth2Url';
   import {Url} from "@/pojo/Url";
   import Result from "@/pojo/Result";
+  import { AuthorityUser } from '@/pojo/AuthorityUser';
 
   export default defineComponent({
     props: {},
@@ -106,7 +114,12 @@
       let puzzleSure = ref(false);
       // 弹框是否显示
       let dialogVisible =  ref(false);
-
+      // 后端返回账号名
+      let username = ref("");
+      // 账号是不是我的 单选框
+      let myAccountRadio = ref("");
+      // 继续注册按钮
+      let goOnRegistRef = ref<HTMLElement | null>(null);
       // 清除phone值
       const cleanPhone = () => {
         showHint.value = false;
@@ -121,20 +134,35 @@
         setTimeout(() => {
           showPuzzle.value = false;
           // 验证码验证
-          showPhoneButton.value = false;
+          //showPhoneButton.value = false;
         }, 1000);
         // 检查手机号是否被使用
         let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
         console.log(getUserByPhone);
         axios.get(getUserByPhone.url).then(response=>{
-          let result:Result = response.data;
-          if (result) {
+          let result:Result<AuthorityUser> = response.data;
+          if (result.data) {
+            username.value = result.data.username;
             dialogVisible.value = true;
+          } else {
+            // 验证码验证
+            showPhoneButton.value = false;
           }
-          console.log(response)
         })
       }
 
+      //
+      const disposeUsername = ():string => {
+        let result = username.value;
+        let replaceStr = "";
+        // 用户名 长度<=4
+        if (result.length <= 4) {
+          replaceStr = result.substring(1, result.length-1);
+        } else {
+          replaceStr = result.substring(2, result.length-2);
+        }
+        return result.replace(replaceStr, "*".repeat(replaceStr.length));
+      }
       // 关闭滑块验证事件监听
       const closePuzzle = () => {
         showPuzzle.value = false;
@@ -194,7 +222,7 @@
         intervalId = setInterval(() => {
           timer.value--;
           // authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
-          if (timer.value == 0) {
+          if (timer.value <= 0) {
             // 清除定时器
             clearInterval(intervalId);
             // 恢复按钮功能
@@ -244,6 +272,17 @@
           }
         }
       }
+
+      /**
+       * 点击继续注册
+       */
+      const goOnRegist = ()=>{
+        // 验证码验证
+        showPhoneButton.value = false;
+        // 隐藏弹框
+        dialogVisible.value = false;
+      }
+
       // 监视手机值
       watch(phone, (cur, pre) => {
         if (phone.value.length == 0) {
@@ -284,6 +323,16 @@
         }
       })
 
+      /**
+       * 选中了单选，‘继续注册’就可以点击
+       */
+      watch(myAccountRadio, () => {
+        // 单选框选中
+        if (myAccountRadio.value != "") {
+          (goOnRegistRef.value as HTMLElement).classList.remove("disabled")
+        }
+      })
+
       return {
         btnClass,
         timer,
@@ -307,6 +356,10 @@
         closePuzzle,
         authCode,
         dialogVisible,
+        disposeUsername,
+        myAccountRadio,
+        goOnRegistRef,
+        goOnRegist,
       }
     }
   })
@@ -501,40 +554,80 @@
       }
     }
   }
-  .el-dialog{
-    border: 4px solid rgba(0,0,0,.1) !important;
-  }
-  .el-dialog__body{
-
-    .content {
-      width: 100%;
-      height: 290px;
-      .header{
-        margin-top: 15px;
-        height: 123px;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
+  .content {
+    width: 100%;
+    height: 290px;
+    .header{
+      margin-top: 15px;
+      height: 123px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      .img{
+        width: 50px;
+        height: 50px;
+        background-image: url("~@/assets/imgs/icon.png");
+        background-position: 190px 0px;
+      }
+      .txt{
+        margin-top: 10px;
         text-align: center;
-        .img{
-          width: 50px;
-          height: 50px;
-          background-image: url("~@/assets/imgs/icon.png");
-          background-position: 190px 0px;
-        }
-        .txt{
-          margin-top: 10px;
-          text-align: center;
-          font-size: 16px;
-          color: #666;
-          line-height: 21px;
+        font-size: 16px;
+        color: #666;
+        line-height: 21px;
+        em{
+          font-style: normal;
+          font-weight: 700;
         }
       }
-      .body{
-        height: 80px;
-        padding: 14px 27px;
-        border-bottom: 1px solid #ddd;
+    }
+    .body{
+      height: 80px;
+      padding: 14px 27px;
+      border-bottom: 1px solid #ddd;
+      .one{
+        line-height: 40px;
+        img{
+          width:29px;
+          height: 29px;
+          // 和文字中心对齐
+          vertical-align: middle;
+        }
+        span{
+          margin-left: 10px;
+          a{
+            text-decoration: underline;
+            color: #06C;
+          }
+        }
+      }
+      .two{
+        line-height: 40px;
+        margin-left: 7px;
+      }
+
+    }
+    .fotter{
+      height: 40px;
+      line-height: 40px;
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      button{
+        /*color: ;*/
+        width: 92px;
+        height: 40px;
+        padding: 0 16px;
+        border: unset;
+        background-color: #E2231A;
+        color: #fff;
+        cursor: pointer;
+      }
+      .disabled{
+        opacity: .5;
+        cursor: not-allowed;
       }
     }
   }
