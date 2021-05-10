@@ -16,7 +16,7 @@ export class AuthorityUser {
   // 备注
   public remark:string="";
   // 有效时间
-  public validTime:Date=new Date();
+  public validTime:Date|null = null;
   // 是否被删除
   public isDelete:boolean=false;
 

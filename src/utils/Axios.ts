@@ -11,6 +11,12 @@ const service = axios.create({
   // 是否跨站点访问控制请求
   withCredentials: true,
   timeout: 30000,
+  // 请求头配置
+  headers:{
+    "post":{
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  },
   transformRequest: [(data) => {
     data = JSON.stringify(data)
     return data

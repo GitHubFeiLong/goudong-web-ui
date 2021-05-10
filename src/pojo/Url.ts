@@ -18,13 +18,12 @@ export class Url {
 
   /**
    * post 请求
-   * @param url
-   * @param requestBody
+   * @param url 接口地址
+   * @param data 请求参数
    */
   static post (url:string, data:object):Url {
     let urlObj = new Url(url, "post");
-    // 转成json字符串
-    urlObj.data = JSON.stringify(data);
+    urlObj.data = data;
     return urlObj;
   }
 

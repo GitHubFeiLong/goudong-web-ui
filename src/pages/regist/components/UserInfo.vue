@@ -42,7 +42,7 @@
           <button @click="getEmailCode" ref="emailCodeBtnRef">{{emailCodeBtnVal}}</button>
           <Hint :hint="hintEmailCode"/>
         </div>
-        <div id="next-step-button" @click="regist">立即注册</div>
+        <div id="next-step-button" ref="nextStepRef"  @click="regist">立即注册</div>
     </div>
 </template>
 
@@ -111,8 +111,10 @@
         let cpasswordRef = ref<HTMLElement | null>(null)
         let emailRef = ref<HTMLElement | null>(null)
         let emailCodeBtnRef = ref<HTMLElement>();
+        // 忘记这个有啥用了
         let isClickBtn = ref(false);
-
+        // 下一步按钮对象
+        let nextStepRef = ref<HTMLElement>();
         // 可以使用的用户名列表
         let usableUsernames = ref([]);
         // 申明一个变量保存旧的用户名
@@ -428,6 +430,12 @@
           let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCodeSure.value;
           isClickBtn.value = true;
           if (result) {
+            if ((nextStepRef.value as HTMLElement).hasAttribute("disabled")) {
+              return false;
+            }
+            // 禁用按钮点击
+            (nextStepRef.value as HTMLElement).setAttribute("disabled", "disabled")
+
             // 保存到数据库
             let phone:string = props.phone as string;
             let user = new AuthorityUser(phone, username.value, password.value, email.value);
@@ -435,11 +443,9 @@
             Axios.post(urlObj.url, urlObj.data).then(response => {
               // 触发父组件的方法，将用户名回传
               context.emit('hindenUserInfo', username.value);
-
-            }).catch(reason => {
-              ElMessage.error("新增失败")
+            }).catch(response=>{
+              (nextStepRef.value as HTMLElement).removeAttribute("disabled")
             })
-
 
           } else if (!usernameSure.value) {
             // 用户名不正确
@@ -462,7 +468,6 @@
               hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_3;
             }
           } else if (!emailSure.value) {
-            (emailRef.value as HTMLElement).focus();
             hintEmail.value = HintEntity.EMAIL_HINT_2;
           } else if (!emailCodeSure.value) {
             hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_3;
@@ -500,7 +505,7 @@
           passwordRef,
           cpasswordRef,
           emailRef,
-
+          nextStepRef,
           emailCodeBtnVal,
           usableUsernames,
           emailFormats,

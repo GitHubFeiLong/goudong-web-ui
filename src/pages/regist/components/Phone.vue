@@ -405,7 +405,7 @@
 
       #phone-num-input {
         width: 230px;
-        height: 50px;
+        height: 52px;
         border: 0;
         padding-left: 20px;
         font-size: 14px;
