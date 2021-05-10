@@ -144,7 +144,7 @@
               showPhoneButton.value = false;
             }
           })
-        }, 1000);
+        }, 600);
 
       }
 
@@ -255,7 +255,7 @@
                 let boo:boolean = response.data.data;
                 if (boo) {
                   // 匹配成功,修改样式
-                  context.emit('hindenPhone')
+                  context.emit('hindenPhone', phone.value)
                 } else {
                   // 匹配错误
                   authHint.value = HintEntity.EMAIL_CODE_HINT_2;

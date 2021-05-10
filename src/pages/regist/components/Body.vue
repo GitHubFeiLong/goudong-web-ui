@@ -18,7 +18,7 @@
                 </div>
             </div>
             <Phone v-if="isShowPhone" @hindenPhone="hindenPhone" />
-            <UserInfo v-else-if="isShowUserInfo" @hindenUserInfo="hindenUserInfo"/>
+            <UserInfo v-else-if="isShowUserInfo" @hindenUserInfo="hindenUserInfo" :phone="phone"/>
             <RegistSuccess v-else :username='username'/>
         </div>
     </div>
@@ -47,6 +47,7 @@
             let isShowPhone = ref(true);
             let isShowUserInfo = ref(true);
             let username = ref('');
+            let phone = ref('');
             // 第一个
             let circleOne = ref({
                 finish:false,
@@ -63,8 +64,8 @@
                 current:false,
             });
 
-            // 邮箱验证成功
-            const hindenPhone = () => {
+            // 手机号验证成功
+            const hindenPhone = (phoneParam:string) => {
                 // 第一个步骤
                 stepSpan1Val.value = '';
                 circleOne.value.finish = true;
@@ -79,6 +80,9 @@
                 // 将Email隐藏
                 isShowPhone.value = false;
                 isShowUserInfo.value = true;
+
+                // 手机号传递到子组件
+                phone.value = phoneParam;
             }
             // 用户名输入成功
             const hindenUserInfo = (uname:string) => {
@@ -115,7 +119,8 @@
                 circleThree,
                 hindenPhone,
                 hindenUserInfo,
-                username
+                username,
+                phone,
             }
         }
     })

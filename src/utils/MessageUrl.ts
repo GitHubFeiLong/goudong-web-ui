@@ -19,3 +19,4 @@ export const emailCode =  (email:string):Url => new Url("/api/message/code/email
  * @param code 验证码
  */
 export const checkCode = (number:string, code:string):Url => new Url("/api/message/code/check-code/{number}/{code}", "get", number, code);
+

@@ -20,6 +20,11 @@ export class AuthorityUser {
   // 是否被删除
   public isDelete:boolean=false;
 
-  constructor() {
+
+  constructor(phone:string, username:string, password:string, email:string) {
+    this.phone = phone;
+    this.username = username;
+    this.password = password;
+    this.email = email;
   }
 }

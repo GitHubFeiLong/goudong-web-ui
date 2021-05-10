@@ -2,6 +2,7 @@ export class Url {
   public url:string;
   public method:string;
   public params:Array<string>;
+  public data:object|string = {};
 
   constructor(url:string, method:string, ...params:string[]) {
 
@@ -13,6 +14,18 @@ export class Url {
     if ("get" === method) {
       this.resolveUrl();
     }
+  }
+
+  /**
+   * post 请求
+   * @param url
+   * @param requestBody
+   */
+  static post (url:string, data:object):Url {
+    let urlObj = new Url(url, "post");
+    // 转成json字符串
+    urlObj.data = JSON.stringify(data);
+    return urlObj;
   }
 
   /**

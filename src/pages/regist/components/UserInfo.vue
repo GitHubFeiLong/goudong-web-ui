@@ -59,14 +59,20 @@
 
     import {Url} from "@/pojo/Url";
     import {BLANK} from "@/pojo/HintEntity";
+    import {AuthorityUser} from "@/pojo/AuthorityUser";
+    import { ElMessage } from "element-plus";
+
     export default defineComponent ({
+        props:{
+          phone:String,
+        },
         components:{
             Hint
         },
         emits:{
             'hindenUserInfo':null,
         },
-      setup: function (props, context) {
+        setup(props, context) {
         // 用户名
         let username = ref('');
         // 密码
@@ -422,8 +428,19 @@
           let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCodeSure.value;
           isClickBtn.value = true;
           if (result) {
-            // 触发父组件的方法，将用户名回传
-            context.emit('hindenUserInfo', username.value);
+            // 保存到数据库
+            let phone:string = props.phone as string;
+            let user = new AuthorityUser(phone, username.value, password.value, email.value);
+            let urlObj = Oauth2Url.createUser(user);
+            Axios.post(urlObj.url, urlObj.data).then(response => {
+              // 触发父组件的方法，将用户名回传
+              context.emit('hindenUserInfo', username.value);
+
+            }).catch(reason => {
+              ElMessage.error("新增失败")
+            })
+
+
           } else if (!usernameSure.value) {
             // 用户名不正确
             if (username.value.length == 0) {

@@ -1,5 +1,6 @@
 /** ===================认证服务相关的接口========================*/
 import {Url} from "@/pojo/Url";
+import {AuthorityUser} from "@/pojo/AuthorityUser";
 
 /**
  * 根据手机号获取用户
@@ -19,3 +20,9 @@ export const checkUsername =  (username:string):Url => new Url("/api/oauth2/user
  */
 export const checkEmail =  (email:string):Url => new Url("/api/oauth2/user/check-email/{email}", "get", email);
 
+
+/**
+ * 注册用户
+ * @param paramObj 用户对象
+ */
+export const createUser = (data:AuthorityUser):Url => Url.post("/api/oauth2/user", data);
