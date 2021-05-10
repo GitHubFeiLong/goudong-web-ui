@@ -40,7 +40,7 @@
           <label for="email-code-input">邮箱验证码</label>
           <input v-model="emailCode" @blur="emailCodeBlur" @focus="emailCodeFocus" ref="emailCodeRef" type="text" id="email-code-input" placeholder="请输入邮箱验证码"  autocomplete="off" maxlength="6">
           <button @click="getEmailCode" ref="emailCodeBtnRef">{{emailCodeBtnVal}}</button>
-          <Hint :hint="hintEmailCode" v-show="showHintEmailCode"/>
+          <Hint :hint="hintEmailCode"/>
         </div>
         <div id="next-step-button" @click="regist">立即注册</div>
     </div>
@@ -101,8 +101,6 @@
         let showHintPassword = ref(false);
         // 显示确认密码的验证提示组件
         let showHintEmail = ref(false);
-        // 显示确认密码的验证提示组件
-        let showHintEmailCode = ref(false);
 
         // 显示确认密码的验证提示组件
         let showHintConfirmPassword = ref(false);
@@ -287,6 +285,7 @@
 
         // 邮箱验证失去焦点
         let oldEmail = ""; // 上一次邮箱
+        let invalidEmail = ""; // 保存临时的无效邮箱
         const emailBlur = () => {
           if (email.value.length == 0) {
             showHintEmail.value = false;
@@ -294,6 +293,14 @@
             oldEmail = email.value;
             return false;
           }
+          // 失去焦点，没有改变值，且还是上次请求无效邮箱
+          if (invalidEmail === email.value) {
+            showHintEmail.value = true;
+            emailSure.value = false;
+            hintEmail.value = HintEntity.EMAIL_HINT_31;
+            return false;
+          }
+          // 正则验证
           Validate.validateEmail(email.value).then(value => {
             // 邮箱格式正确
             showHintEmail.value = false;
@@ -302,14 +309,24 @@
             // 比较本次和上次是否一致，不一致才调用接口
             if (email.value != oldEmail) {
               let checkEmail = Oauth2Url.checkEmail(email.value);
+              // 接口数据校验
               Axios.get(checkEmail.url).then(response => {
                 let data:boolean = response.data.data;
+
                 console.log(data)
                 // 不可以使用
                 if (!data) {
                   showHintEmail.value = true;
-                  hintEmail.value = HintEntity.EMAIL_HINT_32;
                   emailSure.value = false;
+                  // 根据额外字段进行判断详细信息
+                  let dataMap:object = response.data.dataMap;
+                  if ((dataMap as any).status === 0) {
+                    hintEmail.value = HintEntity.EMAIL_HINT_31;
+                    invalidEmail = email.value;
+                  } else {
+                    hintEmail.value = HintEntity.EMAIL_HINT_32;
+                  }
+
                 }
               })
             }
@@ -338,6 +355,11 @@
         watch(email, () => {
           meetEmailFormat(email.value);
           console.log(emailFormats.value)
+          emailSure.value = false;
+          // 邮箱改变，验证码需要重置
+          hintEmailCode.value = HintEntity.BLANK;
+          emailCodeBtnVal.value = "获取验证码";
+          (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled")
         })
         // 检查邮箱是否可用
         const checkEmail = (item:string) => {
@@ -348,6 +370,26 @@
 
         // 邮箱验证失去焦点
         const emailCodeBlur = () => {
+          if (emailCode.value.length == 0) {
+            emailCodeSure.value = false;
+            hintEmailCode.value = HintEntity.BLANK;
+            return false;
+          }
+          // 输入完成，校验验证码是否正确
+          let boo = (emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled") && emailSure.value && emailCode.value.length == 6
+          if (boo) {
+            let checkCode = MessageUrl.checkCode(email.value, emailCode.value);
+            Axios.get(checkCode.url).then(response => {
+              let boo:boolean = response.data.data;
+              emailCodeSure.value = boo;
+              if (boo) {
+                hintEmailCode.value = HintEntity.BLANK;
+              } else {
+                hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_2;
+              }
+
+            })
+          }
 
         }
         // 确认密码得到焦点
@@ -362,6 +404,8 @@
             return false;
           }
           if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled")) {
+            emailCodeSure.value = false;
+            hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_4;
             let emailCodeInterface:Url = MessageUrl.emailCode(email.value);
             Axios.get(emailCodeInterface.url).then(response => {
               intervalEmailCodeBtnVal();
@@ -380,6 +424,8 @@
             if (time <= 0) {
               (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled");
               clearInterval(intervalId);
+              hintEmailCode.value = HintEntity.BLANK;
+              emailCodeBtnVal.value = "重新获取";
             }
             emailCodeBtnVal.value = time+"s后重新获取";
           }, 1000);
@@ -438,7 +484,6 @@
           showHintPassword,
           showHintConfirmPassword,
           showHintEmail,
-          showHintEmailCode,
           usernameBlur,
           usernameFocus,
           passwordBlur,

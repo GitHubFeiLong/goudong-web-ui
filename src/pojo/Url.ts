@@ -20,7 +20,7 @@ export class Url {
    * @param url
    */
   private resolveUrl(){
-
+    console.log("resolve")
     // 正则
     let reg = /\{\w+\}/g;
     // 符合的字符串数组

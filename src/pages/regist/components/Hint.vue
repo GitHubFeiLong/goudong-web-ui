@@ -1,5 +1,5 @@
 <template>
-    <div id="hint-info-div">
+    <div id="hint-info-div" v-show="!hint.isHide">
         <b class="hint-icon" :style="{ backgroundPosition: hint.backgroundPosition}"></b>
         <span class="hint-info" :style="{color:hint.color}">{{ hint.info }}</span>
     </div>
@@ -8,7 +8,7 @@
 <script lang='ts'>
     import { defineComponent} from 'vue';
     import * as HintEntity from '@/pojo/HintEntity';
-    
+
     export default defineComponent ({
         props:{
             hint:HintEntity.HintEntity
@@ -33,7 +33,7 @@
             background-image: url("~@/assets/imgs/icon.png");
             display: inline-block;
             background-position: 0px -100px;
-    
+
         }
         .hint-info{
             display: inline-block;

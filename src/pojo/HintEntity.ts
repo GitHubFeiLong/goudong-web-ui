@@ -3,15 +3,23 @@
  */
 export class HintEntity {
     // 提示信息
-    info:string;
+    info:string="";
     // 字体颜色
-    color:string;
+    color:string="";
     // 图标位置(使用的精灵图)
-    backgroundPosition: string;
-    constructor (info:string ="验证完成后，你可以使用该邮箱登录或找回密码", color:string='#c5c5c5', backgroundPosition:string='0px -100px') {
+    backgroundPosition: string="";
+    // 是否显示
+    isHide:boolean;
+    constructor (info:string ="验证完成后，你可以使用该邮箱登录或找回密码", color:string='#c5c5c5', backgroundPosition:string='0px -100px', isHide:boolean = false) {
         this.info = info;
         this.color = color;
         this.backgroundPosition = backgroundPosition;
+        this.isHide = isHide;
+    }
+    static blank():HintEntity{
+      let result = new HintEntity();
+      result.isHide = true;
+      return result;
     }
     /*
         比较两个对象是否一致
@@ -20,6 +28,9 @@ export class HintEntity {
         return this.info === hint.info;
     }
 }
+// 隐藏提示块，使用属性 isHide
+export const BLANK = HintEntity.blank();
+
 // 注册输入手机号
 export const PHONE_HINT_00 = new HintEntity('验证完成后，你可以使用该手机登录或找回密码', '#c5c5c5', '0px -100px');
 export const PHONE_HINT_01 = new HintEntity('格式错误', '#f91', '-17px -100px');

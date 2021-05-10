@@ -261,8 +261,9 @@
             let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
             axios.get(checkCode.url).then(response => {
               console.log(response);
-              if (response.data.data) {
-                // 匹配成功,修改样式
+              let boo:boolean = response.data.data;
+              if (boo) {
+                  // 匹配成功,修改样式
                   context.emit('hindenPhone')
               } else {
                 // 匹配错误
@@ -395,7 +396,7 @@
       border: solid 1px #ddd;
       width: 398px;
       height: 52px;
-
+      font-size: 14px;
       label {
         position: relative;
         width: 87px;
