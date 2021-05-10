@@ -71,3 +71,4 @@ export const PASSWORD_HINT_4 = new HintEntity('登录密码由 8 ~ 20 位字符�
 // 注册确认密码
 export const CONFIRM_PASSWORD_HINT_0 = new HintEntity('请再次输入密码','#c5c5c5', '0px -100px');
 export const CONFIRM_PASSWORD_HINT_1 = new HintEntity('您两次输入的密码不同，请重试', '#f91', '-17px -100px');
+export const CONFIRM_PASSWORD_HINT_3 = new HintEntity('请您输入正确的确认密码', '#f91', '-17px -100px');

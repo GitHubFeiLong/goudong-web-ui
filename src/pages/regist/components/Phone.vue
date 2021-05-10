@@ -8,13 +8,13 @@
       <span @click="cleanPhone" class='clean-icon normal-icon'
             v-show="phone.length>0 && !phoneSure"></span>
       <span class='clean-icon succes-icon' v-show="phone.length>0 && phoneSure"></span>
-      <Hint :hint="hint" v-show="showHint"/>
+      <Hint :hint="hint"/>
     </div>
     <!--滑块验证-->
     <PuzzleVerify @closePuzzle="closePuzzle" @successPuzzle="successPuzzle" v-if="showPuzzle"/>
 
     <div @click="clickGetAuth" id="phone-button" v-if="showPhoneButton">点击按钮进行验证
-      <Hint :hint="authHint" v-show="showHint2"/>
+      <Hint :hint="authHint"/>
     </div>
     <div id="phone-auth-code" v-else>
       <div class="border">
@@ -85,16 +85,12 @@
     },
     setup: function (props, context) {
       // 提示信息
-      let hint = ref(HintEntity.PHONE_HINT_00);
+      let hint = ref(HintEntity.BLANK);
       let getAuthCodeNum = ref(2);
-      let authHint = ref(new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px'));
+      let authHint = ref(HintEntity.BLANK);
       // 显示下一步（true）
       let showPhoneButton = ref(true)
       let phone = ref('');
-      // 手机输入框的提示是否显示
-      let showHint = ref(false);
-      // 是否显示 完成验证
-      let showHint2 = ref(false);
       // 手机是否正确
       let phoneSure = ref(false);
       // 倒计时
@@ -122,7 +118,7 @@
       let goOnRegistRef = ref<HTMLElement | null>(null);
       // 清除phone值
       const cleanPhone = () => {
-        showHint.value = false;
+        hint.value = HintEntity.BLANK
         phone.value = '';
         phoneSure.value = false;
       }
@@ -135,20 +131,21 @@
           showPuzzle.value = false;
           // 验证码验证
           //showPhoneButton.value = false;
+          // 检查手机号是否被使用
+          let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
+          console.log(getUserByPhone);
+          axios.get(getUserByPhone.url).then(response=>{
+            let result:Result<AuthorityUser> = response.data;
+            if (result.data) {
+              username.value = result.data.username;
+              dialogVisible.value = true;
+            } else {
+              // 验证码验证
+              showPhoneButton.value = false;
+            }
+          })
         }, 1000);
-        // 检查手机号是否被使用
-        let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
-        console.log(getUserByPhone);
-        axios.get(getUserByPhone.url).then(response=>{
-          let result:Result<AuthorityUser> = response.data;
-          if (result.data) {
-            username.value = result.data.username;
-            dialogVisible.value = true;
-          } else {
-            // 验证码验证
-            showPhoneButton.value = false;
-          }
-        })
+
       }
 
       //
@@ -171,7 +168,6 @@
       // 点击获取验证码
       const clickGetAuth = () => {
         if (phone.value.length == 0) {
-          showHint.value = true;
           hint.value = HintEntity.PHONE_HINT_02
         }
         // 手机格式正确才显示
@@ -184,7 +180,6 @@
       }
       // 手机输入框获取焦点
       const phoneFocus = () => {
-        showHint.value = !phoneSure.value;
         if (HintEntity.PHONE_HINT_02.equals(hint.value)) {
           hint.value = HintEntity.PHONE_HINT_02;
         }
@@ -197,15 +192,13 @@
           // 正则验证手机是否正确的格式
           Validate.validatePhone(String(phone.value)).then((value) => {
             phoneSure.value = true;
-            showHint.value = false;
-            hint.value = HintEntity.PHONE_HINT_00;
+            hint.value = HintEntity.BLANK
           }, (reason) => {
             phoneSure.value = false;
-            showHint.value = true;
             hint.value = HintEntity.PHONE_HINT_01;
           });
         } else {
-          showHint.value = false;
+          hint.value = HintEntity.BLANK
         }
       }
       // 定时器
@@ -221,7 +214,6 @@
         })
         intervalId = setInterval(() => {
           timer.value--;
-          // authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
           if (timer.value <= 0) {
             // 清除定时器
             clearInterval(intervalId);
@@ -243,7 +235,6 @@
       const clickNextStep = () => {
         // 手机为空时
         if (phone.value == "") {
-          showHint.value = true;
           hint.value = HintEntity.PHONE_HINT_02;
           // 得到焦点
           phoneRef.value && phoneRef.value.focus();
@@ -252,24 +243,28 @@
         // 手机正确
         if (phoneSure.value) {
           if (!puzzleSure.value) { // 滑块验证未验证通过时
-            showHint2.value = true;
             authHint.value = HintEntity.PHONE_HINT_03;
             // 得到焦点
             phoneRef.value && phoneRef.value.focus();
           } else {
-            // 将手机号和验证码 拿去请求查看是否正确
-            let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
-            axios.get(checkCode.url).then(response => {
-              console.log(response);
-              let boo:boolean = response.data.data;
-              if (boo) {
+            if (authCode.value.length == 6) {
+              // 将手机号和验证码 拿去请求查看是否正确
+              let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
+              axios.get(checkCode.url).then(response => {
+                console.log(response);
+                let boo:boolean = response.data.data;
+                if (boo) {
                   // 匹配成功,修改样式
                   context.emit('hindenPhone')
-              } else {
-                // 匹配错误
-                authHint.value = HintEntity.EMAIL_CODE_HINT_2;
-              }
-            })
+                } else {
+                  // 匹配错误
+                  authHint.value = HintEntity.EMAIL_CODE_HINT_2;
+                }
+              })
+            } else {
+              authHint.value = HintEntity.EMAIL_CODE_HINT_2;
+            }
+
           }
         }
       }
@@ -286,18 +281,19 @@
 
       // 监视手机值
       watch(phone, (cur, pre) => {
+        puzzleSure.value = false;
         if (phone.value.length == 0) {
           hint.value = HintEntity.PHONE_HINT_00;
           phoneSure.value = false;
         } else {
           Validate.validatePhone(String(phone.value)).then((value) => {
             phoneSure.value = true;
-            showHint.value = false;
-            hint.value = HintEntity.PHONE_HINT_00;
+            hint.value = HintEntity.BLANK
+
           }, (reason) => {
             phoneSure.value = false;
-            showHint.value = true;
             hint.value = HintEntity.PHONE_HINT_01;
+            authHint.value = HintEntity.BLANK;
           });
         }
       })
@@ -340,8 +336,6 @@
         btnVal,
         hint,
         authHint,
-        showHint,
-        showHint2,
         showPuzzle,
         showPhoneButton,
         phone,

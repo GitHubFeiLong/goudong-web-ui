@@ -6,7 +6,7 @@
             <input v-model="username" @blur="usernameBlur" @focus="usernameFocus" ref="usernamrRef" type="text" id="username" placeholder="您的账户名和登录名"  autocomplete="off" maxlength="20">
             <span class='clean-icon normal-icon' v-show="username.length>0 && !usernameSure" @click="cleanUsername"></span>
             <span class='clean-icon succes-icon' v-show="username.length > 0 && usernameSure"></span>
-            <Hint :hint="hintUsername" v-show="showHintUsername"/>
+            <Hint :hint="hintUsername"/>
             <ul v-show="usableUsernames.length > 0">
               <li><em class="iconfont icon-jinggao"></em>已注册，推荐您选择</li>
               <li v-for="item in usableUsernames" @click="username=item;usableUsernames=[]">{{item}}</li>
@@ -16,20 +16,20 @@
         <div id="password-div">
             <label for="password">设 置 密 码</label>
             <input v-model="password" @blur="passwordBlur" @focus="passwordFocus" ref="passwordRef" type="password" id="password" placeholder="建议使用两种或两种以上字符组合"  autocomplete="off" maxlength="20">
-            <Hint :hint="hintPassword" v-show="showHintPassword"/>
+            <Hint :hint="hintPassword"/>
         </div>
 
         <div id="confirm-password-div">
             <label for="confirm-password">确 认 密 码</label>
             <input v-model="confirmPassword" @blur="cpBlur" @focus="cpFocus" ref="cpasswordRef" type="password" id="confirm-password" placeholder="请再次输入密码"  autocomplete="off" maxlength="20">
-            <Hint :hint="hintconfirmPassword" v-show="showHintConfirmPassword"/>
+            <Hint :hint="hintconfirmPassword"/>
             <span class='clean-icon succes-icon' v-show="confirmPassword.length > 0 && confirmPasswordSure"></span>
         </div>
 
         <div id="email-div">
           <label for="email-input">邮 箱 验 证</label>
           <input v-model="email" @blur="emailBlur" @focus="emailFocus" ref="emailRef" type="text" id="email-input" placeholder="请输入邮箱"  autocomplete="off">
-          <Hint :hint="hintEmail" v-show="showHintEmail"/>
+          <Hint :hint="hintEmail"/>
           <span class='clean-icon succes-icon' v-show="email.length > 0 && emailSure"></span>
           <ul v-show="emailFormats.length > 0">
             <li v-for="item in emailFormats" @click="checkEmail(item)">{{item}}</li>
@@ -58,6 +58,7 @@
     import * as MessageUrl from '@/utils/MessageUrl';
 
     import {Url} from "@/pojo/Url";
+    import {BLANK} from "@/pojo/HintEntity";
     export default defineComponent ({
         components:{
             Hint
@@ -86,25 +87,16 @@
         // 邮箱验证码正确
         let emailCodeSure = ref(false);
         // 用户名输入框验证提示
-        let hintUsername = ref(HintEntity.USERNAME_HINT_0);
+        let hintUsername = ref(HintEntity.BLANK);
         // 密码输入框验证提示
-        let hintPassword = ref(HintEntity.PASSWORD_HINT_0);
+        let hintPassword = ref(HintEntity.BLANK);
         // 确认密码输入框验证提示
-        let hintconfirmPassword = ref(HintEntity.CONFIRM_PASSWORD_HINT_0);
+        let hintconfirmPassword = ref(HintEntity.BLANK);
         // 邮箱验证的提示
-        let hintEmail = ref(HintEntity.EMAIL_HINT_30);
+        let hintEmail = ref(HintEntity.BLANK);
         // 邮箱验证码提示
-        let hintEmailCode = ref(HintEntity.EMAIL_CODE_HINT_4);
-        // 显示用户的验证提示组件
-        let showHintUsername = ref(false);
-        // 显示密码的验证提示组件
-        let showHintPassword = ref(false);
-        // 显示确认密码的验证提示组件
-        let showHintEmail = ref(false);
-
-        // 显示确认密码的验证提示组件
-        let showHintConfirmPassword = ref(false);
-
+        // let hintEmailCode = ref(HintEntity.EMAIL_CODE_HINT_4);
+        let hintEmailCode = ref(HintEntity.BLANK);
         // 邮箱验证码中的按钮文字
         let emailCodeBtnVal = ref("获取验证码");
         // 默认是空的,页面加载完毕,说明组件已经存在了,获取文本框元素
@@ -158,9 +150,8 @@
         // 清空用户名
         const cleanUsername = () => {
           username.value = '';
-          showHintUsername.value = false;
           usernameSure.value = false;
-          hintUsername.value = HintEntity.USERNAME_HINT_0;
+          hintUsername.value = HintEntity.BLANK;
         }
 
         // 验证用户名的回调函数
@@ -169,7 +160,6 @@
           if (e) {
             let msg = e.message;
             // 显示
-            showHintUsername.value = true;
             if (msg === HintEntity.USERNAME_HINT_0.info) {
               hintUsername.value = HintEntity.USERNAME_HINT_0;
             } else if (msg === HintEntity.USERNAME_HINT_1.info) {
@@ -177,7 +167,7 @@
             }
           } else {
             // 隐藏
-            showHintUsername.value = false;
+            hintUsername.value = HintEntity.BLANK;
             if (username.value != oldUsername) {
               // 当符合条件时，查寻用户名是否被使用
               let checkUsername: Url = Oauth2Url.checkUsername(username.value)
@@ -202,13 +192,12 @@
           } else {
             // 默认显示
             usernameSure.value = false;
-            showHintUsername.value = false;
+            hintUsername.value = HintEntity.BLANK;
           }
         }
         // 用户名输入框得到焦点
         const usernameFocus = () => {
           if (username.value.length == 0 && !isClickBtn.value) {
-            showHintUsername.value = true;
             hintUsername.value = HintEntity.USERNAME_HINT_0;
           }
         }
@@ -217,15 +206,15 @@
         const passwordBlur = () => {
           cpBlur();
           if (password.value.length === 0) {
-            passwordSure.value = false
-            showHintPassword.value = false;
+            passwordSure.value = false;
+            hintPassword.value = HintEntity.BLANK;
           }
         }
 
         // 密码框得到焦点
         const passwordFocus = () => {
           if (password.value.length == 0 && !isClickBtn.value) {
-            showHintPassword.value = true;
+            hintPassword.value = HintEntity.PASSWORD_HINT_0;
           }
         }
         const passwordCallback = (e: Error) => {
@@ -259,15 +248,14 @@
         // 确认密码失去焦点
         const cpBlur = () => {
           if (confirmPassword.value.length == 0) {
-            showHintConfirmPassword.value = false;
+            hintconfirmPassword.value = HintEntity.BLANK;
             confirmPasswordSure.value = false;
           } else {
             // 比较两次密码是否匹配
             if (confirmPassword.value === password.value) {
-              showHintConfirmPassword.value = false;
+              hintconfirmPassword.value = HintEntity.BLANK;
               confirmPasswordSure.value = true;
             } else {
-              showHintConfirmPassword.value = true;
               hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_1;
               confirmPasswordSure.value = false;
             }
@@ -277,7 +265,6 @@
         // 确认密码得到焦点
         const cpFocus = () => {
           if (confirmPassword.value.length === 0) {
-            showHintConfirmPassword.value = true;
             confirmPasswordSure.value = false;
             hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_0;
           }
@@ -288,14 +275,13 @@
         let invalidEmail = ""; // 保存临时的无效邮箱
         const emailBlur = () => {
           if (email.value.length == 0) {
-            showHintEmail.value = false;
+            hintEmail.value = BLANK;
             // 临时存储本次邮箱
             oldEmail = email.value;
             return false;
           }
           // 失去焦点，没有改变值，且还是上次请求无效邮箱
           if (invalidEmail === email.value) {
-            showHintEmail.value = true;
             emailSure.value = false;
             hintEmail.value = HintEntity.EMAIL_HINT_31;
             return false;
@@ -303,7 +289,7 @@
           // 正则验证
           Validate.validateEmail(email.value).then(value => {
             // 邮箱格式正确
-            showHintEmail.value = false;
+            hintEmail.value = BLANK;
             emailSure.value = true;
             console.log(value)
             // 比较本次和上次是否一致，不一致才调用接口
@@ -316,7 +302,6 @@
                 console.log(data)
                 // 不可以使用
                 if (!data) {
-                  showHintEmail.value = true;
                   emailSure.value = false;
                   // 根据额外字段进行判断详细信息
                   let dataMap:object = response.data.dataMap;
@@ -334,7 +319,6 @@
             oldEmail = email.value;
           }, reason => {
             // 格式错误
-            showHintEmail.value = true;
             hintEmail.value = HintEntity.EMAIL_HINT_31;
             emailSure.value = false;
             // 临时存储本次邮箱
@@ -346,7 +330,6 @@
         // 邮箱验证得到焦点
         const emailFocus = () => {
           if (email.value.length === 0) {
-            showHintEmail.value = true;
             hintEmail.value = HintEntity.EMAIL_HINT_30;
             emailSure.value = false;
           }
@@ -358,6 +341,7 @@
           emailSure.value = false;
           // 邮箱改变，验证码需要重置
           hintEmailCode.value = HintEntity.BLANK;
+          clearInterval(intervalId);
           emailCodeBtnVal.value = "获取验证码";
           (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled")
         })
@@ -400,12 +384,11 @@
         const getEmailCode = () => {
           if (email.value === "") {
             hintEmail.value = HintEntity.EMAIL_HINT_2;
-            showHintEmail.value = true;
             return false;
           }
           if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled")) {
             emailCodeSure.value = false;
-            hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_4;
+
             let emailCodeInterface:Url = MessageUrl.emailCode(email.value);
             Axios.get(emailCodeInterface.url).then(response => {
               intervalEmailCodeBtnVal();
@@ -416,10 +399,13 @@
         /**
          * 定时修改按钮属性和值
          */
+        let intervalId:any;
         const intervalEmailCodeBtnVal = () => {
+          hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_4;
           (emailCodeBtnRef.value as HTMLElement).setAttribute("disabled", "disabled");
           let time = 300;
-          let intervalId = setInterval(()=> {
+          emailCodeBtnVal.value = time+"s后重新获取";
+          intervalId = setInterval(()=> {
             time--;
             if (time <= 0) {
               (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled");
@@ -441,7 +427,6 @@
           } else if (!usernameSure.value) {
             // 用户名不正确
             if (username.value.length == 0) {
-              showHintUsername.value = true;
               hintUsername.value = HintEntity.USERNAME_HINT_01;
             }
             // 得到焦点
@@ -449,18 +434,21 @@
           } else if (!passwordSure.value) {
             // 密码不正确
             if (password.value.length === 0) {
-              showHintPassword.value = true;
               hintPassword.value = HintEntity.PASSWORD_HINT_02;
             }
             // 得到焦点
             passwordRef.value && passwordRef.value.focus()
           } else if (!confirmPasswordSure.value) {
             // 确认密码得到焦点
-            cpasswordRef.value && cpasswordRef.value.focus();
+            if (confirmPassword.value != password.value) {
+              (cpasswordRef.value as HTMLElement).focus();
+              hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_3;
+            }
           } else if (!emailSure.value) {
-            (emailRef.value as HTMLElement).focus()
+            (emailRef.value as HTMLElement).focus();
+            hintEmail.value = HintEntity.EMAIL_HINT_2;
           } else if (!emailCodeSure.value) {
-
+            hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_3;
           }
 
         }
@@ -480,10 +468,6 @@
           hintPassword,
           hintEmail,
           hintEmailCode,
-          showHintUsername,
-          showHintPassword,
-          showHintConfirmPassword,
-          showHintEmail,
           usernameBlur,
           usernameFocus,
           passwordBlur,
