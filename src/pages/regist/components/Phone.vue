@@ -58,7 +58,7 @@
 
 <script lang='ts'>
   import {defineComponent, ref, watch, onMounted} from 'vue';
-  import axios from "@/utils/Axios";
+  import Axios from "@/utils/Axios";
 
   import Hint from './Hint.vue';
   import PuzzleVerify from '@/components/PuzzleVerify.vue';
@@ -134,8 +134,9 @@
           // 检查手机号是否被使用
           let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
           console.log(getUserByPhone);
-          axios.get(getUserByPhone.url).then(response=>{
+          Axios.get(getUserByPhone.url).then(response=>{
             let result:Result<AuthorityUser> = response.data;
+            // 用户不为null
             if (result.data) {
               username.value = result.data.username;
               dialogVisible.value = true;
@@ -209,7 +210,7 @@
         authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
         // 请求接口，发送手机验证码
         let phoneCode:Url = MessageUrl.phoneCode(phone.value);
-        axios.get(phoneCode.url).then(response=>{
+        Axios.get(phoneCode.url).then(response=>{
           console.log(response)
         })
         intervalId = setInterval(() => {
@@ -250,7 +251,7 @@
             if (authCode.value.length == 6) {
               // 将手机号和验证码 拿去请求查看是否正确
               let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
-              axios.get(checkCode.url).then(response => {
+              Axios.get(checkCode.url).then(response => {
                 console.log(response);
                 let boo:boolean = response.data.data;
                 if (boo) {

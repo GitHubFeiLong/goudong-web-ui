@@ -1,6 +1,15 @@
 const path = require("path");
 const webpack = require('webpack')
 const baseUrl = require('./src/config/baseUrl.ts')
+const glob = require("glob")
+
+let pages = [];
+glob("./src/pages/*/*@(.html|.ts)", function (er, files) {
+  files.forEach(item => {
+
+  })
+})
+
 module.exports = {
     // publicPath
     publicPath:'/',
