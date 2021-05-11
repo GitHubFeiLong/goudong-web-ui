@@ -57,7 +57,7 @@
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref, watch, onMounted} from 'vue';
+  import {defineComponent, ref, watch, provide, inject, onMounted} from 'vue';
   import Axios from "@/utils/Axios";
 
   import Hint from './Hint.vue';
@@ -148,6 +148,8 @@
         }, 600);
 
       }
+
+
 
       //
       const disposeUsername = ():string => {
@@ -325,6 +327,7 @@
        * 选中了单选，‘继续注册’就可以点击
        */
       watch(myAccountRadio, () => {
+
         // 单选框选中
         if (myAccountRadio.value != "") {
           (goOnRegistRef.value as HTMLElement).classList.remove("disabled")

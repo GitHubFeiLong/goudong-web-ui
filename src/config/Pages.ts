@@ -15,6 +15,7 @@ const createPages = () => {
     // @ts-ignore
     pages[file] = obj;
   }
+  console.log(pages)
   return pages;
 }
 
