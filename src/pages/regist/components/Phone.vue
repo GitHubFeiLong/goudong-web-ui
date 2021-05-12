@@ -28,7 +28,6 @@
     </div>
     <div @click="clickNextStep" id="phone-next-step">下一步</div>
   </div>
-
   <!--弹框-->
   <el-dialog class="phone-dialog" v-model="dialogVisible" width="420px">
     <div class="content">

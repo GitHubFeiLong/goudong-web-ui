@@ -19,6 +19,7 @@
   import Body from './components/Body.vue';
   import Footer from '@/components/Footer.vue';
 
+  import LocalStorageUtil from '@/utils/LocalStorageUtil';
 
   export default defineComponent({
     components: {
@@ -30,6 +31,10 @@
       let HeaderTitle = ref('欢迎注册');
       let goLoginSlot = ref('goLoginSlot');
 
+      onMounted(()=>{
+        console.log("token:" + LocalStorageUtil.get("token"))
+
+      })
       return {
         HeaderTitle,
         goLoginSlot
