@@ -18,9 +18,11 @@ a{
     text-decoration: none;
     color: #333;
 }
+/*去除浏览器对input添加的边框*/
 input:focus{
     outline:none;
 }
+/*去除浏览器对button添加的边框*/
 button:focus{
     outline: none;
 }
@@ -33,4 +35,10 @@ button:focus{
 /* 密码框去掉可见样式（眼睛） */
 input[type="password"]::-ms-reveal{
     display:none;
+}
+
+/*按钮禁用*/
+button[disabled]{
+    opacity: 0.5;
+    cursor: not-allowed;
 }

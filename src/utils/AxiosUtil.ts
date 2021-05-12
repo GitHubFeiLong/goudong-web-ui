@@ -59,7 +59,7 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   // 响应码
   const status = response.status
   const result = response.data;
-  if (status < 200 || status > 400) {
+  if (status >= 400) {
     // 弹出客户端提示
     ElMessage.error(result.clientMessage);
     // 打印服务端提示

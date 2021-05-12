@@ -59,10 +59,9 @@
 
 <script lang='ts'>
   import {defineComponent, ref, watch} from 'vue';
-  import Axios from "@/utils/AxiosUtil";
-
   import Hint from './Hint.vue';
   import PuzzleVerify from '@/components/PuzzleVerify.vue';
+
   // 提示对象
   import * as HintEntity from '@/pojo/HintEntity';
   // 验证
@@ -73,6 +72,8 @@
   import {Url} from "@/pojo/Url";
   import Result from "@/pojo/Result";
   import {AuthorityUser} from '@/pojo/AuthorityUser';
+  import Axios from "@/utils/AxiosUtil";
+  import RegisterStore from "@/store/RegisterStore";
 
   export default defineComponent({
     props: {},
@@ -148,8 +149,6 @@
         }, 600);
 
       }
-
-
       //
       const disposeUsername = (): string => {
         let result = username.value;
@@ -326,7 +325,8 @@
        * 选中了单选，‘继续注册’就可以点击
        */
       watch(myAccountRadio, () => {
-
+        // 修改vuex 的state
+        RegisterStore.commit("changeAccountRadio", myAccountRadio)
         // 单选框选中
         if (myAccountRadio.value != "") {
           (goOnRegistRef.value as HTMLElement).classList.remove("disabled")

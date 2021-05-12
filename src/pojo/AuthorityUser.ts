@@ -1,25 +1,26 @@
 export class AuthorityUser {
   // 用户表主键uuid
-  public uuid:string="";
+  uuid:string="";
   // 用户名
-  public username:string="";
+  username:string="";
   // 密码
-  public password:string="";
+  password:string="";
   // 邮箱
-  public email:string="";
+  email:string="";
   // 手机号
-  public phone:string="";
+  phone:string="";
   // 昵称
-  public nickname:string="";
+  nickname:string="";
   // qq登录后，系统获取腾讯的open_id
-  public qqOpenId:string="";
+  qqOpenId:string="";
   // 备注
-  public remark:string="";
+  remark:string="";
   // 有效时间
-  public validTime:Date|null = null;
+  validTime:Date|null = null;
   // 是否被删除
-  public isDelete:boolean=false;
-
+  isDelete:boolean=false;
+  // 账号是否是你的 空字符串、MY_SELF、NOT_MY_SELF
+  accountRadio:string="";
 
   constructor(phone:string, username:string, password:string, email:string) {
     this.phone = phone;

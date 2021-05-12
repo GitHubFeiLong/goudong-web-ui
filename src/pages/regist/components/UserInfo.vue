@@ -66,9 +66,9 @@
   import Axios from '@/utils/AxiosUtil';
   import * as Oauth2Url from '@/utils/Oauth2Url';
   import * as MessageUrl from '@/utils/MessageUrl';
-
   import {Url} from "@/pojo/Url";
   import {AuthorityUser} from "@/pojo/AuthorityUser";
+  import RegisterStore from "@/store/RegisterStore";
 
   export default defineComponent({
     props: {
@@ -319,15 +319,9 @@
               // 不可以使用
               if (!data) {
                 emailSure.value = false;
-                // 根据额外字段进行判断详细信息
-                let dataMap: object = response.data.dataMap;
-                if ((dataMap as any).status === 0) {
-                  hintEmail.value = HintEntity.EMAIL_HINT_31;
-                  invalidEmail = email.value;
-                } else {
-                  hintEmail.value = HintEntity.EMAIL_HINT_32;
-                }
-
+                hintEmail.value = HintEntity.EMAIL_HINT_32;
+                // 不能用
+                invalidEmail = email.value;
               }
             })
           }
@@ -428,8 +422,9 @@
             clearInterval(intervalId);
             hintEmailCode.value = HintEntity.BLANK;
             emailCodeBtnVal.value = "重新获取";
+          } else {
+            emailCodeBtnVal.value = time + "s后重新获取";
           }
-          emailCodeBtnVal.value = time + "s后重新获取";
         }, 1000);
       }
 
@@ -438,6 +433,7 @@
         let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCodeSure.value;
         isClickBtn.value = true;
         if (result) {
+
           if ((nextStepRef.value as HTMLElement).hasAttribute("disabled")) {
             return false;
           }
@@ -447,11 +443,15 @@
           // 保存到数据库
           let phone: string = props.phone as string;
           let user = new AuthorityUser(phone, username.value, password.value, email.value);
+          // 单选框值
+          user.accountRadio = RegisterStore.state.accountRadio;
+
           let urlObj = Oauth2Url.createUser(user);
           Axios.post(urlObj.url, urlObj.data).then(response => {
+            console.log(response);
             // 触发父组件的方法，将用户名回传
-            context.emit('hindenUserInfo', username.value);
-          }).catch(response => {
+            // context.emit('hindenUserInfo', username.value);
+          }).finally(()=>{
             (nextStepRef.value as HTMLElement).removeAttribute("disabled")
           })
 
@@ -694,6 +694,7 @@
       }
 
       button[disabled] {
+        opacity: unset;
         background-color: #f4f5f6;
         cursor: default;
       }
