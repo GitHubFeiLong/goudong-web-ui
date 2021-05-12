@@ -296,10 +296,9 @@
           oldEmail = email.value;
           return false;
         }
-        // 失去焦点，没有改变值，且还是上次请求无效邮箱
-        if (invalidEmail === email.value) {
-          emailSure.value = false;
-          hintEmail.value = HintEntity.EMAIL_HINT_31;
+
+        // 值未变
+        if (oldEmail === email.value) {
           return false;
         }
         // 正则验证
@@ -322,6 +321,9 @@
                 hintEmail.value = HintEntity.EMAIL_HINT_32;
                 // 不能用
                 invalidEmail = email.value;
+              } else {
+                emailSure.value = true;
+                hintEmail.value = HintEntity.BLANK;
               }
             })
           }
@@ -450,7 +452,7 @@
           Axios.post(urlObj.url, urlObj.data).then(response => {
             console.log(response);
             // 触发父组件的方法，将用户名回传
-            // context.emit('hindenUserInfo', username.value);
+            context.emit('hindenUserInfo', username.value);
           }).finally(()=>{
             (nextStepRef.value as HTMLElement).removeAttribute("disabled")
           })
