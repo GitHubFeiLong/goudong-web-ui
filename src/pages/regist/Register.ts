@@ -5,6 +5,6 @@ import App from './Register.vue';
 import RegisterRouter from '@/router/RegisterRouter';
 import RegisterStore from '@/store/RegisterStore';
 
-import '/public/css/login.css'
+import '@/assets/css/commons.css'
 
 createApp(App).use(RegisterRouter).use(ElementPlus).use(RegisterStore).mount('#app');

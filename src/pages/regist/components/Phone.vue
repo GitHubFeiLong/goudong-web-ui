@@ -3,7 +3,8 @@
   <div id="phone">
     <div id="phone-number">
       <label for="phone-num-input">中国 0086</label>
-      <input @blur="phoneBlur" @focus="phoneFocus" autocomplete="off" id="phone-num-input" maxlength="11"
+      <input @blur="phoneBlur" @focus="phoneFocus" autocomplete="off" id="phone-num-input"
+             maxlength="11"
              placeholder="建议使用常用手机号" ref="phoneRef" type="text" v-model="phone">
       <span @click="cleanPhone" class='clean-icon normal-icon'
             v-show="phone.length>0 && !phoneSure"></span>
@@ -45,34 +46,33 @@
           <span>用户名：{{disposeUsername()}}(<a href="www.baidu.com">可登录</a>)</span>
         </div>
         <div class="two">
-          <el-radio v-model="myAccountRadio" label="MY_SELF">是我的</el-radio>
-          <el-radio v-model="myAccountRadio" label="NOT_MY_SELF">不是我的</el-radio>
+          <el-radio label="MY_SELF" v-model="myAccountRadio">是我的</el-radio>
+          <el-radio label="NOT_MY_SELF" v-model="myAccountRadio">不是我的</el-radio>
         </div>
       </div>
       <div class="fotter">
-        <button ref="goOnRegistRef" class="disabled" @click="goOnRegist">继续注册</button>
+        <button @click="goOnRegist" class="disabled" ref="goOnRegistRef">继续注册</button>
       </div>
     </div>
   </el-dialog>
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref, watch, provide, inject, onMounted} from 'vue';
-  import Axios from "@/utils/Axios";
+  import {defineComponent, ref, watch} from 'vue';
+  import Axios from "@/utils/AxiosUtil";
 
   import Hint from './Hint.vue';
   import PuzzleVerify from '@/components/PuzzleVerify.vue';
   // 提示对象
   import * as HintEntity from '@/pojo/HintEntity';
   // 验证
-  import * as Validate from '@/utils/validate';
-
+  import * as Validate from '@/utils/ValidateUtil';
   // 接口地址
   import * as MessageUrl from '@/utils/MessageUrl';
   import * as Oauth2Url from '@/utils/Oauth2Url';
   import {Url} from "@/pojo/Url";
   import Result from "@/pojo/Result";
-  import { AuthorityUser } from '@/pojo/AuthorityUser';
+  import {AuthorityUser} from '@/pojo/AuthorityUser';
 
   export default defineComponent({
     props: {},
@@ -109,7 +109,7 @@
       // 滑块验证是否正确
       let puzzleSure = ref(false);
       // 弹框是否显示
-      let dialogVisible =  ref(false);
+      let dialogVisible = ref(false);
       // 后端返回账号名
       let username = ref("");
       // 账号是不是我的 单选框
@@ -134,8 +134,8 @@
           // 检查手机号是否被使用
           let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
           console.log(getUserByPhone);
-          Axios.get(getUserByPhone.url).then(response=>{
-            let result:Result<AuthorityUser> = response.data;
+          Axios.get(getUserByPhone.url).then(response => {
+            let result: Result<AuthorityUser> = response.data;
             // 用户不为null
             if (result.data) {
               username.value = result.data.username;
@@ -150,16 +150,15 @@
       }
 
 
-
       //
-      const disposeUsername = ():string => {
+      const disposeUsername = (): string => {
         let result = username.value;
         let replaceStr = "";
         // 用户名 长度<=4
         if (result.length <= 4) {
-          replaceStr = result.substring(1, result.length-1);
+          replaceStr = result.substring(1, result.length - 1);
         } else {
-          replaceStr = result.substring(2, result.length-2);
+          replaceStr = result.substring(2, result.length - 2);
         }
         return result.replace(replaceStr, "*".repeat(replaceStr.length));
       }
@@ -211,8 +210,8 @@
         btnClass.value = 'btn-no-hover';
         authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
         // 请求接口，发送手机验证码
-        let phoneCode:Url = MessageUrl.phoneCode(phone.value);
-        Axios.get(phoneCode.url).then(response=>{
+        let phoneCode: Url = MessageUrl.phoneCode(phone.value);
+        Axios.get(phoneCode.url).then(response => {
           console.log(response)
         })
         intervalId = setInterval(() => {
@@ -255,7 +254,7 @@
               let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
               Axios.get(checkCode.url).then(response => {
                 console.log(response);
-                let boo:boolean = response.data.data;
+                let boo: boolean = response.data.data;
                 if (boo) {
                   // 匹配成功,修改样式
                   context.emit('hindenPhone', phone.value)
@@ -275,7 +274,7 @@
       /**
        * 点击继续注册
        */
-      const goOnRegist = ()=>{
+      const goOnRegist = () => {
         // 验证码验证
         showPhoneButton.value = false;
         // 隐藏弹框
@@ -368,7 +367,8 @@
   #puzzle-warp {
     margin-top: -170px;
   }
-  .el-dialog__body{
+
+  .el-dialog__body {
     padding-top: 0px !important;
   }
 </style>
@@ -384,6 +384,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding-bottom: 240px;
 
     input::-webkit-input-placeholder {
       color: rgb(204, 204, 204);
@@ -395,6 +396,7 @@
       width: 398px;
       height: 52px;
       font-size: 14px;
+
       label {
         position: relative;
         width: 87px;
@@ -553,10 +555,12 @@
       }
     }
   }
+
   .content {
     width: 100%;
     height: 290px;
-    .header{
+
+    .header {
       margin-top: 15px;
       height: 123px;
       border-bottom: 1px solid #ddd;
@@ -564,57 +568,68 @@
       align-items: center;
       flex-direction: column;
       text-align: center;
-      .img{
+
+      .img {
         width: 50px;
         height: 50px;
         background-image: url("~@/assets/imgs/icon.png");
         background-position: 190px 0px;
       }
-      .txt{
+
+      .txt {
         margin-top: 10px;
         text-align: center;
         font-size: 16px;
         color: #666;
         line-height: 21px;
-        em{
+
+        em {
           font-style: normal;
           font-weight: 700;
         }
       }
     }
-    .body{
+
+    .body {
       height: 80px;
       padding: 14px 27px;
       border-bottom: 1px solid #ddd;
-      .one{
+
+      .one {
         line-height: 40px;
-        img{
-          width:29px;
+
+        img {
+          width: 29px;
           height: 29px;
           // 和文字中心对齐
           vertical-align: middle;
         }
-        span{
+
+        span {
           margin-left: 10px;
-          a{
+
+          a {
             text-decoration: underline;
             color: #06C;
           }
         }
       }
-      .two{
+
+      .two {
         line-height: 40px;
         margin-left: 7px;
       }
 
     }
-    .fotter{
+
+    .fotter {
       height: 40px;
       line-height: 40px;
       margin-top: 18px;
       display: flex;
       justify-content: center;
-      button{
+
+      button {
         /*color: ;*/
         width: 92px;
         height: 40px;
@@ -624,7 +639,8 @@
         color: #fff;
         cursor: pointer;
       }
-      .disabled{
+
+      .disabled {
         opacity: .5;
         cursor: not-allowed;
       }

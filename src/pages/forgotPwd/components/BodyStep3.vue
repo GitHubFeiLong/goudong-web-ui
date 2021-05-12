@@ -99,7 +99,7 @@
   import QA from "@/components/QA.vue";
   import * as HintEntity from "@/pojo/HintEntity";
   import * as QAEntity from "@/pojo/QAEntity";
-  import * as Validate from "@/utils/validate";
+  import * as Validate from "@/utils/ValidateUtil";
   export default defineComponent ({
     components:{
       BodyFoot,

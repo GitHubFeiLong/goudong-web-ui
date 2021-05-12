@@ -11,13 +11,17 @@
 
 <script lang='ts'>
     import { defineComponent, ref } from 'vue'
+
+    // 引入工具ts
+    import * as NotDone from '@/utils/NotDone'
+
     export default defineComponent ({
         props:{
             title:String,
         },
         setup () {
             function notDone () {
-                (window as any).notDone()
+              NotDone.notDone()
             }
             return {
                 notDone,

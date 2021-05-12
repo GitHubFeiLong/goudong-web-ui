@@ -12,8 +12,8 @@
                 <sapn class="span">微信</sapn>
             </div>
         </div>
-        <div class="regist">
-            <div class="regist-inner" @click="regist">
+        <div class="register">
+            <div class="register-inner" @click="register">
                 <b></b><span class="span">立即注册</span>
             </div>
         </div>
@@ -22,6 +22,9 @@
 
 <script lang="ts">
     import {defineComponent} from 'vue';
+    // 引入工具ts
+    import * as NotDone from '@/utils/NotDone'
+
     export default defineComponent ({
         name:'QuickLogin',
         setup(){
@@ -29,15 +32,15 @@
               window.location.href = "http://www.goudong.shop/oauth/qq/login";
             }
             function wechat () {
-                (window as any).notDone()
+              NotDone.notDone()
             }
-            function regist () {
-                window.location.href = '/regist.html'
+            function register () {
+                window.location.href = '/register.html'
             }
             return {
                 qq,
                 wechat,
-                regist
+              register
             }
         }
     })
@@ -123,19 +126,19 @@
                 right: 0;
             }
         }
-        .regist{
+        .register{
             width:80px;
             height: 51px;
             position: relative;
             padding: 17px 20px 20px 20px;
-            .regist-inner{
+            .register-inner{
                 width: 80px;
                 height: 20px;
 
                 b{
                     width: 18px;
                     height: 18px;
-                    background-image: url('~@/assets/imgs/regist.png');
+                    background-image: url('~@/assets/imgs/register.png');
                     display: inline-block;
                 }
                 span{

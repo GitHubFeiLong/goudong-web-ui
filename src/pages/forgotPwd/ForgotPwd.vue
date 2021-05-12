@@ -8,7 +8,7 @@
 <script lang='ts'>
     import { defineComponent, ref} from 'vue'
     import Menu from '@/components/Menu.vue'
-    import Header from '@/components/RegistHeader.vue'
+    import Header from '@/components/RegisterHeader.vue'
     import Footer from '@/components/Footer.vue';
     import Body from './components/Body.vue';
     export default defineComponent ({

@@ -7,11 +7,7 @@
 </template>
 
 <script lang='ts'>
-    import {defineComponent, onMounted} from 'vue';
-
-    // 引入工具ts
-    import * as NotDone from '@/utils/notDone'
-
+    import {defineComponent} from 'vue';
     import Header from './components/Header.vue';
     import Body from './components/Body.vue';
     import Footer from '@/components/Footer.vue';
@@ -23,9 +19,7 @@
             Footer,
         },
         setup () {
-            onMounted (() => {
-                (window as any)['notDone'] = (NotDone as any).notDone;
-            })
+
         }
     })
 </script>

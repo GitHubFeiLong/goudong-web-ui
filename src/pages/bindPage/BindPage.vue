@@ -6,7 +6,7 @@
 
 <script lang='ts'>
     import { defineComponent, ref} from 'vue'
-    import Header from '@/components/RegistHeader.vue'
+    import Header from '@/components/RegisterHeader.vue'
     import Body from './components/Body.vue'
     import Footer from '@/components/Footer.vue';
     export default defineComponent ({

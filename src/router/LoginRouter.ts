@@ -3,7 +3,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import QRCode from "@/pages/login/components/QRCode.vue";
 import Account from "@/pages/login/components/Account.vue";
-export const login = [
+export const loginRouter = [
     {
         path:'',
         redirect:'/QRCode',
@@ -22,9 +22,9 @@ export const login = [
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes: login,
+    routes: loginRouter,
 });
-  
+
   export default router;
 
 

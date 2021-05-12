@@ -21,9 +21,13 @@
 
 <script lang='ts'>
     import { defineComponent, ref, watch } from 'vue';
+    import QuickLogin from './QuickLogin.vue'
+
+    // 引入工具ts
+    import * as NotDone from '@/utils/NotDone'
     // 申明jquery
     declare var $: (selector: string) => any;
-    import QuickLogin from './QuickLogin.vue'
+
     export default defineComponent ({
         components:{
             QuickLogin
@@ -82,7 +86,7 @@
             }
             // 登录
             function login () {
-                (window as any).notDone()
+                NotDone.notDone()
             }
             // 忘记密码
             function forgetPassword () {

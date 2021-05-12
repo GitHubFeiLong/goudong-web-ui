@@ -21,7 +21,7 @@
   import * as HintEntity from '@/pojo/HintEntity';
 
   // 验证
-  import * as Validate from '@/utils/validate';
+  import * as Validate from '@/utils/ValidateUtil';
 
   export default defineComponent ({
     components:{

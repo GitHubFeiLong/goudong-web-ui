@@ -1,9 +1,9 @@
 import { createApp } from 'vue';
 import App from './Login.vue';
-import router from '@/router/login';
+import router from '@/router/LoginRouter';
 import store from '@/store/loginStore';
 
-import '/public/css/login.css'
+import '@/assets/css/commons.css'
 const app = createApp(App);
 
 app.use(store).use(router).mount('#login-app');

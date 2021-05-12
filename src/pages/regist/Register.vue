@@ -15,11 +15,10 @@
 
 <script lang='ts'>
   import {defineComponent, onMounted, ref} from 'vue';
-  import Header from '@/components/RegistHeader.vue';
+  import Header from '@/components/RegisterHeader.vue';
   import Body from './components/Body.vue';
   import Footer from '@/components/Footer.vue';
-  // 引入工具ts
-  import * as NotDone from '@/utils/notDone'
+
 
   export default defineComponent({
     components: {
@@ -30,9 +29,7 @@
     setup() {
       let HeaderTitle = ref('欢迎注册');
       let goLoginSlot = ref('goLoginSlot');
-      onMounted(() => {
-        (window as any)['notDone'] = (NotDone as any).notDone;
-      })
+
       return {
         HeaderTitle,
         goLoginSlot
