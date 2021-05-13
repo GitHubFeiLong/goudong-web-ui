@@ -69,7 +69,7 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
     return Promise.reject(response);
   }
   // 根据响应头
-
+  console.log(response);
   return response
 }, (error) => {
   console.log(error)

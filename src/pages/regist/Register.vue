@@ -19,8 +19,6 @@
   import Body from './components/Body.vue';
   import Footer from '@/components/Footer.vue';
 
-  import {initToken} from '@/utils/Init';
-
   export default defineComponent({
     components: {
       Header,
@@ -32,7 +30,6 @@
       let goLoginSlot = ref('goLoginSlot');
 
       onMounted(()=>{
-        initToken()
       })
       return {
         HeaderTitle,
