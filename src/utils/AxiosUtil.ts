@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from "element-plus";
 
 import Result from '@/pojo/Result';
+import * as ProjectConst from '@/pojo/ProjectConst';
 
 /**
  * 初始化 axios
@@ -39,9 +40,9 @@ const service = axios.create({
  */
 service.interceptors.request.use((config: AxiosRequestConfig) => {
   //获取token，并将其添加至请求头中
-  let token = localStorage.getItem('token')
+  let token = localStorage.getItem(ProjectConst.AUTHORIZATION)
   if(token){
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers[ProjectConst.AUTHORIZATION] = `${ProjectConst.BEARER}${token}`;
   }
   return config
 }, (error) => {
@@ -59,7 +60,7 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   // 响应码
   const status = response.status
   const result = response.data;
-  if (status >= 400) {
+  if (200 > status || status >= 400) {
     // 弹出客户端提示
     ElMessage.error(result.clientMessage);
     // 打印服务端提示
@@ -67,6 +68,7 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
     // 设置响应为错误，
     return Promise.reject(response);
   }
+  // 根据响应头
 
   return response
 }, (error) => {

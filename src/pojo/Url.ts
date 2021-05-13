@@ -4,7 +4,7 @@ export class Url {
   public params:Array<string>;
   public data:object|string = {};
 
-  constructor(url:string, method:string, ...params:string[]) {
+  private constructor(url:string, method:string, ...params:string[]) {
 
     this.url = url;
     this.method = method;
@@ -15,6 +15,27 @@ export class Url {
       this.resolveUrl();
     }
   }
+
+  /**
+   * get 请求 使用问号传参
+   * @param url 接口地址
+   * @param data 请求参数
+   */
+  static get (url:string, data?:object):Url {
+    let urlObj = new Url(url, "get");
+    urlObj.data = data as object;
+    return urlObj;
+  }
+
+  /**
+   * get 请求 使用路径参数
+   * @param url 接口地址
+   * @param params 请求参数
+   */
+  static getByUrl (url:string, ...params:string[]):Url {
+    return  new Url(url, "get", ...params);
+  }
+
 
   /**
    * post 请求

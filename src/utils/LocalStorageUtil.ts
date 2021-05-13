@@ -1,4 +1,3 @@
-import AxiosUtil from '@/utils/AxiosUtil';
 /**
  * localStorage 封装
  */
@@ -50,18 +49,6 @@ export default class LocalStorageUtil {
    */
   static remove(key:string){
     LocalStorageUtil.s.removeItem(key);
-  }
-
-  /**
-   *
-   */
-  static init(){
-    let existsToken:boolean = LocalStorageUtil.has(LocalStorageUtil.token)
-    if (!existsToken) {
-      // 不存在，就获取token，且保存到浏览器
-
-      // AxiosUtil.
-    }
   }
 }
 
