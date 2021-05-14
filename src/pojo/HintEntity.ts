@@ -6,19 +6,28 @@ export class HintEntity {
     info:string="";
     // 字体颜色
     color:string="";
-    // 图标位置(使用的精灵图)
+    // 图标位置(使用的精灵图) 默认使用icon.png 因为先做的注册,登录表单 pwd-icons-new.png
     backgroundPosition: string="";
     // 是否显示
     isHide:boolean;
-    constructor (info:string ="验证完成后，你可以使用该邮箱登录或找回密码", color:string='#c5c5c5', backgroundPosition:string='0px -100px', isHide:boolean = false) {
+    imageName:string;
+
+    constructor (info:string ="验证完成后，你可以使用该邮箱登录或找回密码", color:string='#c5c5c5', backgroundPosition:string='0px -100px', imageName:string='icon.png') {
         this.info = info;
         this.color = color;
         this.backgroundPosition = backgroundPosition;
-        this.isHide = isHide;
+        this.isHide = false;
+        this.imageName = imageName;
     }
     static blank():HintEntity{
       let result = new HintEntity();
       result.isHide = true;
+      return result;
+    }
+    // 登录的提示
+    static login(info:string):HintEntity{
+      let result = new HintEntity(info);
+      result.imageName='pwd-icons-new.png';
       return result;
     }
     /*
@@ -36,6 +45,9 @@ export const PHONE_HINT_00 = new HintEntity('验证完成后，你可以使用�
 export const PHONE_HINT_01 = new HintEntity('格式错误', '#f91', '-17px -100px');
 export const PHONE_HINT_02 = new HintEntity('请输入手机号', '#f91', '-17px -100px');
 export const PHONE_HINT_03 = new HintEntity('请完成验证', '#f91', '-17px -100px');
+
+// 实名认证提示
+export const AUTHENTICATION_HINT_00 = new HintEntity('请先完成已有帐号的实名认证', '#c5c5c5', '0px -100px');
 
 // 注册输入邮箱
 export const EMAIL_HINT_0 = new HintEntity('验证完成后，你可以使用该邮箱登录或找回密码', '#c5c5c5', '0px -100px');
@@ -72,3 +84,8 @@ export const PASSWORD_HINT_4 = new HintEntity('登录密码由 8 ~ 20 位字符�
 export const CONFIRM_PASSWORD_HINT_0 = new HintEntity('请再次输入密码','#c5c5c5', '0px -100px');
 export const CONFIRM_PASSWORD_HINT_1 = new HintEntity('您两次输入的密码不同，请重试', '#f91', '-17px -100px');
 export const CONFIRM_PASSWORD_HINT_3 = new HintEntity('请您输入正确的确认密码', '#f91', '-17px -100px');
+
+// 登录相关
+export const USERNAME_PASSWORD_HINT_0 = HintEntity.login('请输入账户名和密码');
+export const USERNAME_PASSWORD_HINT_1 = HintEntity.login('请输入账户名');
+export const USERNAME_PASSWORD_HINT_2 = HintEntity.login('请输入密码');

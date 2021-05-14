@@ -1,6 +1,6 @@
 <!--只显示内容，具体定位需要引入的地方自己进行确定-->
 <template>
-    <div id="hint-info-div">
+    <div id="hint-info-div" v-show="!hint.isHide">
         <b class="hint-icon" :style="{ backgroundPosition: hint.backgroundPosition}"></b>
         <span class="hint-info" :style="{color:hint.color}">{{ hint.info }}</span>
     </div>

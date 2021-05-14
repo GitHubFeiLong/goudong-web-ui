@@ -1,15 +1,16 @@
+<!--迷你版的滑块验证-->
 <template>
   <div id="puzzle-warp">
     <i @click="closeImage" class='puzzle-close'></i>
     <div class='puzzle-header'>
       <span>完成拼图验证</span>
-      <a @click.prevent="changeImage" href="javascript::"><span
+      <a @click.prevent="changeImage" href="javascript:void(0);"><span
         class='iconfont icon-refresh'></span>&nbsp;换一张</a>
     </div>
     <div class='puzzle-body'>
       <div id="shade" ref="SHADE"></div>
-      <canvas height="50" ref="CONVAS" width="50"></canvas>
-      <img :src="bodyImage" height="100%" ref="IMAGE" width="100%">
+      <canvas id="canvas" height="40" ref="CONVAS" width="40"></canvas>
+      <img id="image" :src="bodyImage" height="100%" ref="IMAGE" width="100%">
     </div>
     <div class='puzzle-footer' ref="FOOTER">
       <div id='after-status' ref="STATUS"></div>
@@ -49,14 +50,14 @@
       let statusTxt = ref("向右滑动完成拼图");
 
       // 滑块圆的总宽
-      const CIRCLE_WIDTH = 52;
+      const CIRCLE_WIDTH = 40;
       // 长条的总宽
-      const FOOTER_WIDTH = 364;
+      const FOOTER_WIDTH = 278;
 
-      let bodyImage = ref(require('@/assets/imgs/puzzle-verify.png')) //成功 不报错 require('~');
+      let bodyImage = ref(require('@/assets/imgs/mini1.png')) //成功 不报错 require('~');
       const puzzImgs = [
-        require('@/assets/imgs/puzzle-verify.png'),
-        require('@/assets/imgs/puzzle-verify2.png'),
+        require('@/assets/imgs/mini1.png'),
+        require('@/assets/imgs/mini2.png'),
 
       ]
 
@@ -84,12 +85,14 @@
         circleY = (CIRCLE.value as any).getBoundingClientRect().y;
         footerX = (FOOTER.value as any).getBoundingClientRect().x;
         totalX = footerX + FOOTER_WIDTH - CIRCLE_WIDTH;
+        console.log("totalX", totalX)
         // 鼠标移动
         document.onmousemove = function (e1) {
           if (isMouseDown.value) {
             // 1.获取点坐标
             let x = e1.clientX;
             let y = e1.clientY;
+            console.log("x", x)
             // 大于长条的最大值
             if (x >= totalX) {
               (CIRCLE.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px";
@@ -148,26 +151,30 @@
         image.src = puzzImgs[newIndex];
 
 
-        image.onload = function () {
+        image.onload = function(){
+
+          // 验证码图片的宽高
+          // 滑块需要再减去convas的宽高。
+          let imageWidth = 278-80;
+          let imageHeight = 108-80;
+
+          sx = Math.round(Math.random()*imageWidth)+40;
+          sy = Math.round(Math.random()*imageHeight)+40;
+
+          (CONVAS.value as any).style.top = sy + 'px';
+
+          (SHADE.value as any).style.top = sy + 'px';
+          (SHADE.value as any).style.left = sx + 'px';
+
+          console.log("sx = " + sx + ", sy = " + sy + " ")
+          // shade的left值
+          needX = sx;
+
           // 执行drawImage语句
-          ctx.drawImage(image, sx, sy, 46, 46, 0, 0, 50, 50)
+          console.log("绘制")
+          ctx.drawImage(image, sx, sy, 40, 40, 0, 0, 40, 40)
         }
 
-        // 验证码图片的宽高
-        // 滑块需要再减去convas的宽高。
-        let imageWidth = 363 - 100;
-        let imageHeight = 141 - 100;
-
-        sx = Math.round(Math.random() * imageWidth) + 50;
-        sy = Math.round(Math.random() * imageHeight) + 50;
-
-        (CONVAS.value as any).style.top = sy + 'px';
-
-        (SHADE.value as any).style.top = sy + 'px';
-        (SHADE.value as any).style.left = sx + 'px';
-
-        // shade的left值
-        needX = sx;
 
       }
 
@@ -245,9 +252,9 @@
   @import url('~@/assets/fonts/iconfont.css');
 
   #puzzle-warp {
-    width: 364px;
-    height: 216.5px;
-    padding: 12px 12px 12px 20px;
+    width: 278px;
+    height: 183px;
+    padding: 18px 12px 18px 12px;
     border: 1px solid #eee;
     position: absolute;
     box-shadow: 0 0 2px 2px #eee;
@@ -280,7 +287,7 @@
     .puzzle-header {
       height: 25px;
       font: 14px/25px '微软雅黑';
-
+      color: #666;
       & > a {
         display: inline-block;
         position: absolute;
@@ -288,24 +295,29 @@
         color: #06c;
 
         .iconfont {
+          font-size: 14px;
           font-weight: bold;
         }
       }
     }
 
     .puzzle-body {
-      height: 141.55px;
+      height: 108px;
       background-size: 100%;
       margin-bottom: 10px;
       position: relative;
 
       canvas, #shade {
-        width: 50px;
-        height: 50px;
-        border: 2px solid #a4a4a4;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #a4a4a4;
         z-index: 10;
         position: absolute;
         box-sizing: border-box;
+      }
+      #shade{
+        width: 40px;
+        height: 40px;
       }
 
       img {
@@ -348,8 +360,9 @@
       }
 
       .puzzle-circle {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
+        color: #41c2fc;
         border-radius: 50%;
         border: 1px solid #e6f5ff;
         box-shadow: 0 0 10px 2px #e6f5ff;
@@ -365,7 +378,7 @@
 
         .icon-arrow-right {
           text-align: center;
-          line-height: 50px;
+          line-height: 45px;
           font-size: 30px;
           font-weight: bold;
         }
