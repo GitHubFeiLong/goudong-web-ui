@@ -1,6 +1,9 @@
 /** ===================认证服务相关的接口========================*/
 import {Url} from "@/pojo/Url";
 import {AuthorityUser} from "@/pojo/AuthorityUser";
+import {CONTENT_TYPE_0, CONTENT_TYPE_1, CONTENT_TYPE_2} from "@/pojo/ProjectConst";
+import AxiosUtil from '@/utils/AxiosUtil'
+import {AxiosResponse} from "axios";
 
 /**
  * 根据手机号获取用户
@@ -25,3 +28,19 @@ export const checkEmail =  (email:string):Url => Url.getByUrl("/api/oauth2/open/
  * @param paramObj 用户对象
  */
 export const createUser = (data:AuthorityUser):Url => Url.post("/api/oauth2/open/user", data);
+
+/**
+ * 登录
+ * @param paramObj 用户对象
+ */
+// 写成接口的方式
+export const login = (username:string, password:string):Promise<AxiosResponse> => {
+  return new Promise((resolve, reject) => {
+    let url = `/api/oauth2/open/user/login?username=${username}&password=${password}`;
+    AxiosUtil.post(url).then(response => {
+      reject(response);
+    }).catch(response=>{
+      reject(response);
+    })
+  })
+}

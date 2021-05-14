@@ -85,14 +85,12 @@
         circleY = (CIRCLE.value as any).getBoundingClientRect().y;
         footerX = (FOOTER.value as any).getBoundingClientRect().x;
         totalX = footerX + FOOTER_WIDTH - CIRCLE_WIDTH;
-        console.log("totalX", totalX)
         // 鼠标移动
         document.onmousemove = function (e1) {
           if (isMouseDown.value) {
             // 1.获取点坐标
             let x = e1.clientX;
             let y = e1.clientY;
-            console.log("x", x)
             // 大于长条的最大值
             if (x >= totalX) {
               (CIRCLE.value as any).style.left = FOOTER_WIDTH - CIRCLE_WIDTH + "px";

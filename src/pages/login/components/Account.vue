@@ -18,22 +18,24 @@
       <span @click='cleanPassword' v-show='password.length>0'></span>
     </div>
     <a @click.prevent="forgetPassword" class="forget-password" href="">忘记密码</a>
-    <MiniPuzzleVerify v-if="showPuzzle" @successPuzzle="successPuzzle" @closePuzzle="closePuzzle"/>
+    <MiniPuzzleVerify v-if="puzzle.showPuzzle" @successPuzzle="successPuzzle" @closePuzzle="closePuzzle"/>
     <div id="login-btn">
-      <a @click.prevent="login" href="">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+      <a @click.prevent="login" href="">{{btnValue}}</a>
     </div>
   </div>
   <QuickLogin/>
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref} from 'vue';
+  import {defineComponent, ref, reactive} from 'vue';
   import QuickLogin from './QuickLogin.vue'
   import MiniPuzzleVerify from "@/components/MiniPuzzleVerify.vue";
 
   // 引入工具ts
   import * as NotDone from '@/utils/NotDone'
   import * as HintEntity from "@/pojo/HintEntity";
+  import Axios from '@/utils/AxiosUtil';
+  import * as Oauth2Url from '@/utils/Oauth2Url';
   // 申明jquery
   declare var $: (selector: string) => any;
 
@@ -43,11 +45,14 @@
       QuickLogin,
     },
     setup() {
-      let showPuzzle = ref(false);
+      let puzzle = reactive({
+        showPuzzle:false,
+        puzzleSure:false,
+      })
       let hint = ref(HintEntity.BLANK)
       let username = ref('');
       let password = ref('');
-
+      let btnValue = ref("登    录");
       // 清除用户名
       function cleanUsername() {
         username.value = '';
@@ -104,6 +109,11 @@
 
       // 登录
       function login() {
+        successPuzzle()
+        return false;
+        if (puzzle.showPuzzle) {
+          return false;
+        }
         // NotDone.notDone()
         if (username.value === '' && password.value === "") {
           hint.value = HintEntity.USERNAME_PASSWORD_HINT_0;
@@ -115,17 +125,27 @@
         } else {
           hint.value = HintEntity.BLANK;
           // 滑块验证
-          showPuzzle.value = true;
+          puzzle.showPuzzle = true;
         }
       }
 
       // 滑块成功
       const successPuzzle = () => {
-        showPuzzle.value = false;
+        puzzle.showPuzzle = false;
+        puzzle.puzzleSure = true;
+        btnValue.value = "正在登录..."
+        // 请求登录接口
+        Oauth2Url.login(username.value, password.value).then(response=>{
+          console.log("login回调,", response )
+        }).catch(response=>{
+          console.error("login回调,", response )
+        })
+
       }
       // 关闭滑块
       const closePuzzle = () => {
-        showPuzzle.value = false;
+        puzzle.showPuzzle = false;
+        puzzle.puzzleSure = false;
       }
 
       // 忘记密码
@@ -147,7 +167,8 @@
         forgetPassword,
         successPuzzle,
         closePuzzle,
-        showPuzzle,
+        puzzle,
+        btnValue,
       }
     },
 

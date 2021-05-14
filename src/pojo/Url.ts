@@ -1,8 +1,12 @@
+import {CONTENT_TYPE_0, CONTENT_TYPE_1, CONTENT_TYPE_2} from "@/pojo/ProjectConst";
+
 export class Url {
-  public url:string;
-  public method:string;
-  public params:Array<string>;
-  public data:object|string = {};
+  url:string;
+  method:string;
+  params:Array<string>;
+  data:object|string = {};
+  contentType:string = "";
+
 
   private constructor(url:string, method:string, ...params:string[]) {
 
@@ -21,11 +25,11 @@ export class Url {
    * @param url 接口地址
    * @param data 请求参数
    */
-  static get (url:string, data?:object):Url {
-    let urlObj = new Url(url, "get");
-    urlObj.data = data as object;
-    return urlObj;
-  }
+  // static get (url:string, data?:object):Url {
+  //   let urlObj = new Url(url, "get");
+  //   urlObj.data = data as object;
+  //   return urlObj;
+  // }
 
   /**
    * get 请求 使用路径参数
@@ -33,7 +37,8 @@ export class Url {
    * @param params 请求参数
    */
   static getByUrl (url:string, ...params:string[]):Url {
-    return  new Url(url, "get", ...params);
+    let urlObj = new Url(url, "get", ...params);
+    return urlObj;
   }
 
 
@@ -41,10 +46,12 @@ export class Url {
    * post 请求
    * @param url 接口地址
    * @param data 请求参数
+   * @param contentType 请求媒体类型，默认json
    */
-  static post (url:string, data:object):Url {
+  static post (url:string, data:object, contentType:string=CONTENT_TYPE_1):Url {
     let urlObj = new Url(url, "post");
     urlObj.data = data;
+    urlObj.contentType = contentType;
     return urlObj;
   }
 
