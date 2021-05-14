@@ -63,10 +63,8 @@
   import * as HintEntity from '@/pojo/HintEntity';
   import {BLANK} from '@/pojo/HintEntity';
   import * as Validate from '@/utils/ValidateUtil';
-  import Axios from '@/utils/AxiosUtil';
-  import * as Oauth2Url from '@/utils/Oauth2Url';
-  import * as MessageUrl from '@/utils/MessageUrl';
-  import {Url} from "@/pojo/Url";
+  import {checkUsernameApi, checkEmailApi, createUserApi} from '@/api/Oauth2Api';
+  import {checkCodeApi, emailCodeApi} from '@/api/MessageApi';
   import {AuthorityUser} from "@/pojo/AuthorityUser";
   import RegisterStore from "@/store/RegisterStore";
 
@@ -186,8 +184,7 @@
           hintUsername.value = HintEntity.BLANK;
           if (username.value != oldUsername) {
             // 当符合条件时，查寻用户名是否被使用
-            let checkUsername: Url = Oauth2Url.checkUsername(username.value)
-            Axios.get(checkUsername.url).then(response => {
+            checkUsernameApi(username.value).then(response => {
 
               let data: [] = response.data.data;
               usableUsernames.value = data;
@@ -309,9 +306,7 @@
           console.log(value)
           // 比较本次和上次是否一致，不一致才调用接口
           if (email.value != oldEmail) {
-            let checkEmail = Oauth2Url.checkEmail(email.value);
-            // 接口数据校验
-            Axios.get(checkEmail.url).then(response => {
+            checkEmailApi(email.value).then(response => {
               let data: boolean = response.data.data;
 
               console.log(data)
@@ -366,6 +361,9 @@
 
       // 邮箱验证失去焦点
       const emailCodeBlur = () => {
+        if (emailCodeSure.value) {
+          return false;
+        }
         if (emailCode.value.length == 0) {
           emailCodeSure.value = false;
           hintEmailCode.value = HintEntity.BLANK;
@@ -374,8 +372,7 @@
         // 输入完成，校验验证码是否正确
         let boo = (emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled") && emailSure.value && emailCode.value.length == 6
         if (boo) {
-          let checkCode = MessageUrl.checkCode(email.value, emailCode.value);
-          Axios.get(checkCode.url).then(response => {
+          checkCodeApi(email.value, emailCode.value).then(response => {
             let boo: boolean = response.data.data;
             emailCodeSure.value = boo;
             if (boo) {
@@ -400,9 +397,7 @@
         }
         if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled")) {
           emailCodeSure.value = false;
-
-          let emailCodeInterface: Url = MessageUrl.emailCode(email.value);
-          Axios.get(emailCodeInterface.url).then(response => {
+          emailCodeApi(email.value).then(response => {
             intervalEmailCodeBtnVal();
           })
         }
@@ -448,8 +443,7 @@
           // 单选框值
           user.accountRadio = RegisterStore.state.accountRadio;
 
-          let urlObj = Oauth2Url.createUser(user);
-          Axios.post(urlObj.url, urlObj.data).then(response => {
+          createUserApi(user).then().then(response => {
             console.log(response);
             // 触发父组件的方法，将用户名回传
             context.emit('hindenUserInfo', username.value);

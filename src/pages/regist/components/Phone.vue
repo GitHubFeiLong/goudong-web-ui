@@ -66,12 +66,10 @@
   // 验证
   import * as Validate from '@/utils/ValidateUtil';
   // 接口地址
-  import * as MessageUrl from '@/utils/MessageUrl';
-  import * as Oauth2Url from '@/utils/Oauth2Url';
-  import {Url} from "@/pojo/Url";
+  import {phoneCodeApi, checkCodeApi} from '@/api/MessageApi';
+  import {getUserByPhoneApi} from '@/api/Oauth2Api';
   import Result from "@/pojo/Result";
   import {AuthorityUser} from '@/pojo/AuthorityUser';
-  import Axios from "@/utils/AxiosUtil";
   import RegisterStore from "@/store/RegisterStore";
 
   export default defineComponent({
@@ -132,9 +130,7 @@
           // 验证码验证
           //showPhoneButton.value = false;
           // 检查手机号是否被使用
-          let getUserByPhone = Oauth2Url.getUserByPhone(phone.value);
-          console.log(getUserByPhone);
-          Axios.get(getUserByPhone.url).then(response => {
+          getUserByPhoneApi(phone.value).then(response => {
             let result: Result<AuthorityUser> = response.data;
             // 用户不为null
             if (result.data) {
@@ -145,6 +141,7 @@
               showPhoneButton.value = false;
             }
           })
+
         }, 600);
 
       }
@@ -208,8 +205,7 @@
         btnClass.value = 'btn-no-hover';
         authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
         // 请求接口，发送手机验证码
-        let phoneCode: Url = MessageUrl.phoneCode(phone.value);
-        Axios.get(phoneCode.url).then(response => {
+        phoneCodeApi(phone.value).then(response => {
           console.log(response)
         })
         intervalId = setInterval(() => {
@@ -249,8 +245,7 @@
           } else {
             if (authCode.value.length == 6) {
               // 将手机号和验证码 拿去请求查看是否正确
-              let checkCode = MessageUrl.checkCode(phone.value, authCode.value);
-              Axios.get(checkCode.url).then(response => {
+              checkCodeApi(phone.value, authCode.value).then(response => {
                 console.log(response);
                 let boo: boolean = response.data.data;
                 if (boo) {

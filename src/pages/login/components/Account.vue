@@ -32,10 +32,9 @@
   import MiniPuzzleVerify from "@/components/MiniPuzzleVerify.vue";
 
   // 引入工具ts
-  import * as NotDone from '@/utils/NotDone'
   import * as HintEntity from "@/pojo/HintEntity";
   import Axios from '@/utils/AxiosUtil';
-  import * as Oauth2Url from '@/utils/Oauth2Url';
+  import {loginApi} from '@/api/Oauth2Api';
   // 申明jquery
   declare var $: (selector: string) => any;
 
@@ -135,12 +134,11 @@
         puzzle.puzzleSure = true;
         btnValue.value = "正在登录..."
         // 请求登录接口
-        Oauth2Url.login(username.value, password.value).then(response=>{
+        loginApi(username.value, password.value).then(response=>{
           console.log("login回调,", response )
         }).catch(response=>{
           console.error("login回调,", response )
         })
-
       }
       // 关闭滑块
       const closePuzzle = () => {
