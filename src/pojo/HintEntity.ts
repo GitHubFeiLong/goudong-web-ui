@@ -89,3 +89,4 @@ export const CONFIRM_PASSWORD_HINT_3 = new HintEntity('请您输入正确的确�
 export const USERNAME_PASSWORD_HINT_0 = HintEntity.login('请输入账户名和密码');
 export const USERNAME_PASSWORD_HINT_1 = HintEntity.login('请输入账户名');
 export const USERNAME_PASSWORD_HINT_2 = HintEntity.login('请输入密码');
+export const USERNAME_PASSWORD_HINT_3 = HintEntity.login('账户名与密码不匹配，请重新输入');

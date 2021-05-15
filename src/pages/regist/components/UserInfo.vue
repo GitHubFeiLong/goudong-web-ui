@@ -369,21 +369,7 @@
           hintEmailCode.value = HintEntity.BLANK;
           return false;
         }
-        // 输入完成，校验验证码是否正确
-        let boo = (emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled") && emailSure.value && emailCode.value.length == 6
-        if (boo) {
-          checkCodeApi(email.value, emailCode.value).then(response => {
-            let boo: boolean = response.data.data;
-            emailCodeSure.value = boo;
-            if (boo) {
-              hintEmailCode.value = HintEntity.BLANK;
-            } else {
-              hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_2;
-            }
-
-          })
-        }
-
+        hintEmailCode.value = HintEntity.BLANK;
       }
       // 确认密码得到焦点
       const emailCodeFocus = () => {
@@ -397,6 +383,7 @@
         }
         if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled")) {
           emailCodeSure.value = false;
+          emailCode.value = "";
           emailCodeApi(email.value).then(response => {
             intervalEmailCodeBtnVal();
           })
@@ -427,7 +414,7 @@
 
       // 注册
       const regist = () => {
-        let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCodeSure.value;
+        let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCode.value.length == 6;
         isClickBtn.value = true;
         if (result) {
 
@@ -437,20 +424,29 @@
           // 禁用按钮点击
           (nextStepRef.value as HTMLElement).setAttribute("disabled", "disabled")
 
-          // 保存到数据库
-          let phone: string = props.phone as string;
-          let user = new AuthorityUser(phone, username.value, password.value, email.value);
-          // 单选框值
-          user.accountRadio = RegisterStore.state.accountRadio;
+          checkCodeApi(email.value, emailCode.value).then(response => {
+            let boo: boolean = response.data.data;
+            emailCodeSure.value = boo;
+            if (boo) {
+              hintEmailCode.value = HintEntity.BLANK;
 
-          createUserApi(user).then().then(response => {
-            console.log(response);
-            // 触发父组件的方法，将用户名回传
-            context.emit('hindenUserInfo', username.value);
-          }).finally(()=>{
-            (nextStepRef.value as HTMLElement).removeAttribute("disabled")
+              // 保存到数据库
+              let phone: string = props.phone as string;
+              let user = new AuthorityUser(phone, username.value, password.value, email.value);
+              // 单选框值
+              user.accountRadio = RegisterStore.state.accountRadio;
+              createUserApi(user).then().then(response => {
+                console.log(response);
+                // 触发父组件的方法，将用户名回传
+                context.emit('hindenUserInfo', username.value);
+              }).finally(()=>{
+                (nextStepRef.value as HTMLElement).removeAttribute("disabled")
+              })
+
+            } else {
+              hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_2;
+            }
           })
-
         } else if (!usernameSure.value) {
           // 用户名不正确
           if (username.value.length == 0) {

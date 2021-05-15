@@ -21,6 +21,8 @@ export class AuthorityUser {
   isDelete:boolean=false;
   // 账号是否是你的 空字符串、MY_SELF、NOT_MY_SELF
   accountRadio:string="";
+  // 验证码
+  code:string="";
 
   constructor(phone:string, username:string, password:string, email:string) {
     this.phone = phone;

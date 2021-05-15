@@ -33,7 +33,7 @@
 
   // 引入工具ts
   import * as HintEntity from "@/pojo/HintEntity";
-  import Axios from '@/utils/AxiosUtil';
+  import Result from "@/pojo/Result";
   import {loginApi} from '@/api/Oauth2Api';
   // 申明jquery
   declare var $: (selector: string) => any;
@@ -108,8 +108,6 @@
 
       // 登录
       function login() {
-        successPuzzle()
-        return false;
         if (puzzle.showPuzzle) {
           return false;
         }
@@ -135,9 +133,14 @@
         btnValue.value = "正在登录..."
         // 请求登录接口
         loginApi(username.value, password.value).then(response=>{
-          console.log("login回调,", response )
-        }).catch(response=>{
-          console.error("login回调,", response )
+          console.log(response.data)
+          let result:Result<object> = response.data;
+          btnValue.value = "登    录"
+          if (result.code != "1") {
+            hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
+          } else {
+            window.location.href = "/index.html";
+          }
         })
       }
       // 关闭滑块

@@ -33,5 +33,5 @@ export const createUserApi = (data:AuthorityUser):Promise<AxiosResponse> => Axio
  * @param paramObj 用户对象
  */
 // 写成接口的方式
-export const loginApi = (username:string, password:string):Promise<AxiosResponse> =>  AxiosUtil.post(`/api/oauth2/open/user/login?username=${username}&password=${password}`);
+export const loginApi = (username:string, password:string):Promise<AxiosResponse> =>  AxiosUtil.post(`/api/oauth2/user/login?username=${username}&password=${password}`);
 
