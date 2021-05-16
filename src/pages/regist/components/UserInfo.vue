@@ -168,45 +168,36 @@
         hintUsername.value = HintEntity.BLANK;
       }
 
-      // 验证用户名的回调函数
-      const usernameCallback = (e: Error) => {
-        console.log("调用回调函数")
-        if (e) {
-          let msg = e.message;
-          // 显示
-          if (msg === HintEntity.USERNAME_HINT_0.info) {
-            hintUsername.value = HintEntity.USERNAME_HINT_0;
-          } else if (msg === HintEntity.USERNAME_HINT_1.info) {
-            hintUsername.value = HintEntity.USERNAME_HINT_1;
-          }
-        } else {
-          // 隐藏
-          hintUsername.value = HintEntity.BLANK;
-          if (username.value != oldUsername) {
-            // 当符合条件时，查寻用户名是否被使用
-            checkUsernameApi(username.value).then(response => {
-
-              let data: [] = response.data.data;
-              usableUsernames.value = data;
-            })
-          }
-
-        }
-        oldUsername = username.value;
-      }
-
       // 用户名输入框失去焦点
       const usernameBlur = () => {
         isClickBtn.value = false;
         if (username.value.length > 0) {
           // 检查用户名是否符合条件
-          usernameSure.value = Validate.validateUsername(username.value, usernameCallback);
+          Validate.validateUsername(username.value).then(resolve=>{
+            console.log("resolve", resolve)
+            usernameSure.value = true;
+            hintUsername.value = resolve;
+            if (username.value != oldUsername) {
+              // 当符合条件时，查寻用户名是否被使用
+              checkUsernameApi(username.value).then(response => {
+
+                let data: [] = response.data.data;
+                usableUsernames.value = data;
+              })
+            }
+            oldUsername = username.value;
+          }).catch(reason=>{
+            console.log("reason", reason)
+            usernameSure.value = false;
+            hintUsername.value = reason;
+          });
 
         } else {
           // 默认显示
           usernameSure.value = false;
           hintUsername.value = HintEntity.BLANK;
         }
+
       }
       // 用户名输入框得到焦点
       const usernameFocus = () => {
@@ -230,29 +221,17 @@
           hintPassword.value = HintEntity.PASSWORD_HINT_0;
         }
       }
-      const passwordCallback = (e: Error) => {
-        if (e) {
-          let msg = e.message;
-          // 数量不够
-          if (msg === HintEntity.PASSWORD_HINT_0.info) {
-            hintPassword.value = HintEntity.PASSWORD_HINT_01;
-            passwordSure.value = false;
-          } else if (msg === HintEntity.PASSWORD_HINT_1.info) {
-            hintPassword.value = HintEntity.PASSWORD_HINT_1;
-            passwordSure.value = true;
-          } else if (msg === HintEntity.PASSWORD_HINT_3.info) {
-            hintPassword.value = HintEntity.PASSWORD_HINT_3;
-            passwordSure.value = true;
-          } else if (msg === HintEntity.PASSWORD_HINT_2.info) {
-            hintPassword.value = HintEntity.PASSWORD_HINT_2;
-            passwordSure.value = true;
-          }
-        }
-      }
+
       // 密码监视
       watch(password, () => {
         if (password.value.length > 0) {
-          Validate.validatePassword(password.value, passwordCallback);
+          Validate.validatePassword(password.value).then(reject=>{
+            passwordSure.value = true;
+            hintPassword.value = reject;
+          }).catch(reason => {
+            passwordSure.value = false;
+            hintPassword.value = reason;
+          })
         } else {
           hintPassword.value = HintEntity.PASSWORD_HINT_0;
         }

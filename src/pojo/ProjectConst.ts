@@ -6,8 +6,6 @@
  */
 export const AUTHORIZATION = 'Authorization';
 
-export const BEARER = 'Bearer ';
-
 /**
  * 请求媒体类型
  */

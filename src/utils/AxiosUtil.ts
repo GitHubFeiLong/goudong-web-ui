@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from "element-plus";
 
 import Result from '@/pojo/Result';
-import {AUTHORIZATION, BEARER} from '@/pojo/ProjectConst';
+import {AUTHORIZATION} from '@/pojo/ProjectConst';
 import LocalStorageUtil from "@/utils/LocalStorageUtil";
 
 /**
@@ -50,7 +50,7 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
   //获取token，并将其添加至请求头中
   let token = LocalStorageUtil.get(AUTHORIZATION)
   if(token){
-    config.headers[AUTHORIZATION.toLowerCase()] = `${BEARER}${token}`;
+    config.headers[AUTHORIZATION.toLowerCase()] = token;
   }
   return config
 }, (error) => {

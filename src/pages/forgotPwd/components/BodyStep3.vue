@@ -239,27 +239,14 @@
       }
       // 监视密码
       watch(newPassword, (cur, old) => {
-        Validate.validatePassword(cur, passwordCallback)
+        Validate.validatePassword(cur).then(reject=>{
+          pwdSure.value = true;
+          pwdHint.value = reject;
+        }).catch(reason => {
+          pwdSure.value = false;
+          pwdHint.value = reason;
+        })
       })
-      const passwordCallback = (e:Error) => {
-        if (e) {
-          let msg = e.message;
-          // 数量不够
-          if (msg === HintEntity.PASSWORD_HINT_0.info) {
-            pwdHint.value = HintEntity.PASSWORD_HINT_01;
-            pwdSure.value = false;
-          } else if (msg === HintEntity.PASSWORD_HINT_1.info) {
-            pwdHint.value = HintEntity.PASSWORD_HINT_1;
-            pwdSure.value = true;
-          } else if (msg === HintEntity.PASSWORD_HINT_3.info) {
-            pwdHint.value = HintEntity.PASSWORD_HINT_3;
-            pwdSure.value = true;
-          } else if (msg === HintEntity.PASSWORD_HINT_2.info) {
-            pwdHint.value = HintEntity.PASSWORD_HINT_2;
-            pwdSure.value = true;
-          }
-        }
-      }
 
       // 提交密码
       const clickSubmitBtn = () => {

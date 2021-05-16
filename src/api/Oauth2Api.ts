@@ -47,3 +47,8 @@ export const getUserByLoginNameApi = (loginName:string):Promise<AxiosResponse> =
  */
 export const updatePasswordApi = (data:object):Promise<AxiosResponse> =>  AxiosUtil.patch(`/api/oauth2/open/user/password`, data);
 
+/**
+ * 绑定openId
+ * @param paramObj 用户对象
+ */
+export const updateOpenIdApi = (data:object):Promise<AxiosResponse> =>  AxiosUtil.patch(`/api/oauth2/open/user/bind-open-id`, data);

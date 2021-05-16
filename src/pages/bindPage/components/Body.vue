@@ -52,6 +52,7 @@
 
   import * as HtmlParamUtil from '@/utils/HtmlParamUtil.ts';
   import BindPageParam from "@/pojo/BindPageParam";
+  import {updateOpenIdApi} from '@/api/Oauth2Api';
 
   export default defineComponent({
     components:{
@@ -98,6 +99,15 @@
         }, 1000);
         btnValue.value = "正在绑定..."
         // 后台校验
+        updateOpenIdApi({
+          qqOpenId: bindPageParam.openId,
+          loginName:username.value,
+          password:password.value,
+          userType: bindPageParam.userType}).then(response => {
+            // window.location.href = "/index.html";
+        }).finally(()=>{
+          btnValue.value = "立即绑定";
+        })
         if (false) {
           errorMsg.value = "账户名不存在，请重新输入";
           errorMsg.value = "账户名与密码不匹配，请重新输入";
@@ -141,6 +151,12 @@
     }
   })
 </script>
+
+<style lang="less">
+  #puzzle-warp{
+    bottom: 395px;
+  }
+</style>
 
 <style lang='less' scoped>
   *{
@@ -251,9 +267,8 @@
           width: 190px;
           height: 19px;
           box-sizing: unset;
-          padding-bottom: 11px;
           padding-left: 20px;
-          padding-top: 16px;
+          height: 52px;
         }
         span{
           position: absolute;
