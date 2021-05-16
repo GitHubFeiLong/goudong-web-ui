@@ -19,9 +19,8 @@
   import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
   import * as HintEntity from '@/pojo/HintEntity';
-
-  // 验证
-  import * as Validate from '@/utils/ValidateUtil';
+  import ForgotPwdStore from '@/store/ForgotPwdStore';
+  import {getUserByLoginNameApi} from '@/api/Oauth2Api';
 
   export default defineComponent ({
     components:{
@@ -100,10 +99,14 @@
         if (puzzleSure.value) {
 
           // 后端检查（用户名是否有效）
-          if (true) {
+          getUserByLoginNameApi(username.value).then(response => {
             // 触发父组件定义的事件
+            ForgotPwdStore.commit("changeAuthorityUser", response.data.data)
             context.emit("step1Complete");
-          }
+          }).catch(reason => {
+            hintUsernameShow.value = true;
+            hintUsername.value = HintEntity.USERNAME_HINT_3
+          })
         }
       }
       // 监视用户名的修改

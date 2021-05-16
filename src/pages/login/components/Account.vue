@@ -133,7 +133,6 @@
         btnValue.value = "正在登录..."
         // 请求登录接口
         loginApi(username.value, password.value).then(response=>{
-          console.log(response.data)
           let result:Result<object> = response.data;
           btnValue.value = "登    录"
           if (result.code != "1") {

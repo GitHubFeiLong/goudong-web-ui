@@ -24,13 +24,13 @@
     <div class="step-1-body" v-if="stepStatus == 1">
       <img src="~@/assets/imgs/auth-ico.png">
       <p>为确认是您本人操作，请选择以下任一方式完成身份认证</p>
-      <button @click="dialogVisible = true">使用 邮箱验证码</button>
+      <button @click="usePhoneCode">使用 手机短信验证码</button>
     </div>
     <!--设置新密码-->
     <div class="step-2-body" v-else-if="stepStatus == 2">
       <p>设置新密码</p>
       <div class="password-div" >
-        <input ref="pwdRef" v-model="newPassword" type="password" placeholder="请输入新密码">
+        <input ref="pwdRef" v-model="newPassword" type="password" placeholder="请输入新密码" maxlength="20">
         <em @click="newPassword = ''; " v-show="newPassword.length > 0" class="iconfont icon-fork"></em>
         <em ref="eyeRef" class="iconfont icon-icon-test icon-eye" @click="switchShowPwd()"></em>
       </div>
@@ -50,7 +50,7 @@
     <BodyFoot v-if="stepStatus == 1"/>
   </div>
   <!--弹框-->
-  <el-dialog class="email-dialog" v-model="dialogVisible" width="500px" height="600px">
+  <el-dialog class="phone-dialog" v-model="dialogVisible" width="500px" height="600px">
     <div class="content">
       <div class="header">
         <div class="icon">
@@ -59,20 +59,23 @@
         <p>手机短信验证码</p>
       </div>
       <div class="body">
-        <p class="phone-p">当前手机号152xxxx716</p>
+        <p class="phone-p">当前手机号{{phoneDialog.phone}}</p>
         <div class="verify-div">
           <div :class="verifyLeftDivClass">
             <input v-model="phoneVerifyCode" @focus="phoneVerifyCodeFocus($event)" @blur="phoneVerifyCodeBlur($event)" type="text"  placeholder="请输入手机验证码"  autocomplete="off" maxlength="6">
             <em v-show="phoneVerifyCode.length > 0" @click="phoneVerifyCode=''; showHint=false" class="iconfont icon-fork"></em>
           </div>
           <!--按钮-->
-          <div class="verify-right-div">
+          <div class="verify-right-div" v-if="!phoneDialog.clicked" >
             <div class="message-div">
-              <button class="message-button"><span class="iconfont icon-duanxin"></span>获取短信验证码</button>
+              <button @click="getPhoneCode" class="message-button"><span class="iconfont icon-duanxin"></span>获取短信验证码</button>
             </div>
             <div class="voice-div">
               <button class="voice-button"><span class="iconfont icon-dianhua"></span>获取语音验证码</button>
             </div>
+          </div>
+          <div class="verify-right-div disabled" v-else>
+           {{phoneDialog.btnVal}}
           </div>
         </div>
         <!--提示信息-->
@@ -89,8 +92,10 @@
   </el-dialog>
 </template>
 <script lang='ts'>
+  import Result from "@/pojo/Result";
+
   declare var $: (selector: string) => any;
-  import { defineComponent, ref, onMounted, watch, inject } from 'vue'
+  import { defineComponent, ref, reactive,onMounted, watch, inject } from 'vue'
 
   // 提示信息
   import BodyFoot from "@/pages/forgotPwd/components/BodyFoot.vue";
@@ -100,6 +105,10 @@
   import * as HintEntity from "@/pojo/HintEntity";
   import * as QAEntity from "@/pojo/QAEntity";
   import * as Validate from "@/utils/ValidateUtil";
+  import ForgotPwdStore from '@/store/ForgotPwdStore';
+  import {phoneCodeApi, checkCodeApi} from '@/api/MessageApi';
+  import {updatePasswordApi} from '@/api/Oauth2Api';
+
   export default defineComponent ({
     components:{
       BodyFoot,
@@ -133,6 +142,12 @@
       let showHint = ref(false);
       let hint = ref(HintEntity.EMAIL_CODE_HINT_2);
 
+      let phoneDialog = reactive({
+        phone:'',
+        code:'',
+        btnVal:'',
+        clicked:false,
+      });
       // 弹框问题
       let dialogQA = new QAEntity.QAEntity("收不到短信验证码？", "请检查手机网络并且核实手机是否屏蔽系统短信，如均正常请重新获取或稍后再试。");
       // 邮箱验证按钮点击
@@ -149,14 +164,56 @@
       }
       // 弹框中点击下一步
       const clickDialogNextStep = () => {
-        showHint.value = true;
-
-        // 验证码正确，关闭弹框，跳转到第二部
-        showHint.value = false;
-        dialogVisible.value = false;
-        stepStatus.value = 2;
+        // 验证码检查是否正确(目前只有手机验证码)
+        checkCodeApi(ForgotPwdStore.state.authorityUser.phone, phoneVerifyCode.value).then(response=>{
+          let result:Result<boolean> = response.data;
+          let data:boolean = result.data
+          if (data) {
+            // 验证码正确，关闭弹框，跳转到第二部
+            showHint.value = false;
+            dialogVisible.value = false;
+            stepStatus.value = 2;
+          } else {
+            showHint.value = true;
+            hint.value = HintEntity.EMAIL_CODE_HINT_2;
+          }
+        })
       }
 
+      // 使用手机短信验证码
+      const usePhoneCode = () => {
+        dialogVisible.value = true;
+        console.log(ForgotPwdStore.state.authorityUser)
+        if (ForgotPwdStore.state.authorityUser) {
+          let fullPhone = ForgotPwdStore.state.authorityUser.phone;
+          phoneDialog.phone = fullPhone.replace(fullPhone.substring(3,9), "*****")
+        }
+      }
+
+      const getPhoneCode = () => {
+        if (phoneDialog.clicked) {
+          showHint.value = true;
+          hint.value = HintEntity.EMAIL_CODE_HINT_5;
+        } else {
+          showHint.value = false;
+          phoneDialog.clicked = true;
+          let time = 120;
+          phoneDialog.btnVal = time + "s 后重新获取"
+          let intervalID = setInterval(()=>{
+            time--;
+            if (time <= 0) {
+              phoneDialog.clicked = false;
+              clearInterval(intervalID);
+            }
+            phoneDialog.btnVal = time + "s 后重新获取"
+          }, 1000)
+          phoneCodeApi(ForgotPwdStore.state.authorityUser.phone).then(response=>{
+            console.log(response)
+
+          })
+        }
+
+      }
       // 步骤2
       let newPassword = ref('');
       // 密码框
@@ -206,7 +263,10 @@
 
       // 提交密码
       const clickSubmitBtn = () => {
-        stepStatus.value = 3;
+        let param = {uuid:ForgotPwdStore.state.authorityUser.uuid, password:newPassword.value}
+        updatePasswordApi(param).then(response => {
+          stepStatus.value = 3;
+        })
       }
       // 第三步
       // 去登录
@@ -267,6 +327,9 @@
         pwdSure,
         clickSubmitBtn,
         clickGoLogin,
+        usePhoneCode,
+        phoneDialog,
+        getPhoneCode,
       }
     }
   })
@@ -350,7 +413,6 @@
     }
     .step-1-body{
       width: 402px;
-      height: 218px;
       top: 160px;
       position: relative;
       margin: auto;
@@ -580,6 +642,7 @@
              display: flex;
              font-size: 12px;
              box-sizing: border-box;
+             text-align: center;
              div{
                border: unset;
                top: 0;
@@ -628,6 +691,11 @@
                  border: 1px solid #666;
                }
              }
+           }
+           .disabled{
+             background-color: #f6f6f6;
+             line-height: 52px;
+             display: unset;
            }
          }
          .hint{
