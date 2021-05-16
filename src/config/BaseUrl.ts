@@ -8,6 +8,8 @@ switch (process.env.NODE_ENV) {
     oauth2Url = "http://localhost:10001/";
     break
   case 'production': //生产环境url
+    messageUrl = "http://goudong.shop:10003/";
+    oauth2Url = "http://goudong.shop/";
     break
 }
 
