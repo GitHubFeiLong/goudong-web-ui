@@ -84,7 +84,7 @@
     setup: function (props, context) {
       // 提示信息
       let hint = ref(HintEntity.BLANK);
-      let getAuthCodeNum = ref(2);
+      let getAuthCodeNum = ref(3);
       let authHint = ref(HintEntity.BLANK);
       // 显示下一步（true）
       let showPhoneButton = ref(true)
@@ -206,21 +206,23 @@
         authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
         // 请求接口，发送手机验证码
         phoneCodeApi(phone.value).then(response => {
-          console.log(response)
+          console.log(response);
+          intervalId = setInterval(() => {
+            timer.value--;
+            if (timer.value <= 0) {
+
+              // 恢复按钮功能
+              btnClass.value = '';
+              timer.value = '';
+              btnVal.value = '重新获取';
+              getAuthCodeNum.value--;
+              authHint.value = new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
+              // 清除定时器
+              clearInterval(intervalId);
+            }
+          }, 1000)
         })
-        intervalId = setInterval(() => {
-          timer.value--;
-          if (timer.value <= 0) {
-            // 清除定时器
-            clearInterval(intervalId);
-            // 恢复按钮功能
-            btnClass.value = '';
-            timer.value = '';
-            btnVal.value = '重新获取';
-            getAuthCodeNum.value--;
-            authHint.value = new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
-          }
-        }, 1000)
+
       }
 
       // 重新获取验证码
