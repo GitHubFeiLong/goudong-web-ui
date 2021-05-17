@@ -15,7 +15,7 @@
                 <ul>
                     <li class="li1">
                         <a href="/login.html">你好，请登录</a>&nbsp;
-                        <a href="/regist.html" >免费注册</a>
+                        <a href="/register.html" >免费注册</a>
                     </li>
                     <li class='split-li'></li>
                     <li class="li2">

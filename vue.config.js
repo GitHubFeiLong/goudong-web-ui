@@ -23,26 +23,17 @@ module.exports = {
         open: false,
         /* 设置为0.0.0.0则所有的地址均能访问 */
         host: '0.0.0.0',
-        port: 8080,
+        port: 80,
         https: false,
         hotOnly: false,
         /* 使用代理 需要安装(npm i http-proxy-middleware)*/
         proxy: {
-          '/api/oauth2': {
-            target: BaseUrl.oauth2Url,
+          '^/api': {
+            target: BaseUrl.gatewayUrl,
             // 解决跨域问题
             changeOrigin: true,
-            pathRewrite: {
-              "": ""
-            }
           },
-          '/api/message': {
-            target: BaseUrl.messageUrl,
-            changeOrigin: true,
-            pathRewrite: {
-              "": ""
-            }
-          },
+
         }
     },
     // webpack 配置

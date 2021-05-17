@@ -1,19 +1,16 @@
 //这里是一个默认的url，可以没有
-let messageUrl = "", oauth2Url="";
+let gatewayUrl = ""
 
 // 根据环境设置 服务不同的地址
 switch (process.env.NODE_ENV) {
   case 'development': //开发环境url
-    messageUrl = "http://localhost:10003/";
-    oauth2Url = "http://localhost:10001/";
+    gatewayUrl = "http://localhost:10000/";
     break
   case 'production': //生产环境url
-    messageUrl = "http://goudong.shop:10003/";
-    oauth2Url = "http://goudong.shop/";
+    gatewayUrl = "http://goudong.shop:10000/";
     break
 }
 
 module.exports = {
-  messageUrl,
-  oauth2Url
+  gatewayUrl
 }
