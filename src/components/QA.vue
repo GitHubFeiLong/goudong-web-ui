@@ -8,21 +8,23 @@
   </div>
 </template>
 <script lang='ts'>
-  import { defineComponent, ref, onMounted, watch } from 'vue'
-  import * as QAEntity from '@/pojo/QAEntity';
-  export default defineComponent ({
-    props:{
-      qa:QAEntity.QAEntity,
-    },
-    components:{
-    },
-    setup (props, content) {
+import {
+  defineComponent, ref, onMounted, watch,
+} from 'vue';
+import * as QAEntity from '@/pojo/QAEntity';
 
-      return {
+export default defineComponent({
+  props: {
+    qa: QAEntity.QAEntity,
+  },
+  components: {
+  },
+  setup(props, content) {
+    return {
 
-      }
-    }
-  })
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>

@@ -8,12 +8,13 @@
 </template>
 
 <script>
-    import LoginForm from './LoginForm'
-    export default {
-        components:{
-            LoginForm
-        }
-    }
+import LoginForm from './LoginForm';
+
+export default {
+  components: {
+    LoginForm,
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -31,5 +32,5 @@
             background-image: url("~@/assets/imgs/login-bg1.png");
             position: relative;
         }
-    }  
+    }
 </style>

@@ -25,105 +25,105 @@
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref} from 'vue'
-  import Phone from './Phone.vue';
-  import UserInfo from './UserInfo.vue';
-  import RegistSuccess from './RegistSuccess.vue';
+import { defineComponent, ref } from 'vue';
+import Phone from './Phone.vue';
+import UserInfo from './UserInfo.vue';
+import RegistSuccess from './RegistSuccess.vue';
 
-  export default defineComponent({
-    components: {
-      Phone,
-      UserInfo,
-      RegistSuccess
-    },
-    setup() {
-      let p2Class = ref('');
-      let p3Class = ref('');
-      let lineStep1Class = ref('step-line step-line1');
-      let lineStep2Class = ref('step-line step-line2')
-      let stepSpan1Val = ref('1');
-      let stepSpan2Val = ref('2');
-      let stepSpan3Val = ref('3');
-      let isShowPhone = ref(true);
-      let isShowUserInfo = ref(true);
-      let username = ref('');
-      let phone = ref('');
-      // 第一个
-      let circleOne = ref({
-        finish: false,
-        current: true,
-      });
+export default defineComponent({
+  components: {
+    Phone,
+    UserInfo,
+    RegistSuccess,
+  },
+  setup() {
+    const p2Class = ref('');
+    const p3Class = ref('');
+    const lineStep1Class = ref('step-line step-line1');
+    const lineStep2Class = ref('step-line step-line2');
+    const stepSpan1Val = ref('1');
+    const stepSpan2Val = ref('2');
+    const stepSpan3Val = ref('3');
+    const isShowPhone = ref(true);
+    const isShowUserInfo = ref(true);
+    const username = ref('');
+    const phone = ref('');
+    // 第一个
+    const circleOne = ref({
+      finish: false,
+      current: true,
+    });
       // 第二个
-      let circleTwo = ref({
-        finish: false,
-        current: false,
-      });
+    const circleTwo = ref({
+      finish: false,
+      current: false,
+    });
       // 第三个
-      let circleThree = ref({
-        finish: false,
-        current: false,
-      });
+    const circleThree = ref({
+      finish: false,
+      current: false,
+    });
 
-      // 手机号验证成功
-      const hindenPhone = (phoneParam: string) => {
-        // 第一个步骤
-        stepSpan1Val.value = '';
-        circleOne.value.finish = true;
-        circleOne.value.current = false;
+    // 手机号验证成功
+    const hindenPhone = (phoneParam: string) => {
+      // 第一个步骤
+      stepSpan1Val.value = '';
+      circleOne.value.finish = true;
+      circleOne.value.current = false;
 
-        // 1 2 中间的线
-        lineStep1Class.value += ' step-line-success ';
-        // 第二个步骤
-        p2Class.value = 'p-class-success';
-        circleTwo.value.current = true;
+      // 1 2 中间的线
+      lineStep1Class.value += ' step-line-success ';
+      // 第二个步骤
+      p2Class.value = 'p-class-success';
+      circleTwo.value.current = true;
 
-        // 将Email隐藏
-        isShowPhone.value = false;
-        isShowUserInfo.value = true;
+      // 将Email隐藏
+      isShowPhone.value = false;
+      isShowUserInfo.value = true;
 
-        // 手机号传递到子组件
-        phone.value = phoneParam;
-      }
-      // 用户名输入成功
-      const hindenUserInfo = (uname: string) => {
-        // 第二个步骤
-        stepSpan2Val.value = '';
-        circleTwo.value.finish = true;
-        circleTwo.value.current = false;
+      // 手机号传递到子组件
+      phone.value = phoneParam;
+    };
+    // 用户名输入成功
+    const hindenUserInfo = (uname: string) => {
+      // 第二个步骤
+      stepSpan2Val.value = '';
+      circleTwo.value.finish = true;
+      circleTwo.value.current = false;
 
-        // 1 2 中间的线
-        lineStep1Class.value += ' step-line-success ';
-        // 第三个步骤
-        p3Class.value = 'p-class-success';
-        circleThree.value.current = true;
-        // 2 3 中间的线
-        lineStep2Class.value += ' step-line-success ';
+      // 1 2 中间的线
+      lineStep1Class.value += ' step-line-success ';
+      // 第三个步骤
+      p3Class.value = 'p-class-success';
+      circleThree.value.current = true;
+      // 2 3 中间的线
+      lineStep2Class.value += ' step-line-success ';
 
-        // 将用户名隐藏
-        isShowUserInfo.value = false;
-        username.value = uname;
-        console.log(uname);
-      }
-      return {
-        p2Class,
-        p3Class,
-        lineStep1Class,
-        lineStep2Class,
-        stepSpan1Val,
-        stepSpan2Val,
-        stepSpan3Val,
-        isShowPhone,
-        isShowUserInfo,
-        circleOne,
-        circleTwo,
-        circleThree,
-        hindenPhone,
-        hindenUserInfo,
-        username,
-        phone,
-      }
-    }
-  })
+      // 将用户名隐藏
+      isShowUserInfo.value = false;
+      username.value = uname;
+      console.log(uname);
+    };
+    return {
+      p2Class,
+      p3Class,
+      lineStep1Class,
+      lineStep2Class,
+      stepSpan1Val,
+      stepSpan2Val,
+      stepSpan3Val,
+      isShowPhone,
+      isShowUserInfo,
+      circleOne,
+      circleTwo,
+      circleThree,
+      hindenPhone,
+      hindenUserInfo,
+      username,
+      phone,
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>

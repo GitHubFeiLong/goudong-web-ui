@@ -12,26 +12,27 @@
   </div>
 </template>
 <script lang='ts'>
-  import { defineComponent, ref, onMounted } from 'vue'
-  export default defineComponent ({
-    components:{
-    },
-    setup (props, content) {
-      let style = ref();
-      onMounted(()=>{
-        setTimeout(()=>{
-          style.value = {transition: '3s linear', transform: 'translateY(-100px)'};
-        }, 0);
+import { defineComponent, ref, onMounted } from 'vue';
 
-        setTimeout(() => {
-          content.emit("step2Complete");
-        },4000)
-      })
-      return {
-        style
-      }
-    }
-  })
+export default defineComponent({
+  components: {
+  },
+  setup(props, content) {
+    const style = ref();
+    onMounted(() => {
+      setTimeout(() => {
+        style.value = { transition: '3s linear', transform: 'translateY(-100px)' };
+      }, 0);
+
+      setTimeout(() => {
+        content.emit('step2Complete');
+      }, 4000);
+    });
+    return {
+      style,
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>

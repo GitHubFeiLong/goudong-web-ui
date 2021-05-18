@@ -5,6 +5,6 @@
 /**
  * 初始化token
  */
-export const initToken = () =>{
+export const initToken = () => {
 
-}
+};

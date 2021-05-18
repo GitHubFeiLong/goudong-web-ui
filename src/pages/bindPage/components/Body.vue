@@ -47,109 +47,110 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent,ref, onMounted } from 'vue'
-  import PuzzleVerify from '@/components/PuzzleVerify.vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
-  import * as HtmlParamUtil from '@/utils/HtmlParamUtil.ts';
-  import BindPageParam from "@/pojo/BindPageParam";
-  import {updateOpenIdApi} from '@/api/Oauth2Api';
+import * as HtmlParamUtil from '@/utils/HtmlParamUtil.ts';
+import BindPageParam from '@/pojo/BindPageParam';
+import { updateOpenIdApi } from '@/api/Oauth2Api';
 
-  export default defineComponent({
-    components:{
-      PuzzleVerify
-    },
-    setup(){
-      let headPortrait30 = ref("");
-      let nickname = ref("");
-      let username = ref('');
-      let password = ref('');
-      let errorMsg = ref('');
-      let showPuzzle = ref(false);
-      let puzzleSure = ref(false);
-      let btnValue = ref("立即绑定")
-      let bindPageParam:BindPageParam;
+export default defineComponent({
+  components: {
+    PuzzleVerify,
+  },
+  setup() {
+    const headPortrait30 = ref('');
+    const nickname = ref('');
+    const username = ref('');
+    const password = ref('');
+    const errorMsg = ref('');
+    const showPuzzle = ref(false);
+    const puzzleSure = ref(false);
+    const btnValue = ref('立即绑定');
+    let bindPageParam: BindPageParam;
 
-      const binding = () => {
-        // 超时了重新跳转qq登录页面
-        if ((new Date().getTime() - (bindPageParam.current as number)) > 300000) {
-          window.location.href = "http://www.goudong.shop/oauth/qq/login";
-          return false;
-        }
-        if (username.value === "" && password.value === "") {
-          errorMsg.value = "请输入账户名和密码";
-          return false;
-        }
-        if (username.value === "") {
-          errorMsg.value = "请输入账户名";
-          return false;
-        }
-        if (password.value === "") {
-          errorMsg.value = "请输入密码";
-          return false;
-        }
-
-        showPuzzle.value = true;
+    const binding = () => {
+      // 超时了重新跳转qq登录页面
+      if ((new Date().getTime() - (bindPageParam.current as number)) > 300000) {
+        window.location.href = 'http://www.goudong.shop/oauth/qq/login';
+        return false;
+      }
+      if (username.value === '' && password.value === '') {
+        errorMsg.value = '请输入账户名和密码';
+        return false;
+      }
+      if (username.value === '') {
+        errorMsg.value = '请输入账户名';
+        return false;
+      }
+      if (password.value === '') {
+        errorMsg.value = '请输入密码';
+        return false;
       }
 
-      const successPuzzle = () => {
-        puzzleSure.value = true;
-        // 延迟关闭滑块验证码
-        setTimeout(() => {
-          showPuzzle.value = false;
-        }, 1000);
-        btnValue.value = "正在绑定..."
-        // 后台校验
-        updateOpenIdApi({
-          qqOpenId: bindPageParam.openId,
-          loginName:username.value,
-          password:password.value,
-          userType: bindPageParam.userType}).then(response => {
-            // window.location.href = "/index.html";
-        }).finally(()=>{
-          btnValue.value = "立即绑定";
-        })
-        if (false) {
-          errorMsg.value = "账户名不存在，请重新输入";
-          errorMsg.value = "账户名与密码不匹配，请重新输入";
-        }
-        // 校验成功
-        if (false) {
-          errorMsg.value = ""
-        }
-      }
-      const closePuzzle = () => {
+      showPuzzle.value = true;
+    };
+
+    const successPuzzle = () => {
+      puzzleSure.value = true;
+      // 延迟关闭滑块验证码
+      setTimeout(() => {
         showPuzzle.value = false;
+      }, 1000);
+      btnValue.value = '正在绑定...';
+      // 后台校验
+      updateOpenIdApi({
+        qqOpenId: bindPageParam.openId,
+        loginName: username.value,
+        password: password.value,
+        userType: bindPageParam.userType,
+      }).then((response) => {
+        // window.location.href = "/index.html";
+      }).finally(() => {
+        btnValue.value = '立即绑定';
+      });
+      if (false) {
+        errorMsg.value = '账户名不存在，请重新输入';
+        errorMsg.value = '账户名与密码不匹配，请重新输入';
       }
-
-      onMounted(() => {
-        bindPageParam = HtmlParamUtil.resolveBindPageParam();
-        headPortrait30.value = bindPageParam.headPortrait30 as any;
-        nickname.value = bindPageParam.nickname as any;
-        let current = bindPageParam.current as number;
-
-        // 超过了5分钟后就超时
-        if ((new Date().getTime() - current) > 300000) {
-          window.location.href = "http://www.goudong.shop/oauth/qq/login";
-          return false;
-        }
-        console.log(bindPageParam)
-      })
-
-      return {
-        headPortrait30,
-        nickname,
-        username,
-        password,
-        errorMsg,
-        binding,
-        btnValue,
-        puzzleSure,
-        showPuzzle,
-        successPuzzle,
-        closePuzzle,
+      // 校验成功
+      if (false) {
+        errorMsg.value = '';
       }
-    }
-  })
+    };
+    const closePuzzle = () => {
+      showPuzzle.value = false;
+    };
+
+    onMounted(() => {
+      bindPageParam = HtmlParamUtil.resolveBindPageParam();
+      headPortrait30.value = bindPageParam.headPortrait30 as any;
+      nickname.value = bindPageParam.nickname as any;
+      const current = bindPageParam.current as number;
+
+      // 超过了5分钟后就超时
+      if ((new Date().getTime() - current) > 300000) {
+        window.location.href = 'http://www.goudong.shop/oauth/qq/login';
+        return false;
+      }
+      console.log(bindPageParam);
+    });
+
+    return {
+      headPortrait30,
+      nickname,
+      username,
+      password,
+      errorMsg,
+      binding,
+      btnValue,
+      puzzleSure,
+      showPuzzle,
+      successPuzzle,
+      closePuzzle,
+    };
+  },
+});
 </script>
 
 <style lang="less">

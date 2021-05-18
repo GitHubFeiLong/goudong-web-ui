@@ -21,29 +21,29 @@
 </template>
 
 <script lang="ts">
-    import {defineComponent} from 'vue';
-    // 引入工具ts
-    import * as NotDone from '@/utils/NotDone'
+import { defineComponent } from 'vue';
+// 引入工具ts
+import * as NotDone from '@/utils/NotDone';
 
-    export default defineComponent ({
-        name:'QuickLogin',
-        setup(){
-            function qq () {
-              window.location.href = "http://www.goudong.shop/oauth/qq/login";
-            }
-            function wechat () {
-              NotDone.notDone()
-            }
-            function register () {
-                window.location.href = '/register.html'
-            }
-            return {
-                qq,
-                wechat,
-              register
-            }
-        }
-    })
+export default defineComponent({
+  name: 'QuickLogin',
+  setup() {
+    function qq() {
+      window.location.href = 'http://www.goudong.shop/oauth/qq/login';
+    }
+    function wechat() {
+      NotDone.notDone();
+    }
+    function register() {
+      window.location.href = '/register.html';
+    }
+    return {
+      qq,
+      wechat,
+      register,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>

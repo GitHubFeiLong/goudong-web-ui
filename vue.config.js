@@ -12,9 +12,8 @@ module.exports = {
     productionSourceMap:true,
     /* 默认情况下，生成的静态资源在它们的文件名中包含了 hash 以便更好的控制缓存，你可以通过将这个选项设为 false 来关闭文件名哈希。(false的时候就是让原来的文件名不改变) */
     filenameHashing: false,
-    indexPath:'/login.html',
-    // 代码保存时进行eslint检测
-    lintOnSave: false,
+    // 代码保存时进行eslint检测(false 不检查)
+    lintOnSave: true,
     //配置多页面入口
     pages:Pages.createPages(),
     /* webpack-dev-server 相关配置 */

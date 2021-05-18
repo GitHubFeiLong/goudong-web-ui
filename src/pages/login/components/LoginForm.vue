@@ -11,18 +11,19 @@
 </template>
 
 <script>
-    import Hint from './Hint';
-    export default {
-        components:{
-            Hint,
-        },
-        data () {
-            return {
-                hint:`京东不会以任何理由要求您转账汇款，谨防诈骗。`,
-            }
-        }
+import Hint from './Hint';
 
-    }
+export default {
+  components: {
+    Hint,
+  },
+  data() {
+    return {
+      hint: '京东不会以任何理由要求您转账汇款，谨防诈骗。',
+    };
+  },
+
+};
 </script>
 
 <style lang="less" scoped>
@@ -48,7 +49,7 @@
             color:#e4393c !important;
             font-weight: 700;
         }
-        
+
     }
     #login-form{
         width:346px;

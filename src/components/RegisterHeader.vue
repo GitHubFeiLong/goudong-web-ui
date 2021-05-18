@@ -10,24 +10,24 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue';
 
-    // 引入工具ts
-    import * as NotDone from '@/utils/NotDone'
+// 引入工具ts
+import * as NotDone from '@/utils/NotDone';
 
-    export default defineComponent ({
-        props:{
-            title:String,
-        },
-        setup () {
-            function notDone () {
-              NotDone.notDone()
-            }
-            return {
-                notDone,
-            }
-        }
-    })
+export default defineComponent({
+  props: {
+    title: String,
+  },
+  setup() {
+    function notDone() {
+      NotDone.notDone();
+    }
+    return {
+      notDone,
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>

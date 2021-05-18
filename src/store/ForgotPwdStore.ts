@@ -1,17 +1,17 @@
 import { createStore } from 'vuex';
-import {AuthorityUser} from "@/pojo/AuthorityUser";
+import { AuthorityUser } from '@/pojo/AuthorityUser';
 
 export default createStore({
-  state () {
+  state() {
     return {
-      authorityUser: null
-    }
+      authorityUser: null,
+    };
   },
   mutations: {
-    changeAuthorityUser (state:any, value:AuthorityUser) {
+    changeAuthorityUser(state: any, value: AuthorityUser) {
       state.authorityUser = value;
-    }
-  }
+    },
+  },
 
 });
 

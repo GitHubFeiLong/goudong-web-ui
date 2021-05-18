@@ -9,36 +9,36 @@
 </template>
 
 <script lang='ts'>
-  import { defineComponent,ref } from 'vue'
-  import BodyStep1 from "@/pages/forgotPwd/components/BodyStep1.vue";
-  import BodyStep2 from "@/pages/forgotPwd/components/BodyStep2.vue";
-  import BodyStep3 from "@/pages/forgotPwd/components/BodyStep3.vue";
-  export default defineComponent({
-    components:{
-      BodyStep1,
-      BodyStep2,
-      BodyStep3,
-    },
-    setup(){
-      // 显示哪个个步骤（组件）
-      let steps = ["BodyStep1", "BodyStep2", "BodyStep3"]
-      let stepVal = ref(steps[0]);
-      // 定义一个 第一个子组件步骤完成的回调
-      const step1Complete = () => {
-        stepVal.value = steps[1];
-      }
-      const step2Complete = () => {
-        stepVal.value = steps[2];
-      }
-      return{
-        stepVal,
-        step1Complete,
-        step2Complete,
-      }
-    }
-  })
-</script>
+import { defineComponent, ref } from 'vue';
+import BodyStep1 from '@/pages/forgotPwd/components/BodyStep1.vue';
+import BodyStep2 from '@/pages/forgotPwd/components/BodyStep2.vue';
+import BodyStep3 from '@/pages/forgotPwd/components/BodyStep3.vue';
 
+export default defineComponent({
+  components: {
+    BodyStep1,
+    BodyStep2,
+    BodyStep3,
+  },
+  setup() {
+    // 显示哪个个步骤（组件）
+    const steps = ['BodyStep1', 'BodyStep2', 'BodyStep3'];
+    const stepVal = ref(steps[0]);
+    // 定义一个 第一个子组件步骤完成的回调
+    const step1Complete = () => {
+      stepVal.value = steps[1];
+    };
+    const step2Complete = () => {
+      stepVal.value = steps[2];
+    };
+    return {
+      stepVal,
+      step1Complete,
+      step2Complete,
+    };
+  },
+});
+</script>
 
 <style lang='less' scoped>
     @import url('~@/assets/less/globalVariable.less');

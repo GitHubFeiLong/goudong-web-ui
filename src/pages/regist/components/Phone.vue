@@ -57,306 +57,296 @@
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref, watch} from 'vue';
-  import Hint from './Hint.vue';
-  import PuzzleVerify from '@/components/PuzzleVerify.vue';
+import { defineComponent, ref, watch } from 'vue';
+import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
-  // 提示对象
-  import * as HintEntity from '@/pojo/HintEntity';
-  // 验证
-  import * as Validate from '@/utils/ValidateUtil';
-  // 接口地址
-  import {phoneCodeApi, checkCodeApi} from '@/api/MessageApi';
-  import {getUserByPhoneApi} from '@/api/Oauth2Api';
-  import Result from "@/pojo/Result";
-  import {AuthorityUser} from '@/pojo/AuthorityUser';
-  import RegisterStore from "@/store/RegisterStore";
+// 提示对象
+import * as HintEntity from '@/pojo/HintEntity';
+// 验证
+import * as Validate from '@/utils/ValidateUtil';
+// 接口地址
+import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
+import { getUserByPhoneApi } from '@/api/Oauth2Api';
+import Result from '@/pojo/Result';
+import { AuthorityUser } from '@/pojo/AuthorityUser';
+import RegisterStore from '@/store/RegisterStore';
+import Hint from './Hint.vue';
 
-  export default defineComponent({
-    props: {},
-    emits: {
-      'hindenPhone': null,
-    },
-    components: {
-      Hint,
-      PuzzleVerify
-    },
-    setup: function (props, context) {
-      // 提示信息
-      let hint = ref(HintEntity.BLANK);
-      let getAuthCodeNum = ref(3);
-      let authHint = ref(HintEntity.BLANK);
-      // 显示下一步（true）
-      let showPhoneButton = ref(true)
-      let phone = ref('');
-      // 手机是否正确
-      let phoneSure = ref(false);
-      // 倒计时
-      let timer: any = ref(5);
-      let btnVal = ref('s后重新获取');
-      // 定时器id
-      let intervalId: any = null;
-      // 按钮class
-      let btnClass = ref('btn-no-hover');
-      // 是否显示滑块验证
-      let showPuzzle = ref(false);
-      // 用户输入的验证码
-      let authCode = ref("");
-      // phone输入框
-      let phoneRef = ref<HTMLElement | null>(null);
-      // 滑块验证是否正确
-      let puzzleSure = ref(false);
-      // 弹框是否显示
-      let dialogVisible = ref(false);
-      // 后端返回账号名
-      let username = ref("");
-      // 账号是不是我的 单选框
-      let myAccountRadio = ref("");
-      // 继续注册按钮
-      let goOnRegistRef = ref<HTMLElement | null>(null);
-      // 清除phone值
-      const cleanPhone = () => {
-        hint.value = HintEntity.BLANK
-        phone.value = '';
-        phoneSure.value = false;
-      }
-      // 绑定事件监听，父子组件通信
-      const successPuzzle = () => {
-        console.log("successPuzzle 调用了");
-        puzzleSure.value = true;
-        // 延迟关闭滑块验证码
-        setTimeout(() => {
-          showPuzzle.value = false;
-          // 验证码验证
-          //showPhoneButton.value = false;
-          // 检查手机号是否被使用
-          getUserByPhoneApi(phone.value).then(response => {
-            let result: Result<AuthorityUser> = response.data;
-            // 用户不为null
-            if (result.data) {
-              username.value = result.data.username;
-              dialogVisible.value = true;
-            } else {
-              // 验证码验证
-              showPhoneButton.value = false;
-            }
-          })
-
-        }, 600);
-
-      }
-      //
-      const disposeUsername = (): string => {
-        let result = username.value;
-        let replaceStr = "";
-        // 用户名 长度<=4
-        if (result.length <= 4) {
-          replaceStr = result.substring(1, result.length - 1);
-        } else {
-          replaceStr = result.substring(2, result.length - 2);
-        }
-        return result.replace(replaceStr, "*".repeat(replaceStr.length));
-      }
-      // 关闭滑块验证事件监听
-      const closePuzzle = () => {
+export default defineComponent({
+  props: {},
+  emits: {
+    hindenPhone: null,
+  },
+  components: {
+    Hint,
+    PuzzleVerify,
+  },
+  setup(props, context) {
+    // 提示信息
+    const hint = ref(HintEntity.BLANK);
+    const getAuthCodeNum = ref(3);
+    const authHint = ref(HintEntity.BLANK);
+    // 显示下一步（true）
+    const showPhoneButton = ref(true);
+    const phone = ref('');
+    // 手机是否正确
+    const phoneSure = ref(false);
+    // 倒计时
+    const timer: any = ref(5);
+    const btnVal = ref('s后重新获取');
+    // 定时器id
+    let intervalId: any = null;
+    // 按钮class
+    const btnClass = ref('btn-no-hover');
+    // 是否显示滑块验证
+    const showPuzzle = ref(false);
+    // 用户输入的验证码
+    const authCode = ref('');
+    // phone输入框
+    const phoneRef = ref<HTMLElement | null>(null);
+    // 滑块验证是否正确
+    const puzzleSure = ref(false);
+    // 弹框是否显示
+    const dialogVisible = ref(false);
+    // 后端返回账号名
+    const username = ref('');
+    // 账号是不是我的 单选框
+    const myAccountRadio = ref('');
+    // 继续注册按钮
+    const goOnRegistRef = ref<HTMLElement | null>(null);
+    // 清除phone值
+    const cleanPhone = () => {
+      hint.value = HintEntity.BLANK;
+      phone.value = '';
+      phoneSure.value = false;
+    };
+    // 绑定事件监听，父子组件通信
+    const successPuzzle = () => {
+      console.log('successPuzzle 调用了');
+      puzzleSure.value = true;
+      // 延迟关闭滑块验证码
+      setTimeout(() => {
         showPuzzle.value = false;
+        // 验证码验证
+        // showPhoneButton.value = false;
+        // 检查手机号是否被使用
+        getUserByPhoneApi(phone.value).then((response) => {
+          const result: Result<AuthorityUser> = response.data;
+          // 用户不为null
+          if (result.data) {
+            username.value = result.data.username;
+            dialogVisible.value = true;
+          } else {
+            // 验证码验证
+            showPhoneButton.value = false;
+          }
+        });
+      }, 600);
+    };
+    //
+    const disposeUsername = (): string => {
+      const result = username.value;
+      let replaceStr = '';
+      // 用户名 长度<=4
+      if (result.length <= 4) {
+        replaceStr = result.substring(1, result.length - 1);
+      } else {
+        replaceStr = result.substring(2, result.length - 2);
       }
+      return result.replace(replaceStr, '*'.repeat(replaceStr.length));
+    };
+    // 关闭滑块验证事件监听
+    const closePuzzle = () => {
+      showPuzzle.value = false;
+    };
 
-      // 点击获取验证码
-      const clickGetAuth = () => {
-        if (phone.value.length == 0) {
-          hint.value = HintEntity.PHONE_HINT_02
-        }
-        // 手机格式正确才显示
-        if (phoneSure.value) {
-          // 1. 滑块验证
-          showPuzzle.value = true;
-          puzzleSure.value = false;
-        }
-
+    // 点击获取验证码
+    const clickGetAuth = () => {
+      if (phone.value.length == 0) {
+        hint.value = HintEntity.PHONE_HINT_02;
       }
-      // 手机输入框获取焦点
-      const phoneFocus = () => {
-        if (HintEntity.PHONE_HINT_02.equals(hint.value)) {
-          hint.value = HintEntity.PHONE_HINT_02;
-        }
-
+      // 手机格式正确才显示
+      if (phoneSure.value) {
+        // 1. 滑块验证
+        showPuzzle.value = true;
+        puzzleSure.value = false;
       }
-      // 手机输入框失去焦点
-      const phoneBlur = () => {
-        // 判断是否显示下面的提示信息
-        if (phone.value.length > 0) {
-          // 正则验证手机是否正确的格式
-          Validate.validatePhone(String(phone.value)).then((value) => {
-            phoneSure.value = true;
-            hint.value = HintEntity.BLANK
-          }, (reason) => {
-            phoneSure.value = false;
-            hint.value = HintEntity.PHONE_HINT_01;
-          });
-        } else {
-          hint.value = HintEntity.BLANK
-        }
+    };
+    // 手机输入框获取焦点
+    const phoneFocus = () => {
+      if (HintEntity.PHONE_HINT_02.equals(hint.value)) {
+        hint.value = HintEntity.PHONE_HINT_02;
       }
-      // 定时器
-      const authCodeTimer = () => {
-        timer.value = 120;
-        btnVal.value = 's后重新获取';
-        btnClass.value = 'btn-no-hover';
-        authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
-        // 请求接口，发送手机验证码
-        phoneCodeApi(phone.value).then(response => {
-          console.log(response);
-          intervalId = setInterval(() => {
-            timer.value--;
-            if (timer.value <= 0) {
-
-              // 恢复按钮功能
-              btnClass.value = '';
-              timer.value = '';
-              btnVal.value = '重新获取';
-              getAuthCodeNum.value--;
-              authHint.value = new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
-              // 清除定时器
-              clearInterval(intervalId);
-            }
-          }, 1000)
-        })
-
+    };
+    // 手机输入框失去焦点
+    const phoneBlur = () => {
+      // 判断是否显示下面的提示信息
+      if (phone.value.length > 0) {
+        // 正则验证手机是否正确的格式
+        Validate.validatePhone(String(phone.value)).then((value) => {
+          phoneSure.value = true;
+          hint.value = HintEntity.BLANK;
+        }, (reason) => {
+          phoneSure.value = false;
+          hint.value = HintEntity.PHONE_HINT_01;
+        });
+      } else {
+        hint.value = HintEntity.BLANK;
       }
+    };
+    // 定时器
+    const authCodeTimer = () => {
+      timer.value = 120;
+      btnVal.value = 's后重新获取';
+      btnClass.value = 'btn-no-hover';
+      authHint.value = new HintEntity.HintEntity(`验证码已发送,${timer.value}秒内输入有效`, '#c5c5c5', '0px -100px');
+      // 请求接口，发送手机验证码
+      phoneCodeApi(phone.value).then((response) => {
+        console.log(response);
+        intervalId = setInterval(() => {
+          timer.value--;
+          if (timer.value <= 0) {
+            // 恢复按钮功能
+            btnClass.value = '';
+            timer.value = '';
+            btnVal.value = '重新获取';
+            getAuthCodeNum.value--;
+            authHint.value = new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
+            // 清除定时器
+            clearInterval(intervalId);
+          }
+        }, 1000);
+      });
+    };
 
-      // 重新获取验证码
-      const repeatGetAuth = () => {
-        authCodeTimer();
+    // 重新获取验证码
+    const repeatGetAuth = () => {
+      authCodeTimer();
+    };
+    //  点击下一步
+    const clickNextStep = () => {
+      // 手机为空时
+      if (phone.value == '') {
+        hint.value = HintEntity.PHONE_HINT_02;
+        // 得到焦点
+        phoneRef.value && phoneRef.value.focus();
+        return;
       }
-      //  点击下一步
-      const clickNextStep = () => {
-        // 手机为空时
-        if (phone.value == "") {
-          hint.value = HintEntity.PHONE_HINT_02;
+      // 手机正确
+      if (phoneSure.value) {
+        if (!puzzleSure.value) { // 滑块验证未验证通过时
+          authHint.value = HintEntity.PHONE_HINT_03;
           // 得到焦点
           phoneRef.value && phoneRef.value.focus();
-          return;
-        }
-        // 手机正确
-        if (phoneSure.value) {
-          if (!puzzleSure.value) { // 滑块验证未验证通过时
-            authHint.value = HintEntity.PHONE_HINT_03;
-            // 得到焦点
-            phoneRef.value && phoneRef.value.focus();
-          } else {
-            if (authCode.value.length == 6) {
-              // 将手机号和验证码 拿去请求查看是否正确
-              checkCodeApi(phone.value, authCode.value).then(response => {
-                console.log(response);
-                let boo: boolean = response.data.data;
-                if (boo) {
-                  // 匹配成功,修改样式
-                  context.emit('hindenPhone', phone.value)
-                } else {
-                  // 匹配错误
-                  authHint.value = HintEntity.EMAIL_CODE_HINT_2;
-                }
-              })
+        } else if (authCode.value.length == 6) {
+          // 将手机号和验证码 拿去请求查看是否正确
+          checkCodeApi(phone.value, authCode.value).then((response) => {
+            console.log(response);
+            const boo: boolean = response.data.data;
+            if (boo) {
+              // 匹配成功,修改样式
+              context.emit('hindenPhone', phone.value);
             } else {
+              // 匹配错误
               authHint.value = HintEntity.EMAIL_CODE_HINT_2;
             }
-
-          }
+          });
+        } else {
+          authHint.value = HintEntity.EMAIL_CODE_HINT_2;
         }
       }
+    };
 
-      /**
+    /**
        * 点击继续注册
        */
-      const goOnRegist = () => {
-        // 验证码验证
-        showPhoneButton.value = false;
-        // 隐藏弹框
-        dialogVisible.value = false;
-      }
+    const goOnRegist = () => {
+      // 验证码验证
+      showPhoneButton.value = false;
+      // 隐藏弹框
+      dialogVisible.value = false;
+    };
 
-      // 监视手机值
-      watch(phone, (cur, pre) => {
-        puzzleSure.value = false;
-        if (phone.value.length == 0) {
-          hint.value = HintEntity.PHONE_HINT_00;
+    // 监视手机值
+    watch(phone, (cur, pre) => {
+      puzzleSure.value = false;
+      if (phone.value.length == 0) {
+        hint.value = HintEntity.PHONE_HINT_00;
+        phoneSure.value = false;
+      } else {
+        Validate.validatePhone(String(phone.value)).then((value) => {
+          phoneSure.value = true;
+          hint.value = HintEntity.BLANK;
+        }, (reason) => {
           phoneSure.value = false;
-        } else {
-          Validate.validatePhone(String(phone.value)).then((value) => {
-            phoneSure.value = true;
-            hint.value = HintEntity.BLANK
+          hint.value = HintEntity.PHONE_HINT_01;
+          authHint.value = HintEntity.BLANK;
+        });
+      }
+    });
+    // 监视手机格式是否正确
+    watch(phoneSure, () => {
+      if (!phoneSure.value) {
+        // 不正确,显示按钮
+        showPhoneButton.value = true;
+        console.log('showPhoneButton', showPhoneButton);
+      }
+    });
 
-          }, (reason) => {
-            phoneSure.value = false;
-            hint.value = HintEntity.PHONE_HINT_01;
-            authHint.value = HintEntity.BLANK;
-          });
-        }
-      })
-      // 监视手机格式是否正确
-      watch(phoneSure, () => {
-        if (!phoneSure.value) {
-          // 不正确,显示按钮
-          showPhoneButton.value = true;
-          console.log('showPhoneButton', showPhoneButton);
-        }
-      })
+    // 监视显示验证码输入框
+    watch(showPhoneButton, () => {
+      if (!showPhoneButton.value) {
+        authCodeTimer();
+      }
+    });
 
-      // 监视显示验证码输入框
-      watch(showPhoneButton, () => {
-        if (!showPhoneButton.value) {
-          authCodeTimer()
-        }
-      })
+    // 监视次数
+    watch(getAuthCodeNum, () => {
+      if (getAuthCodeNum.value <= 0) {
+        btnClass.value = 'btn-no-hover';
+      }
+    });
 
-      // 监视次数
-      watch(getAuthCodeNum, () => {
-        if (getAuthCodeNum.value <= 0) {
-          btnClass.value = 'btn-no-hover';
-        }
-      })
-
-      /**
+    /**
        * 选中了单选，‘继续注册’就可以点击
        */
-      watch(myAccountRadio, () => {
-        // 修改vuex 的state
-        RegisterStore.commit("changeAccountRadio", myAccountRadio)
-        // 单选框选中
-        if (myAccountRadio.value != "") {
-          (goOnRegistRef.value as HTMLElement).classList.remove("disabled")
-        }
-      })
-
-      return {
-        btnClass,
-        timer,
-        btnVal,
-        hint,
-        authHint,
-        showPuzzle,
-        showPhoneButton,
-        phone,
-        phoneSure,
-        phoneFocus,
-        phoneBlur,
-        phoneRef,
-        cleanPhone,
-        clickGetAuth,
-        repeatGetAuth,
-        clickNextStep,
-        successPuzzle,
-        closePuzzle,
-        authCode,
-        dialogVisible,
-        disposeUsername,
-        myAccountRadio,
-        goOnRegistRef,
-        goOnRegist,
+    watch(myAccountRadio, () => {
+      // 修改vuex 的state
+      RegisterStore.commit('changeAccountRadio', myAccountRadio);
+      // 单选框选中
+      if (myAccountRadio.value != '') {
+        (goOnRegistRef.value as HTMLElement).classList.remove('disabled');
       }
-    }
-  })
+    });
+
+    return {
+      btnClass,
+      timer,
+      btnVal,
+      hint,
+      authHint,
+      showPuzzle,
+      showPhoneButton,
+      phone,
+      phoneSure,
+      phoneFocus,
+      phoneBlur,
+      phoneRef,
+      cleanPhone,
+      clickGetAuth,
+      repeatGetAuth,
+      clickNextStep,
+      successPuzzle,
+      closePuzzle,
+      authCode,
+      dialogVisible,
+      disposeUsername,
+      myAccountRadio,
+      goOnRegistRef,
+      goOnRegist,
+    };
+  },
+});
 </script>
 
 <style>

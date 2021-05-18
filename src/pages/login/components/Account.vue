@@ -27,152 +27,152 @@
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref, reactive} from 'vue';
-  import QuickLogin from './QuickLogin.vue'
-  import MiniPuzzleVerify from "@/components/MiniPuzzleVerify.vue";
+import { defineComponent, ref, reactive } from 'vue';
+import MiniPuzzleVerify from '@/components/MiniPuzzleVerify.vue';
 
-  // 引入工具ts
-  import * as HintEntity from "@/pojo/HintEntity";
-  import Result from "@/pojo/Result";
-  import {loginApi} from '@/api/Oauth2Api';
-  // 申明jquery
-  declare var $: (selector: string) => any;
+// 引入工具ts
+import * as HintEntity from '@/pojo/HintEntity';
+import Result from '@/pojo/Result';
+import { loginApi } from '@/api/Oauth2Api';
+import QuickLogin from './QuickLogin.vue';
+// 申明jquery
+declare let $: (selector: string) => any;
 
-  export default defineComponent({
-    components: {
-      MiniPuzzleVerify,
-      QuickLogin,
-    },
-    setup() {
-      let puzzle = reactive({
-        showPuzzle:false,
-        puzzleSure:false,
-      })
-      let hint = ref(HintEntity.BLANK)
-      let username = ref('');
-      let password = ref('');
-      let btnValue = ref("登    录");
-      // 清除用户名
-      function cleanUsername() {
-        username.value = '';
+export default defineComponent({
+  components: {
+    MiniPuzzleVerify,
+    QuickLogin,
+  },
+  setup() {
+    const puzzle = reactive({
+      showPuzzle: false,
+      puzzleSure: false,
+    });
+    const hint = ref(HintEntity.BLANK);
+    const username = ref('');
+    const password = ref('');
+    const btnValue = ref('登    录');
+    // 清除用户名
+    function cleanUsername() {
+      username.value = '';
+    }
+
+    // 清除密码
+    function cleanPassword() {
+      password.value = '';
+    }
+
+    // 用户名输入框得到焦点
+    function usernameFocus(e: any) {
+      // e.target 是你当前点击的元素
+      // e.currentTarget 是你绑定事件的元素
+
+      // 获得点击元素的前一个元素
+      // e.currentTarget.previousElementSibling.innerHTML
+
+      // 获得点击元素的第一个子元素
+      // e.currentTarget.firstElementChild
+
+      // 获得点击元素的下一个元素
+      // e.currentTarget.nextElementSibling
+
+      // 获得点击元素中id为string的元素
+      // e.currentTarget.getElementById("string")
+
+      // 获得点击元素的string属性
+      // e.currentTarget.getAttributeNode('string')
+
+      // 获得点击元素的父级元素
+      // e.currentTarget.parentElement
+
+      // 获得点击元素的前一个元素的第一个子元素的HTML值
+      // e.currentTarget.previousElementSibling.firstElementChild.innerHTML
+      $(e.currentTarget.previousElementSibling).css('background-position', '0px -48px');
+      console.log();
+    }
+
+    // 用户名输入框失去焦点事件
+    function usernameBlur(e: any) {
+      $(e.currentTarget.previousElementSibling).css('background-position', '0px 0px');
+    }
+
+    // 密码框得到焦点
+    function passwordFocus(e: any) {
+      $(e.currentTarget.previousElementSibling).css('background-position', '-48px -48px');
+    }
+
+    // 密码框失去焦点
+    function passwordBlur(e: any) {
+      $(e.currentTarget.previousElementSibling).css('background-position', '-48px 0px');
+    }
+
+    // 登录
+    function login() {
+      if (puzzle.showPuzzle) {
+        return false;
       }
-
-      // 清除密码
-      function cleanPassword() {
-        password.value = '';
+      // NotDone.notDone()
+      if (username.value === '' && password.value === '') {
+        hint.value = HintEntity.USERNAME_PASSWORD_HINT_0;
+        return false;
+      } if (username.value === '') {
+        hint.value = HintEntity.USERNAME_PASSWORD_HINT_1;
+      } else if (password.value === '') {
+        hint.value = HintEntity.USERNAME_PASSWORD_HINT_2;
+      } else {
+        hint.value = HintEntity.BLANK;
+        // 滑块验证
+        puzzle.showPuzzle = true;
       }
+    }
 
-      // 用户名输入框得到焦点
-      function usernameFocus(e: any) {
-        // e.target 是你当前点击的元素
-        // e.currentTarget 是你绑定事件的元素
-
-        // 获得点击元素的前一个元素
-        // e.currentTarget.previousElementSibling.innerHTML
-
-        // 获得点击元素的第一个子元素
-        // e.currentTarget.firstElementChild
-
-        // 获得点击元素的下一个元素
-        // e.currentTarget.nextElementSibling
-
-        // 获得点击元素中id为string的元素
-        // e.currentTarget.getElementById("string")
-
-        // 获得点击元素的string属性
-        // e.currentTarget.getAttributeNode('string')
-
-        // 获得点击元素的父级元素
-        // e.currentTarget.parentElement
-
-        // 获得点击元素的前一个元素的第一个子元素的HTML值
-        // e.currentTarget.previousElementSibling.firstElementChild.innerHTML
-        $(e.currentTarget.previousElementSibling).css('background-position', '0px -48px');
-        console.log();
-      }
-
-      // 用户名输入框失去焦点事件
-      function usernameBlur(e: any) {
-        $(e.currentTarget.previousElementSibling).css('background-position', '0px 0px');
-      }
-
-      // 密码框得到焦点
-      function passwordFocus(e: any) {
-        $(e.currentTarget.previousElementSibling).css('background-position', '-48px -48px');
-      }
-
-      // 密码框失去焦点
-      function passwordBlur(e: any) {
-        $(e.currentTarget.previousElementSibling).css('background-position', '-48px 0px');
-      }
-
-      // 登录
-      function login() {
-        if (puzzle.showPuzzle) {
-          return false;
-        }
-        // NotDone.notDone()
-        if (username.value === '' && password.value === "") {
-          hint.value = HintEntity.USERNAME_PASSWORD_HINT_0;
-          return false;
-        } else if (username.value === "") {
-          hint.value = HintEntity.USERNAME_PASSWORD_HINT_1;
-        } else if (password.value === "") {
-          hint.value = HintEntity.USERNAME_PASSWORD_HINT_2;
+    // 滑块成功
+    const successPuzzle = () => {
+      puzzle.showPuzzle = false;
+      puzzle.puzzleSure = true;
+      btnValue.value = '正在登录...';
+      // 请求登录接口
+      loginApi(username.value, password.value).then((response) => {
+        const result: Result<object> = response.data;
+        btnValue.value = '登    录';
+        if (result.code != '1') {
+          hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
         } else {
-          hint.value = HintEntity.BLANK;
-          // 滑块验证
-          puzzle.showPuzzle = true;
+          window.location.href = '/index.html';
         }
-      }
+      });
+    };
+    // 关闭滑块
+    const closePuzzle = () => {
+      puzzle.showPuzzle = false;
+      puzzle.puzzleSure = false;
+    };
 
-      // 滑块成功
-      const successPuzzle = () => {
-        puzzle.showPuzzle = false;
-        puzzle.puzzleSure = true;
-        btnValue.value = "正在登录..."
-        // 请求登录接口
-        loginApi(username.value, password.value).then(response=>{
-          let result:Result<object> = response.data;
-          btnValue.value = "登    录"
-          if (result.code != "1") {
-            hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
-          } else {
-            window.location.href = "/index.html";
-          }
-        })
-      }
-      // 关闭滑块
-      const closePuzzle = () => {
-        puzzle.showPuzzle = false;
-        puzzle.puzzleSure = false;
-      }
+    // 忘记密码
+    function forgetPassword() {
+      window.location.href = '/forgotPwd.html';
+    }
 
-      // 忘记密码
-      function forgetPassword() {
-        window.location.href = '/forgotPwd.html'
-      }
+    return {
+      hint,
+      username,
+      password,
+      cleanUsername,
+      cleanPassword,
+      usernameFocus,
+      usernameBlur,
+      passwordFocus,
+      passwordBlur,
+      login,
+      forgetPassword,
+      successPuzzle,
+      closePuzzle,
+      puzzle,
+      btnValue,
+    };
+  },
 
-      return {
-        hint,
-        username,
-        password,
-        cleanUsername,
-        cleanPassword,
-        usernameFocus,
-        usernameBlur,
-        passwordFocus,
-        passwordBlur,
-        login,
-        forgetPassword,
-        successPuzzle,
-        closePuzzle,
-        puzzle,
-        btnValue,
-      }
-    },
-
-  })
+});
 </script>
 
 <style lang="less">

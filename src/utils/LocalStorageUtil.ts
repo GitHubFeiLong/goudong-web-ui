@@ -3,15 +3,16 @@
  */
 export default class LocalStorageUtil {
   static s = window.localStorage;
-  static token = "token";
+
+  static token = 'token';
 
   /**
    * 保存值
    * @param key
    * @param value
    */
-  static set(key:string, value:any) {
-    if (typeof value == 'object') {
+  static set(key: string, value: any) {
+    if (typeof value === 'object') {
       LocalStorageUtil.s.setItem(key, JSON.stringify(value));
     } else {
       LocalStorageUtil.s.setItem(key, value);
@@ -25,9 +26,8 @@ export default class LocalStorageUtil {
    * 获取值
    * @param key
    */
-  static get(key:string) {
-
-    let item = LocalStorageUtil.s.getItem(key);
+  static get(key: string) {
+    const item = LocalStorageUtil.s.getItem(key);
     try {
       return JSON.parse((item as any));
     } catch (e) {
@@ -39,7 +39,7 @@ export default class LocalStorageUtil {
    * 判断是否存在key
    * @param key
    */
-  static has(key:string) {
+  static has(key: string) {
     return !!LocalStorageUtil.s.getItem(key);
   }
 
@@ -47,9 +47,7 @@ export default class LocalStorageUtil {
    * 删除值
    * @param key
    */
-  static remove(key:string){
+  static remove(key: string) {
     LocalStorageUtil.s.removeItem(key);
   }
 }
-
-

@@ -17,7 +17,6 @@
       <img src="~@/assets/imgs/gd7.jpeg"/>
     </el-carousel-item>
 
-
     </el-carousel>
 
     <div class="body-1">
@@ -77,19 +76,20 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent} from 'vue'
-  export default defineComponent({
-    setup(){
-      const item = {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      };
-      return {
-        tableData: Array(20).fill(item)
-      }
-    }
-  })
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  setup() {
+    const item = {
+      date: '2016-05-02',
+      name: '王小虎',
+      address: '上海市普陀区金沙江路 1518 弄',
+    };
+    return {
+      tableData: Array(20).fill(item),
+    };
+  },
+});
 </script>
 
 <style lang="less">
@@ -136,7 +136,6 @@
       line-height: 50px;
     }
   }
-
 
   .el-carousel .el-carousel__container{
     height: 500px;

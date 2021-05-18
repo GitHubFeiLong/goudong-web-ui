@@ -1,15 +1,15 @@
 import { createStore } from 'vuex';
 
 export default createStore({
-  state () {
+  state() {
     return {
-      accountRadio: ""
-    }
+      accountRadio: '',
+    };
   },
   mutations: {
-    changeAccountRadio (state:any, value:string) {
+    changeAccountRadio(state: any, value: string) {
       state.accountRadio = value;
-    }
-  }
+    },
+  },
 
 });

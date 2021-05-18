@@ -2,15 +2,15 @@ export class QAEntity {
   /**
    * question 问题
    */
-  q:string;
+  q: string;
+
   /**
    * answer 答案
    */
-  a:string
-  constructor(q:string, a:string) {
+  a: string
+
+  constructor(q: string, a: string) {
     this.q = q;
     this.a = a;
   }
 }
-
-

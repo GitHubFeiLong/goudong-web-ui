@@ -9,24 +9,25 @@
 </template>
 
 <script lang='ts'>
-    import {defineComponent, onMounted} from 'vue';
+import { defineComponent, onMounted } from 'vue';
 
-    // 引入工具ts
-    import * as NotDone from '@/utils/NotDone'
-    export default defineComponent({
-        props:{
-            hint:String
-        },
-        setup () {
-            const notDone = () => {
-              NotDone.notDone();
-            };
-            return {
-                notDone,
-            }
-        }
+// 引入工具ts
+import * as NotDone from '@/utils/NotDone';
 
-    });
+export default defineComponent({
+  props: {
+    hint: String,
+  },
+  setup() {
+    const notDone = () => {
+      NotDone.notDone();
+    };
+    return {
+      notDone,
+    };
+  },
+
+});
 </script>
 
 <!--<style>

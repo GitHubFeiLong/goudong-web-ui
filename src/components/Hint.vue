@@ -7,14 +7,14 @@
 </template>
 
 <script lang='ts'>
-    import { defineComponent} from 'vue';
-    import * as HintEntity from '@/pojo/HintEntity';
+import { defineComponent } from 'vue';
+import * as HintEntity from '@/pojo/HintEntity';
 
-    export default defineComponent ({
-        props:{
-            hint:HintEntity.HintEntity
-        },
-    })
+export default defineComponent({
+  props: {
+    hint: HintEntity.HintEntity,
+  },
+});
 </script>
 
 <style lang='less' scoped>

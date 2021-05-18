@@ -1,6 +1,6 @@
 /* register.html 路由  */
-import {createRouter, createWebHashHistory} from 'vue-router';
-import Register from "@/pages/regist/Register.vue";
+import { createRouter, createWebHashHistory } from 'vue-router';
+import Register from '@/pages/regist/Register.vue';
 
 export const routes = [
   {
@@ -15,6 +15,3 @@ const router = createRouter({
 });
 
 export default router;
-
-
-

@@ -57,443 +57,434 @@
 </template>
 
 <script lang='ts'>
-  import {defineComponent, ref, watch} from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
-  import Hint from './Hint.vue';
-  import * as HintEntity from '@/pojo/HintEntity';
-  import {BLANK} from '@/pojo/HintEntity';
-  import * as Validate from '@/utils/ValidateUtil';
-  import {checkUsernameApi, checkEmailApi, createUserApi} from '@/api/Oauth2Api';
-  import {checkCodeApi, emailCodeApi} from '@/api/MessageApi';
-  import {AuthorityUser} from "@/pojo/AuthorityUser";
-  import RegisterStore from "@/store/RegisterStore";
+import * as HintEntity from '@/pojo/HintEntity';
+import { BLANK } from '@/pojo/HintEntity';
+import * as Validate from '@/utils/ValidateUtil';
+import { checkUsernameApi, checkEmailApi, createUserApi } from '@/api/Oauth2Api';
+import { checkCodeApi, emailCodeApi } from '@/api/MessageApi';
+import { AuthorityUser } from '@/pojo/AuthorityUser';
+import RegisterStore from '@/store/RegisterStore';
+import Hint from './Hint.vue';
 
-  export default defineComponent({
-    props: {
-      phone: String,
-    },
-    components: {
-      Hint
-    },
-    emits: {
-      'hindenUserInfo': null,
-    },
-    setup(props, context) {
-      // 用户名
-      let username = ref('');
-      // 密码
-      let password = ref('');
-      // 二次输入密码
-      let confirmPassword = ref('');
-      // 邮箱验证
-      let email = ref("");
-      // 邮箱验证码
-      let emailCode = ref("");
-      // 用户名格式是否正确
-      let usernameSure = ref(false);
-      let passwordSure = ref(false);
-      // 确认密码是否正确
-      let confirmPasswordSure = ref(false);
-      // 邮箱验证格式是否正确
-      let emailSure = ref(false);
-      // 邮箱验证码正确
-      let emailCodeSure = ref(false);
-      // 用户名输入框验证提示
-      let hintUsername = ref(HintEntity.BLANK);
-      // 密码输入框验证提示
-      let hintPassword = ref(HintEntity.BLANK);
-      // 确认密码输入框验证提示
-      let hintconfirmPassword = ref(HintEntity.BLANK);
-      // 邮箱验证的提示
-      let hintEmail = ref(HintEntity.BLANK);
-      // 邮箱验证码提示
-      // let hintEmailCode = ref(HintEntity.EMAIL_CODE_HINT_4);
-      let hintEmailCode = ref(HintEntity.BLANK);
-      // 邮箱验证码中的按钮文字
-      let emailCodeBtnVal = ref("获取验证码");
-      // 默认是空的,页面加载完毕,说明组件已经存在了,获取文本框元素
-      let usernamrRef = ref<HTMLElement | null>(null)
-      let passwordRef = ref<HTMLElement | null>(null)
-      let cpasswordRef = ref<HTMLElement | null>(null)
-      let emailRef = ref<HTMLElement | null>(null)
-      let emailCodeBtnRef = ref<HTMLElement>();
-      // 忘记这个有啥用了
-      let isClickBtn = ref(false);
-      // 下一步按钮对象
-      let nextStepRef = ref<HTMLElement>();
-      // 可以使用的用户名列表
-      let usableUsernames = ref([]);
-      // 申明一个变量保存旧的用户名
-      let oldUsername: string = "";
-      // 邮箱格式
-      let emailFormats = ref();
+export default defineComponent({
+  props: {
+    phone: String,
+  },
+  components: {
+    Hint,
+  },
+  emits: {
+    hindenUserInfo: null,
+  },
+  setup(props, context) {
+    // 用户名
+    const username = ref('');
+    // 密码
+    const password = ref('');
+    // 二次输入密码
+    const confirmPassword = ref('');
+    // 邮箱验证
+    const email = ref('');
+    // 邮箱验证码
+    const emailCode = ref('');
+    // 用户名格式是否正确
+    const usernameSure = ref(false);
+    const passwordSure = ref(false);
+    // 确认密码是否正确
+    const confirmPasswordSure = ref(false);
+    // 邮箱验证格式是否正确
+    const emailSure = ref(false);
+    // 邮箱验证码正确
+    const emailCodeSure = ref(false);
+    // 用户名输入框验证提示
+    const hintUsername = ref(HintEntity.BLANK);
+    // 密码输入框验证提示
+    const hintPassword = ref(HintEntity.BLANK);
+    // 确认密码输入框验证提示
+    const hintconfirmPassword = ref(HintEntity.BLANK);
+    // 邮箱验证的提示
+    const hintEmail = ref(HintEntity.BLANK);
+    // 邮箱验证码提示
+    // let hintEmailCode = ref(HintEntity.EMAIL_CODE_HINT_4);
+    const hintEmailCode = ref(HintEntity.BLANK);
+    // 邮箱验证码中的按钮文字
+    const emailCodeBtnVal = ref('获取验证码');
+    // 默认是空的,页面加载完毕,说明组件已经存在了,获取文本框元素
+    const usernamrRef = ref<HTMLElement | null>(null);
+    const passwordRef = ref<HTMLElement | null>(null);
+    const cpasswordRef = ref<HTMLElement | null>(null);
+    const emailRef = ref<HTMLElement | null>(null);
+    const emailCodeBtnRef = ref<HTMLElement>();
+    // 忘记这个有啥用了
+    const isClickBtn = ref(false);
+    // 下一步按钮对象
+    const nextStepRef = ref<HTMLElement>();
+    // 可以使用的用户名列表
+    const usableUsernames = ref([]);
+    // 申明一个变量保存旧的用户名
+    let oldUsername = '';
+    // 邮箱格式
+    const emailFormats = ref();
+    emailFormats.value = [];
+    // 已知邮箱格式
+    const existsEmailFormats = ['qq', '163', '126', 'Gmail', 'Souhu', 'Sina'];
+    const meetEmailFormat = (email: string) => {
+      const temp: any[] = [];
       emailFormats.value = [];
-      // 已知邮箱格式
-      let existsEmailFormats = ["qq", "163", "126", "Gmail", "Souhu", "Sina"];
-      const meetEmailFormat = (email: string) => {
-        let temp: any[] = [];
-        emailFormats.value = [];
-        if (email === "") {
-          return false;
-        }
-        // 没有@,追加所有格式
-        let reg1 = /[@]+/g;
-        if (!reg1.test(email)) {
-          existsEmailFormats.forEach(item => {
-            temp.push(email + "@" + item + ".com")
-          })
-          emailFormats.value = temp;
-          return false;
-        }
-
-        // @ 后的字符串，拿来循环匹配
-        let reg2 = /[\d\w]+@([a-zA-Z0-9]+.*)?/g
-        let boo = reg2.test(email)
-        if (boo) {
-          let reg2 = RegExp.$1;
-          existsEmailFormats.forEach(item => {
-            if (item.indexOf(reg2) != -1) {
-              let str = email.substring(0, email.indexOf("@"));
-              temp.push(str + "@" + item + ".com")
-            }
-          })
-          emailFormats.value = temp;
-        }
+      if (email === '') {
+        return false;
+      }
+      // 没有@,追加所有格式
+      const reg1 = /[@]+/g;
+      if (!reg1.test(email)) {
+        existsEmailFormats.forEach((item) => {
+          temp.push(`${email}@${item}.com`);
+        });
+        emailFormats.value = temp;
+        return false;
       }
 
-      // 清空用户名
-      const cleanUsername = () => {
-        username.value = '';
+      // @ 后的字符串，拿来循环匹配
+      const reg2 = /[\d\w]+@([a-zA-Z0-9]+.*)?/g;
+      const boo = reg2.test(email);
+      if (boo) {
+        const reg2 = RegExp.$1;
+        existsEmailFormats.forEach((item) => {
+          if (item.indexOf(reg2) != -1) {
+            const str = email.substring(0, email.indexOf('@'));
+            temp.push(`${str}@${item}.com`);
+          }
+        });
+        emailFormats.value = temp;
+      }
+    };
+
+    // 清空用户名
+    const cleanUsername = () => {
+      username.value = '';
+      usernameSure.value = false;
+      hintUsername.value = HintEntity.BLANK;
+    };
+
+    // 用户名输入框失去焦点
+    const usernameBlur = () => {
+      isClickBtn.value = false;
+      if (username.value.length > 0) {
+        // 检查用户名是否符合条件
+        Validate.validateUsername(username.value).then((resolve) => {
+          console.log('resolve', resolve);
+          usernameSure.value = true;
+          hintUsername.value = resolve;
+          if (username.value != oldUsername) {
+            // 当符合条件时，查寻用户名是否被使用
+            checkUsernameApi(username.value).then((response) => {
+              const { data } = response.data;
+              usableUsernames.value = data;
+            });
+          }
+          oldUsername = username.value;
+        }).catch((reason) => {
+          console.log('reason', reason);
+          usernameSure.value = false;
+          hintUsername.value = reason;
+        });
+      } else {
+        // 默认显示
         usernameSure.value = false;
         hintUsername.value = HintEntity.BLANK;
       }
-
-      // 用户名输入框失去焦点
-      const usernameBlur = () => {
-        isClickBtn.value = false;
-        if (username.value.length > 0) {
-          // 检查用户名是否符合条件
-          Validate.validateUsername(username.value).then(resolve=>{
-            console.log("resolve", resolve)
-            usernameSure.value = true;
-            hintUsername.value = resolve;
-            if (username.value != oldUsername) {
-              // 当符合条件时，查寻用户名是否被使用
-              checkUsernameApi(username.value).then(response => {
-
-                let data: [] = response.data.data;
-                usableUsernames.value = data;
-              })
-            }
-            oldUsername = username.value;
-          }).catch(reason=>{
-            console.log("reason", reason)
-            usernameSure.value = false;
-            hintUsername.value = reason;
-          });
-
-        } else {
-          // 默认显示
-          usernameSure.value = false;
-          hintUsername.value = HintEntity.BLANK;
-        }
-
+    };
+    // 用户名输入框得到焦点
+    const usernameFocus = () => {
+      if (username.value.length == 0 && !isClickBtn.value) {
+        hintUsername.value = HintEntity.USERNAME_HINT_0;
       }
-      // 用户名输入框得到焦点
-      const usernameFocus = () => {
-        if (username.value.length == 0 && !isClickBtn.value) {
-          hintUsername.value = HintEntity.USERNAME_HINT_0;
-        }
-      }
+    };
 
-      // 密码框失去焦点
-      const passwordBlur = () => {
-        cpBlur();
-        if (password.value.length === 0) {
+    // 密码框失去焦点
+    const passwordBlur = () => {
+      cpBlur();
+      if (password.value.length === 0) {
+        passwordSure.value = false;
+        hintPassword.value = HintEntity.BLANK;
+      }
+    };
+
+    // 密码框得到焦点
+    const passwordFocus = () => {
+      if (password.value.length == 0 && !isClickBtn.value) {
+        hintPassword.value = HintEntity.PASSWORD_HINT_0;
+      }
+    };
+
+    // 密码监视
+    watch(password, () => {
+      if (password.value.length > 0) {
+        Validate.validatePassword(password.value).then((reject) => {
+          passwordSure.value = true;
+          hintPassword.value = reject;
+        }).catch((reason) => {
           passwordSure.value = false;
-          hintPassword.value = HintEntity.BLANK;
-        }
+          hintPassword.value = reason;
+        });
+      } else {
+        hintPassword.value = HintEntity.PASSWORD_HINT_0;
       }
+    });
 
-      // 密码框得到焦点
-      const passwordFocus = () => {
-        if (password.value.length == 0 && !isClickBtn.value) {
-          hintPassword.value = HintEntity.PASSWORD_HINT_0;
-        }
-      }
-
-      // 密码监视
-      watch(password, () => {
-        if (password.value.length > 0) {
-          Validate.validatePassword(password.value).then(reject=>{
-            passwordSure.value = true;
-            hintPassword.value = reject;
-          }).catch(reason => {
-            passwordSure.value = false;
-            hintPassword.value = reason;
-          })
-        } else {
-          hintPassword.value = HintEntity.PASSWORD_HINT_0;
-        }
-      })
-
-      // 确认密码失去焦点
-      const cpBlur = () => {
-        if (confirmPassword.value.length == 0) {
+    // 确认密码失去焦点
+    const cpBlur = () => {
+      if (confirmPassword.value.length == 0) {
+        hintconfirmPassword.value = HintEntity.BLANK;
+        confirmPasswordSure.value = false;
+      } else {
+        // 比较两次密码是否匹配
+        if (confirmPassword.value === password.value) {
           hintconfirmPassword.value = HintEntity.BLANK;
-          confirmPasswordSure.value = false;
+          confirmPasswordSure.value = true;
         } else {
-          // 比较两次密码是否匹配
-          if (confirmPassword.value === password.value) {
-            hintconfirmPassword.value = HintEntity.BLANK;
-            confirmPasswordSure.value = true;
-          } else {
-            hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_1;
-            confirmPasswordSure.value = false;
-          }
-        }
-
-      }
-      // 确认密码得到焦点
-      const cpFocus = () => {
-        if (confirmPassword.value.length === 0) {
+          hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_1;
           confirmPasswordSure.value = false;
-          hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_0;
         }
       }
-
-      // 邮箱验证失去焦点
-      let oldEmail = ""; // 上一次邮箱
-      let invalidEmail = ""; // 保存临时的无效邮箱
-      const emailBlur = () => {
-        if (email.value.length == 0) {
-          hintEmail.value = BLANK;
-          // 临时存储本次邮箱
-          oldEmail = email.value;
-          return false;
-        }
-
-        // 值未变
-        if (oldEmail === email.value) {
-          return false;
-        }
-        // 正则验证
-        Validate.validateEmail(email.value).then(value => {
-          // 邮箱格式正确
-          hintEmail.value = BLANK;
-          emailSure.value = true;
-          console.log(value)
-          // 比较本次和上次是否一致，不一致才调用接口
-          if (email.value != oldEmail) {
-            checkEmailApi(email.value).then(response => {
-              let data: boolean = response.data.data;
-
-              console.log(data)
-              // 不可以使用
-              if (!data) {
-                emailSure.value = false;
-                hintEmail.value = HintEntity.EMAIL_HINT_32;
-                // 不能用
-                invalidEmail = email.value;
-              } else {
-                emailSure.value = true;
-                hintEmail.value = HintEntity.BLANK;
-              }
-            })
-          }
-          // 临时存储本次邮箱
-          oldEmail = email.value;
-        }, reason => {
-          // 格式错误
-          hintEmail.value = HintEntity.EMAIL_HINT_31;
-          emailSure.value = false;
-          // 临时存储本次邮箱
-          oldEmail = email.value;
-        })
-
-
+    };
+    // 确认密码得到焦点
+    const cpFocus = () => {
+      if (confirmPassword.value.length === 0) {
+        confirmPasswordSure.value = false;
+        hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_0;
       }
-      // 邮箱验证得到焦点
-      const emailFocus = () => {
-        if (email.value.length === 0) {
-          hintEmail.value = HintEntity.EMAIL_HINT_30;
-          emailSure.value = false;
-        }
+    };
+
+    // 邮箱验证失去焦点
+    let oldEmail = ''; // 上一次邮箱
+    let invalidEmail = ''; // 保存临时的无效邮箱
+    const emailBlur = () => {
+      if (email.value.length == 0) {
+        hintEmail.value = BLANK;
+        // 临时存储本次邮箱
+        oldEmail = email.value;
+        return false;
       }
-      // 监视邮箱
-      watch(email, () => {
-        meetEmailFormat(email.value);
-        console.log(emailFormats.value)
+
+      // 值未变
+      if (oldEmail === email.value) {
+        return false;
+      }
+      // 正则验证
+      Validate.validateEmail(email.value).then((value) => {
+        // 邮箱格式正确
+        hintEmail.value = BLANK;
+        emailSure.value = true;
+        console.log(value);
+        // 比较本次和上次是否一致，不一致才调用接口
+        if (email.value != oldEmail) {
+          checkEmailApi(email.value).then((response) => {
+            const { data } = response.data;
+
+            console.log(data);
+            // 不可以使用
+            if (!data) {
+              emailSure.value = false;
+              hintEmail.value = HintEntity.EMAIL_HINT_32;
+              // 不能用
+              invalidEmail = email.value;
+            } else {
+              emailSure.value = true;
+              hintEmail.value = HintEntity.BLANK;
+            }
+          });
+        }
+        // 临时存储本次邮箱
+        oldEmail = email.value;
+      }, (reason) => {
+        // 格式错误
+        hintEmail.value = HintEntity.EMAIL_HINT_31;
         emailSure.value = false;
-        // 邮箱改变，验证码需要重置
+        // 临时存储本次邮箱
+        oldEmail = email.value;
+      });
+    };
+    // 邮箱验证得到焦点
+    const emailFocus = () => {
+      if (email.value.length === 0) {
+        hintEmail.value = HintEntity.EMAIL_HINT_30;
+        emailSure.value = false;
+      }
+    };
+    // 监视邮箱
+    watch(email, () => {
+      meetEmailFormat(email.value);
+      console.log(emailFormats.value);
+      emailSure.value = false;
+      // 邮箱改变，验证码需要重置
+      hintEmailCode.value = HintEntity.BLANK;
+      clearInterval(intervalId);
+      emailCodeBtnVal.value = '获取验证码';
+      (emailCodeBtnRef.value as HTMLElement).removeAttribute('disabled');
+    });
+    // 检查邮箱是否可用
+    const checkEmail = (item: string) => {
+      email.value = item;
+      emailFormats.value = [];
+      emailBlur();
+    };
+
+    // 邮箱验证失去焦点
+    const emailCodeBlur = () => {
+      if (emailCodeSure.value) {
+        return false;
+      }
+      if (emailCode.value.length == 0) {
+        emailCodeSure.value = false;
         hintEmailCode.value = HintEntity.BLANK;
-        clearInterval(intervalId);
-        emailCodeBtnVal.value = "获取验证码";
-        (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled")
-      })
-      // 检查邮箱是否可用
-      const checkEmail = (item: string) => {
-        email.value = item;
-        emailFormats.value = [];
-        emailBlur();
+        return false;
       }
+      hintEmailCode.value = HintEntity.BLANK;
+    };
+    // 确认密码得到焦点
+    const emailCodeFocus = () => {
+    };
 
-      // 邮箱验证失去焦点
-      const emailCodeBlur = () => {
-        if (emailCodeSure.value) {
-          return false;
-        }
-        if (emailCode.value.length == 0) {
-          emailCodeSure.value = false;
-          hintEmailCode.value = HintEntity.BLANK;
-          return false;
-        }
-        hintEmailCode.value = HintEntity.BLANK;
+    // 获取邮箱验证码
+    const getEmailCode = () => {
+      if (email.value === '') {
+        hintEmail.value = HintEntity.EMAIL_HINT_2;
+        return false;
       }
-      // 确认密码得到焦点
-      const emailCodeFocus = () => {
+      if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute('disabled')) {
+        emailCodeSure.value = false;
+        emailCode.value = '';
+        emailCodeApi(email.value).then((response) => {
+          intervalEmailCodeBtnVal();
+        });
       }
+    };
 
-      // 获取邮箱验证码
-      const getEmailCode = () => {
-        if (email.value === "") {
-          hintEmail.value = HintEntity.EMAIL_HINT_2;
-          return false;
-        }
-        if (emailSure.value && !(emailCodeBtnRef.value as HTMLElement).hasAttribute("disabled")) {
-          emailCodeSure.value = false;
-          emailCode.value = "";
-          emailCodeApi(email.value).then(response => {
-            intervalEmailCodeBtnVal();
-          })
-        }
-      }
-
-      /**
+    /**
        * 定时修改按钮属性和值
        */
-      let intervalId: any;
-      const intervalEmailCodeBtnVal = () => {
-        hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_4;
-        (emailCodeBtnRef.value as HTMLElement).setAttribute("disabled", "disabled");
-        let time = 300;
-        emailCodeBtnVal.value = time + "s后重新获取";
-        intervalId = setInterval(() => {
-          time--;
-          if (time <= 0) {
-            (emailCodeBtnRef.value as HTMLElement).removeAttribute("disabled");
-            clearInterval(intervalId);
-            hintEmailCode.value = HintEntity.BLANK;
-            emailCodeBtnVal.value = "重新获取";
-          } else {
-            emailCodeBtnVal.value = time + "s后重新获取";
-          }
-        }, 1000);
-      }
-
-      // 注册
-      const regist = () => {
-        let result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCode.value.length == 6;
-        isClickBtn.value = true;
-        if (result) {
-
-          if ((nextStepRef.value as HTMLElement).hasAttribute("disabled")) {
-            return false;
-          }
-          // 禁用按钮点击
-          (nextStepRef.value as HTMLElement).setAttribute("disabled", "disabled")
-
-          checkCodeApi(email.value, emailCode.value).then(response => {
-            let boo: boolean = response.data.data;
-            emailCodeSure.value = boo;
-            if (boo) {
-              hintEmailCode.value = HintEntity.BLANK;
-
-              // 保存到数据库
-              let phone: string = props.phone as string;
-              let user = new AuthorityUser(phone, username.value, password.value, email.value);
-              // 单选框值
-              user.accountRadio = RegisterStore.state.accountRadio;
-              createUserApi(user).then().then(response => {
-                console.log(response);
-                // 触发父组件的方法，将用户名回传
-                context.emit('hindenUserInfo', username.value);
-              }).finally(()=>{
-                (nextStepRef.value as HTMLElement).removeAttribute("disabled")
-              })
-
-            } else {
-              hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_2;
-            }
-          })
-        } else if (!usernameSure.value) {
-          // 用户名不正确
-          if (username.value.length == 0) {
-            hintUsername.value = HintEntity.USERNAME_HINT_01;
-          }
-          // 得到焦点
-          usernamrRef.value && usernamrRef.value.focus()
-        } else if (!passwordSure.value) {
-          // 密码不正确
-          if (password.value.length === 0) {
-            hintPassword.value = HintEntity.PASSWORD_HINT_02;
-          }
-          // 得到焦点
-          passwordRef.value && passwordRef.value.focus()
-        } else if (!confirmPasswordSure.value) {
-          // 确认密码得到焦点
-          if (confirmPassword.value != password.value) {
-            (cpasswordRef.value as HTMLElement).focus();
-            hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_3;
-          }
-        } else if (!emailSure.value) {
-          hintEmail.value = HintEntity.EMAIL_HINT_2;
-        } else if (!emailCodeSure.value) {
-          hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_3;
+    let intervalId: any;
+    const intervalEmailCodeBtnVal = () => {
+      hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_4;
+      (emailCodeBtnRef.value as HTMLElement).setAttribute('disabled', 'disabled');
+      let time = 300;
+      emailCodeBtnVal.value = `${time}s后重新获取`;
+      intervalId = setInterval(() => {
+        time--;
+        if (time <= 0) {
+          (emailCodeBtnRef.value as HTMLElement).removeAttribute('disabled');
+          clearInterval(intervalId);
+          hintEmailCode.value = HintEntity.BLANK;
+          emailCodeBtnVal.value = '重新获取';
+        } else {
+          emailCodeBtnVal.value = `${time}s后重新获取`;
         }
+      }, 1000);
+    };
 
-      }
+    // 注册
+    const regist = () => {
+      const result = usernameSure.value && passwordSure.value && confirmPasswordSure.value && emailSure.value && emailCode.value.length == 6;
+      isClickBtn.value = true;
+      if (result) {
+        if ((nextStepRef.value as HTMLElement).hasAttribute('disabled')) {
+          return false;
+        }
+        // 禁用按钮点击
+        (nextStepRef.value as HTMLElement).setAttribute('disabled', 'disabled');
 
-      return {
-        username,
-        password,
-        confirmPassword,
-        email,
-        emailCode,
-        cleanUsername,
-        usernameSure,
-        confirmPasswordSure,
-        emailSure,
-        hintUsername,
-        hintconfirmPassword,
-        hintPassword,
-        hintEmail,
-        hintEmailCode,
-        usernameBlur,
-        usernameFocus,
-        passwordBlur,
-        passwordFocus,
-        cpBlur,
-        cpFocus,
-        emailBlur,
-        emailFocus,
-        emailCodeBlur,
-        emailCodeFocus,
-        regist,
-        usernamrRef,
-        passwordRef,
-        cpasswordRef,
-        emailRef,
-        nextStepRef,
-        emailCodeBtnVal,
-        usableUsernames,
-        emailFormats,
-        getEmailCode,
-        emailCodeBtnRef,
-        checkEmail,
+        checkCodeApi(email.value, emailCode.value).then((response) => {
+          const boo: boolean = response.data.data;
+          emailCodeSure.value = boo;
+          if (boo) {
+            hintEmailCode.value = HintEntity.BLANK;
+
+            // 保存到数据库
+            const phone: string = props.phone as string;
+            const user = new AuthorityUser(phone, username.value, password.value, email.value);
+            // 单选框值
+            user.accountRadio = RegisterStore.state.accountRadio;
+            createUserApi(user).then().then((response) => {
+              console.log(response);
+              // 触发父组件的方法，将用户名回传
+              context.emit('hindenUserInfo', username.value);
+            }).finally(() => {
+              (nextStepRef.value as HTMLElement).removeAttribute('disabled');
+            });
+          } else {
+            hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_2;
+          }
+        });
+      } else if (!usernameSure.value) {
+        // 用户名不正确
+        if (username.value.length == 0) {
+          hintUsername.value = HintEntity.USERNAME_HINT_01;
+        }
+        // 得到焦点
+        usernamrRef.value && usernamrRef.value.focus();
+      } else if (!passwordSure.value) {
+        // 密码不正确
+        if (password.value.length === 0) {
+          hintPassword.value = HintEntity.PASSWORD_HINT_02;
+        }
+        // 得到焦点
+        passwordRef.value && passwordRef.value.focus();
+      } else if (!confirmPasswordSure.value) {
+        // 确认密码得到焦点
+        if (confirmPassword.value != password.value) {
+          (cpasswordRef.value as HTMLElement).focus();
+          hintconfirmPassword.value = HintEntity.CONFIRM_PASSWORD_HINT_3;
+        }
+      } else if (!emailSure.value) {
+        hintEmail.value = HintEntity.EMAIL_HINT_2;
+      } else if (!emailCodeSure.value) {
+        hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_3;
       }
-    }
-  })
+    };
+
+    return {
+      username,
+      password,
+      confirmPassword,
+      email,
+      emailCode,
+      cleanUsername,
+      usernameSure,
+      confirmPasswordSure,
+      emailSure,
+      hintUsername,
+      hintconfirmPassword,
+      hintPassword,
+      hintEmail,
+      hintEmailCode,
+      usernameBlur,
+      usernameFocus,
+      passwordBlur,
+      passwordFocus,
+      cpBlur,
+      cpFocus,
+      emailBlur,
+      emailFocus,
+      emailCodeBlur,
+      emailCodeFocus,
+      regist,
+      usernamrRef,
+      passwordRef,
+      cpasswordRef,
+      emailRef,
+      nextStepRef,
+      emailCodeBtnVal,
+      usableUsernames,
+      emailFormats,
+      getEmailCode,
+      emailCodeBtnRef,
+      checkEmail,
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>

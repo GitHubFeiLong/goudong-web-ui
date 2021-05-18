@@ -16,15 +16,18 @@
   </div>
 </template>
 <script lang='ts'>
-  import { defineComponent, ref, onMounted, watch } from 'vue'
-  export default defineComponent ({
-    components:{
-    },
-    setup (props, content) {
-      return {
-      }
-    }
-  })
+import {
+  defineComponent, ref, onMounted, watch,
+} from 'vue';
+
+export default defineComponent({
+  components: {
+  },
+  setup(props, content) {
+    return {
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>

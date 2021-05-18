@@ -92,234 +92,232 @@
   </el-dialog>
 </template>
 <script lang='ts'>
-  import Result from "@/pojo/Result";
+import Result from '@/pojo/Result';
+import {
+  defineComponent, ref, reactive, onMounted, watch, inject,
+} from 'vue';
 
-  declare var $: (selector: string) => any;
-  import { defineComponent, ref, reactive,onMounted, watch, inject } from 'vue'
+// 提示信息
+import BodyFoot from '@/pages/forgotPwd/components/BodyFoot.vue';
+// 输入框提示信息
+import Hint from '@/components/Hint.vue';
+import QA from '@/components/QA.vue';
+import * as HintEntity from '@/pojo/HintEntity';
+import * as QAEntity from '@/pojo/QAEntity';
+import * as Validate from '@/utils/ValidateUtil';
+import ForgotPwdStore from '@/store/ForgotPwdStore';
+import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
+import { updatePasswordApi } from '@/api/Oauth2Api';
 
-  // 提示信息
-  import BodyFoot from "@/pages/forgotPwd/components/BodyFoot.vue";
-  // 输入框提示信息
-  import Hint from "@/components/Hint.vue";
-  import QA from "@/components/QA.vue";
-  import * as HintEntity from "@/pojo/HintEntity";
-  import * as QAEntity from "@/pojo/QAEntity";
-  import * as Validate from "@/utils/ValidateUtil";
-  import ForgotPwdStore from '@/store/ForgotPwdStore';
-  import {phoneCodeApi, checkCodeApi} from '@/api/MessageApi';
-  import {updatePasswordApi} from '@/api/Oauth2Api';
+declare let $: (selector: string) => any;
 
-  export default defineComponent ({
-    components:{
-      BodyFoot,
-      Hint,
-      QA,
-    },
-    setup (props, content) {
-      // 当前的步骤状态
-      let stepStatus = ref(1);
-      // 步骤1相关
-      let step1Style = ref({color:'#0c8'});
-      let circle1 = ref({"background-color": '#0c8', color:'#fff'});
-      let outer1 = ref({"background-color":'#0c8'});
+export default defineComponent({
+  components: {
+    BodyFoot,
+    Hint,
+    QA,
+  },
+  setup(props, content) {
+    // 当前的步骤状态
+    const stepStatus = ref(1);
+    // 步骤1相关
+    const step1Style = ref({ color: '#0c8' });
+    const circle1 = ref({ 'background-color': '#0c8', color: '#fff' });
+    const outer1 = ref({ 'background-color': '#0c8' });
 
-      // 步骤2相关
-      let step2Style = ref({});
-      let circle2 = ref({});
-      let outer2 = ref({});
-      // 步骤3相关
-      let step3Style = ref({});
-      let circle3 = ref({});
-      let outer3 = ref({});
+    // 步骤2相关
+    const step2Style = ref({});
+    const circle2 = ref({});
+    const outer2 = ref({});
+    // 步骤3相关
+    const step3Style = ref({});
+    const circle3 = ref({});
+    const outer3 = ref({});
 
-      // 弹框是否显示
-      let dialogVisible =  ref(false);
-      // 弹框验证码输入左边的divclass
-      let verifyLeftDivClass = ref({'verify-left-div':true, 'verify-left-div-focus':false});
-      // 弹框验证码输入
-      let phoneVerifyCode = ref("");
-      // 弹框提示信息
-      let showHint = ref(false);
-      let hint = ref(HintEntity.EMAIL_CODE_HINT_2);
+    // 弹框是否显示
+    const dialogVisible = ref(false);
+    // 弹框验证码输入左边的divclass
+    const verifyLeftDivClass = ref({ 'verify-left-div': true, 'verify-left-div-focus': false });
+    // 弹框验证码输入
+    const phoneVerifyCode = ref('');
+    // 弹框提示信息
+    const showHint = ref(false);
+    const hint = ref(HintEntity.EMAIL_CODE_HINT_2);
 
-      let phoneDialog = reactive({
-        phone:'',
-        code:'',
-        btnVal:'',
-        clicked:false,
-      });
+    const phoneDialog = reactive({
+      phone: '',
+      code: '',
+      btnVal: '',
+      clicked: false,
+    });
       // 弹框问题
-      let dialogQA = new QAEntity.QAEntity("收不到短信验证码？", "请检查手机网络并且核实手机是否屏蔽系统短信，如均正常请重新获取或稍后再试。");
-      // 邮箱验证按钮点击
-      const emailFunc = () => {
+    const dialogQA = new QAEntity.QAEntity('收不到短信验证码？', '请检查手机网络并且核实手机是否屏蔽系统短信，如均正常请重新获取或稍后再试。');
+    // 邮箱验证按钮点击
+    const emailFunc = () => {
 
-      }
-      // 弹框验证码得到焦点
-      const phoneVerifyCodeFocus = () => {
-        verifyLeftDivClass.value['verify-left-div-focus'] = true;
-      }
-      // 弹框验证码失去焦点
-      const phoneVerifyCodeBlur = () => {
-        verifyLeftDivClass.value['verify-left-div-focus'] = false;
-      }
-      // 弹框中点击下一步
-      const clickDialogNextStep = () => {
-        // 验证码检查是否正确(目前只有手机验证码)
-        checkCodeApi(ForgotPwdStore.state.authorityUser.phone, phoneVerifyCode.value).then(response=>{
-          let result:Result<boolean> = response.data;
-          let data:boolean = result.data
-          if (data) {
-            // 验证码正确，关闭弹框，跳转到第二部
-            showHint.value = false;
-            dialogVisible.value = false;
-            stepStatus.value = 2;
-          } else {
-            showHint.value = true;
-            hint.value = HintEntity.EMAIL_CODE_HINT_2;
-          }
-        })
-      }
-
-      // 使用手机短信验证码
-      const usePhoneCode = () => {
-        dialogVisible.value = true;
-        console.log(ForgotPwdStore.state.authorityUser)
-        if (ForgotPwdStore.state.authorityUser) {
-          let fullPhone = ForgotPwdStore.state.authorityUser.phone;
-          phoneDialog.phone = fullPhone.replace(fullPhone.substring(3,9), "*****")
-        }
-      }
-
-      const getPhoneCode = () => {
-        if (phoneDialog.clicked) {
-          showHint.value = true;
-          hint.value = HintEntity.EMAIL_CODE_HINT_5;
-        } else {
+    };
+    // 弹框验证码得到焦点
+    const phoneVerifyCodeFocus = () => {
+      verifyLeftDivClass.value['verify-left-div-focus'] = true;
+    };
+    // 弹框验证码失去焦点
+    const phoneVerifyCodeBlur = () => {
+      verifyLeftDivClass.value['verify-left-div-focus'] = false;
+    };
+    // 弹框中点击下一步
+    const clickDialogNextStep = () => {
+      // 验证码检查是否正确(目前只有手机验证码)
+      checkCodeApi(ForgotPwdStore.state.authorityUser.phone, phoneVerifyCode.value).then((response) => {
+        const result: Result<boolean> = response.data;
+        const { data } = result;
+        if (data) {
+          // 验证码正确，关闭弹框，跳转到第二部
           showHint.value = false;
-          phoneDialog.clicked = true;
-          let time = 120;
-          phoneDialog.btnVal = time + "s 后重新获取"
-          let intervalID = setInterval(()=>{
-            time--;
-            if (time <= 0) {
-              phoneDialog.clicked = false;
-              clearInterval(intervalID);
-            }
-            phoneDialog.btnVal = time + "s 后重新获取"
-          }, 1000)
-          phoneCodeApi(ForgotPwdStore.state.authorityUser.phone).then(response=>{
-            console.log(response)
-
-          })
-        }
-
-      }
-      // 步骤2
-      let newPassword = ref('');
-      // 密码框
-      let pwdRef = ref(null);
-      // 眼睛icon
-      let eyeRef = ref(null);
-      // 设置密码的提示信息
-      let pwdHint = ref(HintEntity.PASSWORD_HINT_4);
-      // 密码是否符合正则
-      let pwdSure = ref(false);
-      // 点击切换显示隐藏面膜
-      const switchShowPwd = () => {
-        let type = (pwdRef.value as any).getAttribute("type");
-        if (type === 'text') {
-          (pwdRef.value as any).setAttribute("type", "password");
-          // 修改眼睛为睁眼
-          (eyeRef.value as any).className="iconfont icon-icon-test icon-eye";
+          dialogVisible.value = false;
+          stepStatus.value = 2;
         } else {
-          (pwdRef.value as any).setAttribute("type", "text");
-          // 修改眼睛为闭眼
-          (eyeRef.value as any).className="iconfont icon-biyan icon-eye";
+          showHint.value = true;
+          hint.value = HintEntity.EMAIL_CODE_HINT_2;
         }
+      });
+    };
+
+    // 使用手机短信验证码
+    const usePhoneCode = () => {
+      dialogVisible.value = true;
+      console.log(ForgotPwdStore.state.authorityUser);
+      if (ForgotPwdStore.state.authorityUser) {
+        const fullPhone = ForgotPwdStore.state.authorityUser.phone;
+        phoneDialog.phone = fullPhone.replace(fullPhone.substring(3, 9), '*****');
       }
-      // 监视密码
-      watch(newPassword, (cur, old) => {
-        Validate.validatePassword(cur).then(reject=>{
-          pwdSure.value = true;
-          pwdHint.value = reject;
-        }).catch(reason => {
-          pwdSure.value = false;
-          pwdHint.value = reason;
-        })
-      })
+    };
 
-      // 提交密码
-      const clickSubmitBtn = () => {
-        let param = {uuid:ForgotPwdStore.state.authorityUser.uuid, password:newPassword.value}
-        updatePasswordApi(param).then(response => {
-          stepStatus.value = 3;
-        })
+    const getPhoneCode = () => {
+      if (phoneDialog.clicked) {
+        showHint.value = true;
+        hint.value = HintEntity.EMAIL_CODE_HINT_5;
+      } else {
+        showHint.value = false;
+        phoneDialog.clicked = true;
+        let time = 120;
+        phoneDialog.btnVal = `${time}s 后重新获取`;
+        const intervalID = setInterval(() => {
+          time--;
+          if (time <= 0) {
+            phoneDialog.clicked = false;
+            clearInterval(intervalID);
+          }
+          phoneDialog.btnVal = `${time}s 后重新获取`;
+        }, 1000);
+        phoneCodeApi(ForgotPwdStore.state.authorityUser.phone).then((response) => {
+          console.log(response);
+        });
       }
-      // 第三步
-      // 去登录
-      const clickGoLogin = () => {
-        window.location.href = "/login.html";
+    };
+    // 步骤2
+    const newPassword = ref('');
+    // 密码框
+    const pwdRef = ref(null);
+    // 眼睛icon
+    const eyeRef = ref(null);
+    // 设置密码的提示信息
+    const pwdHint = ref(HintEntity.PASSWORD_HINT_4);
+    // 密码是否符合正则
+    const pwdSure = ref(false);
+    // 点击切换显示隐藏面膜
+    const switchShowPwd = () => {
+      const type = (pwdRef.value as any).getAttribute('type');
+      if (type === 'text') {
+        (pwdRef.value as any).setAttribute('type', 'password');
+        // 修改眼睛为睁眼
+        (eyeRef.value as any).className = 'iconfont icon-icon-test icon-eye';
+      } else {
+        (pwdRef.value as any).setAttribute('type', 'text');
+        // 修改眼睛为闭眼
+        (eyeRef.value as any).className = 'iconfont icon-biyan icon-eye';
       }
+    };
+    // 监视密码
+    watch(newPassword, (cur, old) => {
+      Validate.validatePassword(cur).then((reject) => {
+        pwdSure.value = true;
+        pwdHint.value = reject;
+      }).catch((reason) => {
+        pwdSure.value = false;
+        pwdHint.value = reason;
+      });
+    });
 
-      // 监视当前的状态
-      watch(stepStatus, (cur, pre) => {
-        console.log(cur, pre)
-        switch (cur) {
-          case 1:
-            break;
-          case 2:
-            step2Style.value = {color:'#0c8'};
-            circle2.value = {"background-color": '#0c8', color:'#fff'};
-            outer2.value = {"background-color":'#0c8'};
-            break;
-          case 3:
-            step3Style.value = {color:'#0c8'};
-            circle3.value = {"background-color": '#0c8', color:'#fff'};
-            outer3.value = {"background-color":'#0c8'};
-            break;
-          default:
+    // 提交密码
+    const clickSubmitBtn = () => {
+      const param = { uuid: ForgotPwdStore.state.authorityUser.uuid, password: newPassword.value };
+      updatePasswordApi(param).then((response) => {
+        stepStatus.value = 3;
+      });
+    };
+    // 第三步
+    // 去登录
+    const clickGoLogin = () => {
+      window.location.href = '/login.html';
+    };
 
-            break
-        }
-      })
+    // 监视当前的状态
+    watch(stepStatus, (cur, pre) => {
+      console.log(cur, pre);
+      switch (cur) {
+        case 1:
+          break;
+        case 2:
+          step2Style.value = { color: '#0c8' };
+          circle2.value = { 'background-color': '#0c8', color: '#fff' };
+          outer2.value = { 'background-color': '#0c8' };
+          break;
+        case 3:
+          step3Style.value = { color: '#0c8' };
+          circle3.value = { 'background-color': '#0c8', color: '#fff' };
+          outer3.value = { 'background-color': '#0c8' };
+          break;
+        default:
 
-
-
-      return {
-        stepStatus,
-        step1Style,
-        circle1,
-        outer1,
-        step2Style,
-        circle2,
-        outer2,
-        step3Style,
-        circle3,
-        outer3,
-        emailFunc,
-        verifyLeftDivClass,
-        phoneVerifyCodeFocus,
-        phoneVerifyCodeBlur,
-        phoneVerifyCode,
-        showHint,
-        hint,
-        dialogQA,
-        dialogVisible,
-        clickDialogNextStep,
-        pwdRef,
-        eyeRef,
-        newPassword,
-        switchShowPwd,
-        pwdHint,
-        pwdSure,
-        clickSubmitBtn,
-        clickGoLogin,
-        usePhoneCode,
-        phoneDialog,
-        getPhoneCode,
+          break;
       }
-    }
-  })
+    });
+
+    return {
+      stepStatus,
+      step1Style,
+      circle1,
+      outer1,
+      step2Style,
+      circle2,
+      outer2,
+      step3Style,
+      circle3,
+      outer3,
+      emailFunc,
+      verifyLeftDivClass,
+      phoneVerifyCodeFocus,
+      phoneVerifyCodeBlur,
+      phoneVerifyCode,
+      showHint,
+      hint,
+      dialogQA,
+      dialogVisible,
+      clickDialogNextStep,
+      pwdRef,
+      eyeRef,
+      newPassword,
+      switchShowPwd,
+      pwdHint,
+      pwdSure,
+      clickSubmitBtn,
+      clickGoLogin,
+      usePhoneCode,
+      phoneDialog,
+      getPhoneCode,
+    };
+  },
+});
 </script>
 <style>
   #body{

@@ -1,20 +1,20 @@
-import BindPageParam from "@/pojo/BindPageParam";
+import BindPageParam from '@/pojo/BindPageParam';
 
 /**
  * 解析绑定账号页面的参数列表
  */
 export function resolveBindPageParam() {
-  let search = window.location.search;
-  let paramStr = search.substring(1, search.length);
-  let paramArr = paramStr.split("&");
+  const { search } = window.location;
+  const paramStr = search.substring(1, search.length);
+  const paramArr = paramStr.split('&');
 
-  let bindPageParam = new BindPageParam();
-  paramArr.forEach(item=>{
-    let keyValue = item.split("=");
+  const bindPageParam = new BindPageParam();
+  paramArr.forEach((item) => {
+    const keyValue = item.split('=');
     // @ts-ignore
     bindPageParam[keyValue[0]] = keyValue[1];
-  })
+  });
 
-  console.log(bindPageParam)
+  console.log(bindPageParam);
   return bindPageParam;
 }

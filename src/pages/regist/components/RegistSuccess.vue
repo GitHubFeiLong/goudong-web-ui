@@ -13,24 +13,24 @@
 </template>
 
 <script lang='ts'>
-  import {defineComponent, onMounted} from 'vue'
+import { defineComponent, onMounted } from 'vue';
 
-  export default defineComponent({
-    props: {
-      username: String,
-    },
-    setup() {
-      const goShopping = () => {
-        window.location.href = '/index'
-      }
-      onMounted(() => {
-        setTimeout(goShopping, 5000)
-      });
-      return {
-        goShopping
-      }
-    }
-  })
+export default defineComponent({
+  props: {
+    username: String,
+  },
+  setup() {
+    const goShopping = () => {
+      window.location.href = '/index';
+    };
+    onMounted(() => {
+      setTimeout(goShopping, 5000);
+    });
+    return {
+      goShopping,
+    };
+  },
+});
 </script>
 
 <style lang='less' scoped>
