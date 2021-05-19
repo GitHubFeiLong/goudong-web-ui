@@ -5,8 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lintbak": "vue-cli-service lint",
-    "lint": "eslint --fix --ext .js,.vue src"
+    "lint": "vue-cli-service lint",
+    "repair": "eslint --fix --ext .js,.vue src"
   },
   "dependencies": {
     "axios": "^0.21.1",
