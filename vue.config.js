@@ -22,7 +22,7 @@ module.exports = {
         open: false,
         /* 设置为0.0.0.0则所有的地址均能访问 */
         host: '0.0.0.0',
-        port: 80,
+        port: 9998,
         https: false,
         hotOnly: false,
         /* 使用代理 需要安装(npm i http-proxy-middleware)*/
