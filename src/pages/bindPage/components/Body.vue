@@ -7,7 +7,7 @@
       </div>
       <div class="tab tab-right">
         <em class="iconfont icon-icon-"></em>
-        <a href='/regist.html'>没有京东账号，请完善资料</a>
+        <a href='/register.html'>没有京东账号，请完善资料</a>
       </div>
     </div>
     <div class="panle">
