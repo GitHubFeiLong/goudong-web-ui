@@ -31,7 +31,10 @@
       <p>设置新密码</p>
       <div class="password-div" >
         <input ref="pwdRef" v-model="newPassword" type="password" placeholder="请输入新密码" maxlength="20">
-        <em @click="newPassword = ''; " v-show="newPassword.length > 0" class="iconfont icon-fork"></em>
+        <em
+          @click="newPassword = ''"
+          v-show="newPassword.length > 0"
+          class="iconfont icon-fork"></em>
         <em ref="eyeRef" class="iconfont icon-icon-test icon-eye" @click="switchShowPwd()"></em>
       </div>
       <div class="hint"><Hint :hint="pwdHint"/></div>
@@ -103,7 +106,7 @@ import BodyFoot from '@/pages/forgotPwd/components/BodyFoot.vue';
 import Hint from '@/components/Hint.vue';
 import QA from '@/components/QA.vue';
 import * as HintEntity from '@/pojo/HintEntity';
-import * as QAEntity from '@/pojo/QAEntity';
+import QAEntity from '@/pojo/QAEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
 import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
@@ -151,11 +154,8 @@ export default defineComponent({
       clicked: false,
     });
       // 弹框问题
-    const dialogQA = new QAEntity.QAEntity('收不到短信验证码？', '请检查手机网络并且核实手机是否屏蔽系统短信，如均正常请重新获取或稍后再试。');
-    // 邮箱验证按钮点击
-    const emailFunc = () => {
+    const dialogQA = new QAEntity('收不到短信验证码？', '请检查手机网络并且核实手机是否屏蔽系统短信，如均正常请重新获取或稍后再试。');
 
-    };
     // 弹框验证码得到焦点
     const phoneVerifyCodeFocus = () => {
       verifyLeftDivClass.value['verify-left-div-focus'] = true;
@@ -202,7 +202,7 @@ export default defineComponent({
         let time = 120;
         phoneDialog.btnVal = `${time}s 后重新获取`;
         const intervalID = setInterval(() => {
-          time--;
+          time -= 1;
           if (time <= 0) {
             phoneDialog.clicked = false;
             clearInterval(intervalID);
@@ -294,7 +294,6 @@ export default defineComponent({
       step3Style,
       circle3,
       outer3,
-      emailFunc,
       verifyLeftDivClass,
       phoneVerifyCodeFocus,
       phoneVerifyCodeBlur,

@@ -1,4 +1,5 @@
 // https://www.php.cn/js-tutorial-408926.html
-export function notDone() {
+export default function notDone() {
+  // eslint-disable-next-line prefer-destructuring
   alert('未 做');
 }

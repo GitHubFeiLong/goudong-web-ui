@@ -17,7 +17,7 @@ export default class LocalStorageUtil {
     } else {
       LocalStorageUtil.s.setItem(key, value);
     }
-    if (value == undefined || value == null) {
+    if (value === undefined || value === null) {
       LocalStorageUtil.s.removeItem(key);
     }
   }

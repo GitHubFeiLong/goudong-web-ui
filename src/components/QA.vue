@@ -11,11 +11,11 @@
 import {
   defineComponent, ref, onMounted, watch,
 } from 'vue';
-import * as QAEntity from '@/pojo/QAEntity';
+import QAEntity from '@/pojo/QAEntity';
 
 export default defineComponent({
   props: {
-    qa: QAEntity.QAEntity,
+    qa: QAEntity,
   },
   components: {
   },

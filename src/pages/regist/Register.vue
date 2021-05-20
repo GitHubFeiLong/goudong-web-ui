@@ -14,7 +14,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import Header from '@/components/RegisterHeader.vue';
 import Footer from '@/components/Footer.vue';
 import Body from './components/Body.vue';
@@ -29,8 +29,6 @@ export default defineComponent({
     const HeaderTitle = ref('欢迎注册');
     const goLoginSlot = ref('goLoginSlot');
 
-    onMounted(() => {
-    });
     return {
       HeaderTitle,
       goLoginSlot,

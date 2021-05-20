@@ -3,7 +3,7 @@ import BindPageParam from '@/pojo/BindPageParam';
 /**
  * 解析绑定账号页面的参数列表
  */
-export function resolveBindPageParam() {
+export default function resolveBindPageParam() {
   const { search } = window.location;
   const paramStr = search.substring(1, search.length);
   const paramArr = paramStr.split('&');
@@ -11,8 +11,10 @@ export function resolveBindPageParam() {
   const bindPageParam = new BindPageParam();
   paramArr.forEach((item) => {
     const keyValue = item.split('=');
+    const [param, value] = keyValue;
+
     // @ts-ignore
-    bindPageParam[keyValue[0]] = keyValue[1];
+    bindPageParam[param] = value;
   });
 
   console.log(bindPageParam);

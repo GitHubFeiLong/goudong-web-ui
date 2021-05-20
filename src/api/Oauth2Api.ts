@@ -1,5 +1,5 @@
 /** ===================认证服务相关的接口======================== */
-import { AuthorityUser } from '@/pojo/AuthorityUser';
+import AuthorityUser from '@/pojo/AuthorityUser';
 import { CONTENT_TYPE_0, CONTENT_TYPE_1, CONTENT_TYPE_2 } from '@/pojo/ProjectConst';
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';

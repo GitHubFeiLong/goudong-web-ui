@@ -26,9 +26,11 @@ export default defineComponent({
     const stepVal = ref(steps[0]);
     // 定义一个 第一个子组件步骤完成的回调
     const step1Complete = () => {
+      // eslint-disable-next-line prefer-destructuring
       stepVal.value = steps[1];
     };
     const step2Complete = () => {
+      // eslint-disable-next-line prefer-destructuring
       stepVal.value = steps[2];
     };
     return {

@@ -1,4 +1,4 @@
-export class QAEntity {
+export default class QAEntity {
   /**
    * question 问题
    */

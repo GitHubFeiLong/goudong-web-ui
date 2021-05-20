@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import { AuthorityUser } from '@/pojo/AuthorityUser';
+import AuthorityUser from '@/pojo/AuthorityUser';
 
 export default createStore({
   state() {

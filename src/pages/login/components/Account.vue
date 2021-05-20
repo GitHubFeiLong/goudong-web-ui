@@ -18,7 +18,10 @@
       <span @click='cleanPassword' v-show='password.length>0'></span>
     </div>
     <a @click.prevent="forgetPassword" class="forget-password" href="">忘记密码</a>
-    <MiniPuzzleVerify v-if="puzzle.showPuzzle" @successPuzzle="successPuzzle" @closePuzzle="closePuzzle"/>
+    <MiniPuzzleVerify
+      v-if="puzzle.showPuzzle"
+      @successPuzzle="successPuzzle"
+      @closePuzzle="closePuzzle"/>
     <div id="login-btn">
       <a @click.prevent="login" href="">{{btnValue}}</a>
     </div>
@@ -109,12 +112,11 @@ export default defineComponent({
     // 登录
     function login() {
       if (puzzle.showPuzzle) {
-        return false;
+        return;
       }
-      // NotDone.notDone()
       if (username.value === '' && password.value === '') {
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_0;
-        return false;
+        return;
       } if (username.value === '') {
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_1;
       } else if (password.value === '') {
@@ -135,7 +137,7 @@ export default defineComponent({
       loginApi(username.value, password.value).then((response) => {
         const result: Result<object> = response.data;
         btnValue.value = '登    录';
-        if (result.code != '1') {
+        if (result.code !== '1') {
           hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
         } else {
           window.location.href = '/index.html';

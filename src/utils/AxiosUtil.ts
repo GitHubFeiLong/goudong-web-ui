@@ -25,10 +25,7 @@ const service = axios.create({
   // `transformRequest` 允许在向服务器发送前，修改请求数据
   // 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
   // 后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream
-  transformRequest: [(data) => {
-    data = JSON.stringify(data);
-    return data;
-  }],
+  transformRequest: [(data) => JSON.stringify(data)],
   // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 rejecte
   validateStatus(status) {
     return status < 500;
@@ -36,7 +33,7 @@ const service = axios.create({
   // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
   transformResponse: [(data) => {
     if (typeof data === 'string' && data.startsWith('{')) {
-      data = JSON.parse(data);
+      return JSON.parse(data);
     }
     return data;
   }],

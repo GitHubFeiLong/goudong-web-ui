@@ -13,7 +13,7 @@
 import { defineComponent, ref } from 'vue';
 
 // 引入工具ts
-import * as NotDone from '@/utils/NotDone';
+import NotDone from '@/utils/NotDone';
 
 export default defineComponent({
   props: {
@@ -21,7 +21,7 @@ export default defineComponent({
   },
   setup() {
     function notDone() {
-      NotDone.notDone();
+      NotDone();
     }
     return {
       notDone,

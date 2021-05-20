@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Hint from './Hint';
+import Hint from './Hint.vue';
 
 export default {
   components: {

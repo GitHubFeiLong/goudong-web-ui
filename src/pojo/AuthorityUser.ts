@@ -1,4 +1,4 @@
-export class AuthorityUser {
+export default class AuthorityUser {
   // 用户表主键uuid
   uuid='';
 

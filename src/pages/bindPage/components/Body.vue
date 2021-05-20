@@ -50,7 +50,8 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
-import * as HtmlParamUtil from '@/utils/HtmlParamUtil.ts';
+// eslint-disable-next-line import/named
+import resolveBindPageParam from '@/utils/HtmlParamUtil';
 import BindPageParam from '@/pojo/BindPageParam';
 import { updateOpenIdApi } from '@/api/Oauth2Api';
 
@@ -73,19 +74,19 @@ export default defineComponent({
       // 超时了重新跳转qq登录页面
       if ((new Date().getTime() - (bindPageParam.current as number)) > 300000) {
         window.location.href = 'http://www.goudong.shop/oauth/qq/login';
-        return false;
+        return;
       }
       if (username.value === '' && password.value === '') {
         errorMsg.value = '请输入账户名和密码';
-        return false;
+        return;
       }
       if (username.value === '') {
         errorMsg.value = '请输入账户名';
-        return false;
+        return;
       }
       if (password.value === '') {
         errorMsg.value = '请输入密码';
-        return false;
+        return;
       }
 
       showPuzzle.value = true;
@@ -109,21 +110,21 @@ export default defineComponent({
       }).finally(() => {
         btnValue.value = '立即绑定';
       });
-      if (false) {
-        errorMsg.value = '账户名不存在，请重新输入';
-        errorMsg.value = '账户名与密码不匹配，请重新输入';
-      }
-      // 校验成功
-      if (false) {
-        errorMsg.value = '';
-      }
+      // if (false) {
+      //   errorMsg.value = '账户名不存在，请重新输入';
+      //   errorMsg.value = '账户名与密码不匹配，请重新输入';
+      // }
+      // // 校验成功
+      // if (false) {
+      //   errorMsg.value = '';
+      // }
     };
     const closePuzzle = () => {
       showPuzzle.value = false;
     };
 
     onMounted(() => {
-      bindPageParam = HtmlParamUtil.resolveBindPageParam();
+      bindPageParam = resolveBindPageParam();
       headPortrait30.value = bindPageParam.headPortrait30 as any;
       nickname.value = bindPageParam.nickname as any;
       const current = bindPageParam.current as number;
@@ -131,7 +132,7 @@ export default defineComponent({
       // 超过了5分钟后就超时
       if ((new Date().getTime() - current) > 300000) {
         window.location.href = 'http://www.goudong.shop/oauth/qq/login';
-        return false;
+        return;
       }
       console.log(bindPageParam);
     });

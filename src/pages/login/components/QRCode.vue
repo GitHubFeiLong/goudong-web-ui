@@ -3,14 +3,14 @@
     <div id="qr-code">
         <!-- 鼠标移入@mouseenter 移出@mouseleave -->
         <div class="qr-top" @mouseenter="qrTopMouseover" @mouseleave="qrTopMouseleave">
-            <div :class="qr_outer" class='const-out'>
+            <div :class="qrOuter" class='const-out'>
                 <div id="qr-timeout" v-show="showQRMasking">
                     <p>二维码已失效</p>
                     <a @click.prevent="flushQr">刷新</a>
                 </div>
                 <img src="@/assets/imgs/qr-code.png" alt="扫码登录二维码" class="qr-inner">
             </div>
-            <img src="@/assets/imgs/phone-orange.png" alt="手机图片" :class="qr_phone" >
+            <img src="@/assets/imgs/phone-orange.png" alt="手机图片" :class="qrPhone" >
         </div>
         <div class="qr-bottom">
             <p class="text-info">打开<a href="">手机京东</a>&nbsp;&nbsp;&nbsp;&nbsp;扫描二维码</p>
@@ -50,10 +50,16 @@ export default defineComponent({
   },
   setup() {
     // class 值
-    const qr_phone = ref('qr-phone');
-    const qr_outer = ref('qr-outer');
+    const qrPhone = ref('qr-phone');
+    const qrOuter = ref('qr-outer');
     // 显示超时二维码蒙版，默认不显示
     const showQRMasking = ref(false);
+
+    // 二维码居左，手机img显示（class值修改）
+    const qrMoveFunc = () => {
+      qrPhone.value = 'qr-phone';
+      qrOuter.value = 'qr-outer';
+    };
 
     // 鼠标移入事件触发回调函数
     const qrTopMouseover = () => {
@@ -62,23 +68,18 @@ export default defineComponent({
       }
       qrMoveFunc();
     };
+    // 二维码居中，手机img消失(样式class值改变)
+    const qrHomingFunc = () => {
+      qrPhone.value = 'qr-phone-leave';
+      qrOuter.value = 'qr-outer qr-outer-leave';
+    };
+
     // 鼠标移出事件触发回调函数
     const qrTopMouseleave = () => {
       if (showQRMasking.value) {
         return;
       }
       qrHomingFunc();
-    };
-
-    // 二维码居中，手机img消失(样式class值改变)
-    const qrHomingFunc = () => {
-      qr_phone.value = 'qr-phone-leave';
-      qr_outer.value = 'qr-outer qr-outer-leave';
-    };
-    // 二维码居左，手机img显示（class值修改）
-    const qrMoveFunc = () => {
-      qr_phone.value = 'qr-phone';
-      qr_outer.value = 'qr-outer';
     };
 
     // 二维码时间过期，样式回归初始值
@@ -106,8 +107,8 @@ export default defineComponent({
       qrTimeout();
     });
     return {
-      qr_phone,
-      qr_outer,
+      qrPhone,
+      qrOuter,
       showQRMasking,
       qrTopMouseover,
       qrTopMouseleave,

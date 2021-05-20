@@ -87,7 +87,7 @@ export default defineComponent({
       footerX = (FOOTER.value as any).getBoundingClientRect().x;
       totalX = footerX + FOOTER_WIDTH - CIRCLE_WIDTH;
       // 鼠标移动
-      document.onmousemove = function (e1) {
+      document.onmousemove = (e1) => {
         if (isMouseDown.value) {
           // 1.获取点坐标
           const x = e1.clientX;
@@ -111,7 +111,7 @@ export default defineComponent({
           (STATUS.value as any).style.backgroundImage = 'linear-gradient(to top, #4fcffd, #30b2fb)';
         }
       };
-      document.onmouseup = function (e2) {
+      document.onmouseup = (e2) => {
         isMouseUp.value = true;
         isMouseDown.value = false;
         // // 1.获取点坐标
@@ -125,11 +125,6 @@ export default defineComponent({
     let sx = 0;
     // 裁剪滑块验证图片距左上角y轴距离
     let sy = 0;
-    onMounted(() => {
-      randomSXY();
-      console.log(context);
-    });
-
     // 上次的索引
     let oldIndex = 0;
     // 随机生成 canvas 的裁剪位置
@@ -142,13 +137,13 @@ export default defineComponent({
       let newIndex = 0;
       do {
         newIndex = Math.floor(Math.random() * puzzImgs.length);
-      } while (oldIndex == newIndex);
+      } while (oldIndex === newIndex);
 
       oldIndex = newIndex;
       // 修改路径
       image.src = puzzImgs[newIndex];
 
-      image.onload = function () {
+      image.onload = () => {
         // 执行drawImage语句
         ctx.drawImage(image, sx, sy, 46, 46, 0, 0, 50, 50);
       };
@@ -169,6 +164,10 @@ export default defineComponent({
       // shade的left值
       needX = sx;
     };
+    onMounted(() => {
+      randomSXY();
+      console.log(context);
+    });
 
     // 监视鼠标是由抬起
     watch(isMouseUp, (now, old) => {

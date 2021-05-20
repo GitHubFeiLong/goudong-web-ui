@@ -18,9 +18,6 @@ export default defineComponent({
     Body,
     Footer,
   },
-  setup() {
-
-  },
 });
 </script>
 

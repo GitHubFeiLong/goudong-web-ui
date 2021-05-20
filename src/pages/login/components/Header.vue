@@ -22,7 +22,7 @@
 // defineComponent函数定义一个组件，内部可以传入一个配置对象
 import { defineComponent, ref } from 'vue';
 // 引入子组件
-import * as NotDone from '@/utils/NotDone';
+import NotDone from '@/utils/NotDone';
 import Hint from './Hint.vue';
 
 // 引入工具ts
@@ -36,7 +36,7 @@ export default defineComponent({
     const hint = ref(` 依据《网络安全法》，为保障您的账户安全和正常使用，请尽快完成手机号验证！ 新版
             <a href='javascript:' onClick='notDone()'>《京东隐私政策》</a>已上线，将更有利于保护您的个人隐私。`);
     function notDone() {
-      NotDone.notDone();
+      NotDone();
     }
     return {
       hint,

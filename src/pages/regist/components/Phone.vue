@@ -68,7 +68,7 @@ import * as Validate from '@/utils/ValidateUtil';
 import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
 import { getUserByPhoneApi } from '@/api/Oauth2Api';
 import Result from '@/pojo/Result';
-import { AuthorityUser } from '@/pojo/AuthorityUser';
+import AuthorityUser from '@/pojo/AuthorityUser';
 import RegisterStore from '@/store/RegisterStore';
 import Hint from './Hint.vue';
 
@@ -162,7 +162,7 @@ export default defineComponent({
 
     // 点击获取验证码
     const clickGetAuth = () => {
-      if (phone.value.length == 0) {
+      if (phone.value.length === 0) {
         hint.value = HintEntity.PHONE_HINT_02;
       }
       // 手机格式正确才显示
@@ -204,13 +204,13 @@ export default defineComponent({
       phoneCodeApi(phone.value).then((response) => {
         console.log(response);
         intervalId = setInterval(() => {
-          timer.value--;
+          timer.value -= 1;
           if (timer.value <= 0) {
             // 恢复按钮功能
             btnClass.value = '';
             timer.value = '';
             btnVal.value = '重新获取';
-            getAuthCodeNum.value--;
+            getAuthCodeNum.value -= 1;
             authHint.value = new HintEntity.HintEntity(`该手机还可以获取${getAuthCodeNum.value}次验证码，请尽快验证`, '#c5c5c5', '0px -100px');
             // 清除定时器
             clearInterval(intervalId);
@@ -226,9 +226,10 @@ export default defineComponent({
     //  点击下一步
     const clickNextStep = () => {
       // 手机为空时
-      if (phone.value == '') {
+      if (phone.value === '') {
         hint.value = HintEntity.PHONE_HINT_02;
         // 得到焦点
+        // eslint-disable-next-line no-unused-expressions
         phoneRef.value && phoneRef.value.focus();
         return;
       }
@@ -237,8 +238,9 @@ export default defineComponent({
         if (!puzzleSure.value) { // 滑块验证未验证通过时
           authHint.value = HintEntity.PHONE_HINT_03;
           // 得到焦点
+          // eslint-disable-next-line no-unused-expressions
           phoneRef.value && phoneRef.value.focus();
-        } else if (authCode.value.length == 6) {
+        } else if (authCode.value.length === 6) {
           // 将手机号和验证码 拿去请求查看是否正确
           checkCodeApi(phone.value, authCode.value).then((response) => {
             console.log(response);
@@ -270,7 +272,7 @@ export default defineComponent({
     // 监视手机值
     watch(phone, (cur, pre) => {
       puzzleSure.value = false;
-      if (phone.value.length == 0) {
+      if (phone.value.length === 0) {
         hint.value = HintEntity.PHONE_HINT_00;
         phoneSure.value = false;
       } else {
@@ -314,7 +316,7 @@ export default defineComponent({
       // 修改vuex 的state
       RegisterStore.commit('changeAccountRadio', myAccountRadio);
       // 单选框选中
-      if (myAccountRadio.value != '') {
+      if (myAccountRadio.value !== '') {
         (goOnRegistRef.value as HTMLElement).classList.remove('disabled');
       }
     });

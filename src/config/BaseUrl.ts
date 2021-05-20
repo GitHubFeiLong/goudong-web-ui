@@ -9,6 +9,9 @@ switch (process.env.NODE_ENV) {
   case 'production': // 生产环境url
     gatewayUrl = 'http://goudong.shop:10000/';
     break;
+  default:
+    console.log(process.env.NODE_ENV);
+    break;
 }
 
 module.exports = {

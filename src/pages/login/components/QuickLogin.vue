@@ -23,16 +23,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 // 引入工具ts
-import * as NotDone from '@/utils/NotDone';
+import NotDone from '@/utils/NotDone';
 
 export default defineComponent({
   name: 'QuickLogin',
   setup() {
     function qq() {
-      window.location.href = 'http://www.goudong.shop/oauth/qq/login';
+      window.location.href = 'http://www.goudong.shop/api/oauth2/qq/login';
     }
     function wechat() {
-      NotDone.notDone();
+      NotDone();
     }
     function register() {
       window.location.href = '/register.html';
