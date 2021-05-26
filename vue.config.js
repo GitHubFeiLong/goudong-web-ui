@@ -53,7 +53,7 @@ module.exports = {
       preProcessor: 'less',
       patterns: [
         path.resolve(__dirname, 'src/assets/less/globalVariable.less'),
-        path.resolve(__dirname, 'src/assets/css/commons.css'),
+        path.resolve(__dirname, 'src/assets/less/commons.less'),
       ]
     }
   }

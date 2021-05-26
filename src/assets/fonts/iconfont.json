@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1240939",
+      "name": "警告",
+      "font_class": "jinggao",
+      "unicode": "e810",
+      "unicode_decimal": 59408
+    },
+    {
+      "icon_id": "1546571",
+      "name": "二维码",
+      "font_class": "erweima",
+      "unicode": "e690",
+      "unicode_decimal": 59024
+    },
+    {
+      "icon_id": "3287614",
+      "name": "账户",
+      "font_class": "icon-",
+      "unicode": "e6e6",
+      "unicode_decimal": 59110
+    },
+    {
+      "icon_id": "18171244",
+      "name": "附件,曲别针,回形针",
+      "font_class": "annex",
+      "unicode": "ea36",
+      "unicode_decimal": 59958
+    },
+    {
+      "icon_id": "10468862",
+      "name": "眼睛",
+      "font_class": "icon-test",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
+      "icon_id": "21181077",
+      "name": "闭眼",
+      "font_class": "biyan",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "5772883",
+      "name": "叉号",
+      "font_class": "fork",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
       "icon_id": "2127151",
       "name": "电话 (1)",
       "font_class": "dianhua",

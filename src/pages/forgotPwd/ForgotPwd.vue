@@ -29,9 +29,9 @@ export default defineComponent({
 </script>
 
 <style>
-  #app{
+  /*#app{
     position: relative;
-  }
+  }*/
 </style>
 <style lang='less' scoped>
 

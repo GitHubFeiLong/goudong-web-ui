@@ -1,0 +1,47 @@
+/*
+    公共样式
+*/
+* {
+    margin:0px;
+    padding:0px;
+}
+/* bootstrap 的 row 占据整行 */
+.container-fluid {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+.row {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+a{
+    text-decoration: none;
+    color: #333;
+}
+/*去除浏览器对input添加的边框*/
+input:focus{
+    outline:none;
+}
+/*去除浏览器对button添加的边框*/
+button:focus{
+    outline: none;
+}
+/*  */
+.btn-no-hover{
+    pointer-events:none;
+    background: rgb(244, 245, 246) !important;
+}
+
+/* 密码框去掉可见样式（眼睛） */
+input[type="password"]::-ms-reveal{
+    display:none;
+}
+
+/*按钮禁用*/
+button[disabled]{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.disabled{
+    cursor: not-allowed;
+}
