@@ -42,11 +42,11 @@
       <div class="body">
         <div class="one">
           <img src="@/assets/imgs/no-img_mid.png">
-          <span>用户名：{{disposeUsername()}}(<a href="www.baidu.com">可登录</a>)</span>
+          <span>用户名：{{disposeUsername()}}(<a href="/login.html">可登录</a>)</span>
         </div>
         <div class="two">
-          <el-radio label="MY_SELF" v-model="myAccountRadio">是我的</el-radio>
-          <el-radio label="NOT_MY_SELF" v-model="myAccountRadio">不是我的</el-radio>
+          <el-radio class="radio" label="MY_SELF" v-model="myAccountRadio">是我的</el-radio>
+          <el-radio class="radio" label="NOT_MY_SELF" v-model="myAccountRadio">不是我的</el-radio>
         </div>
       </div>
       <div class="fotter">
@@ -605,6 +605,9 @@ export default defineComponent({
       .two {
         line-height: 40px;
         margin-left: 7px;
+        .radio {
+          margin-right: 25px;
+        }
       }
 
     }
