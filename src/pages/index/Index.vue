@@ -1,9 +1,10 @@
 <template>
-
+  <IndexActivity/>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
+import IndexActivity from './components/IndexActivity.vue';
 
 import { resolvePageParam } from '@/utils/HtmlParamUtil';
 
@@ -13,6 +14,9 @@ import LocalStorageUtil from '@/utils/LocalStorageUtil';
 
 
 export default defineComponent({
+  components: {
+    IndexActivity,
+  },
   setup() {
     onMounted(() => {
       const pageParam: PageParam = resolvePageParam();

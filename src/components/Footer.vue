@@ -41,7 +41,6 @@ export default defineComponent({});
 </script>
 
 <style lang="less" scoped>
-    @import url('~@/assets/less/globalVariable.less');
     #fotter {
         height: 86px;
         width: 100%;

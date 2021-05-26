@@ -361,7 +361,6 @@ export default defineComponent({
   }
 </style>
 <style lang='less' scoped>
-  @import url('~@/assets/less/globalVariable.less');
 
   #phone {
     width: @regist-inner-main-width;

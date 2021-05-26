@@ -6,7 +6,7 @@ import router from '@/router/LoginRouter';
 import store from '@/store/loginStore';
 import App from './Login.vue';
 
-import '@/assets/css/commons.css';
+// import '@/assets/css/commons.css';
 
 const app = createApp(App);
 

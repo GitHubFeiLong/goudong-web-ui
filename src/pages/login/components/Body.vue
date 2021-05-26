@@ -18,7 +18,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    @import url('~@/assets/less/globalVariable.less');
     #body{
         height: 475px;
         width: 100%;

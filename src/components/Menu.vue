@@ -59,7 +59,6 @@ export default defineComponent({
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/less/globalVariable.less');
     @import url('~@/assets/fonts/iconfont.css');
     // 未点击样式
     a:link{

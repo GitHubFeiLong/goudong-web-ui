@@ -141,7 +141,6 @@ export default defineComponent({
   }
 </style>
 <style lang='less' scoped>
-  @import url('~@/assets/less/globalVariable.less');
   #body-info{
     width: 400px;
     height: 210px;

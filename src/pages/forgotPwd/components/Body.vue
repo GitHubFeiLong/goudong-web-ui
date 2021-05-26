@@ -43,7 +43,6 @@ export default defineComponent({
 </script>
 
 <style lang='less' scoped>
-    @import url('~@/assets/less/globalVariable.less');
     #body{
         height:@regist-main-height;
         background-color:#fff;

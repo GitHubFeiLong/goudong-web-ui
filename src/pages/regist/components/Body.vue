@@ -127,7 +127,6 @@ export default defineComponent({
 </script>
 
 <style lang='less' scoped>
-  @import url('~@/assets/less/globalVariable.less');
 
   #body {
     padding-top: 85px;
