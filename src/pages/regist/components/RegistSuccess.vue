@@ -15,6 +15,11 @@
 <script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 
+import RegisterStore from '@/store/RegisterStore';
+import AuthorityUser from '@/pojo/AuthorityUser';
+import { loginApi } from '@/api/Oauth2Api';
+import Result from '@/pojo/Result';
+
 export default defineComponent({
   props: {
     username: String,
@@ -24,8 +29,22 @@ export default defineComponent({
       window.location.href = '/index';
     };
     onMounted(() => {
-      setTimeout(goShopping, 5000);
+      // 进行登录
+      const { user } = RegisterStore.state;
+      const username: string = (user as AuthorityUser).username as string;
+      const password: string = (user as AuthorityUser).password as string;
+      // 登录
+      loginApi(username, password).then((response) => {
+        const result: Result<object> = response.data;
+
+        if (result.code === '1') {
+          window.location.href = '/index.html';
+        }
+
+        setTimeout(goShopping, 3000);
+      });
     });
+
     return {
       goShopping,
     };
@@ -34,7 +53,7 @@ export default defineComponent({
 </script>
 
 <style lang='less' scoped>
-  @import url('~@/assets/fonts/iconfont.css');
+  /*@import url('~@/assets/fonts/iconfont.css');*/
 
   #regist-success {
     width: @regist-inner-main-width;

@@ -1,41 +1,41 @@
 export default class AuthorityUser {
   // 用户表主键uuid
-  uuid='';
+  uuid: string | undefined ='';
 
   // 用户名
-  username='';
+  username: string | undefined ='';
 
   // 密码
-  password='';
+  password: string | undefined ='';
 
   // 邮箱
-  email='';
+  email: string | undefined ='';
 
   // 手机号
-  phone='';
+  phone: string | undefined ='';
 
   // 昵称
-  nickname='';
+  nickname: string | undefined ='';
 
   // qq登录后，系统获取腾讯的open_id
-  qqOpenId='';
+  qqOpenId: string | undefined ='';
 
   // 备注
-  remark='';
+  remark: string | undefined ='';
 
   // 有效时间
   validTime: Date|null = null;
 
   // 是否被删除
-  isDelete=false;
+  isDelete: boolean | undefined =false;
 
   // 账号是否是你的 空字符串、MY_SELF、NOT_MY_SELF
-  accountRadio='';
+  accountRadio: string | undefined ='';
 
   // 验证码
-  code='';
+  code: string | undefined ='';
 
-  constructor(phone: string, username: string, password: string, email: string) {
+  constructor(phone?: string, username?: string, password?: string, email?: string) {
     this.phone = phone;
     this.username = username;
     this.password = password;

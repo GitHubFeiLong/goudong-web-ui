@@ -413,6 +413,8 @@ export default defineComponent({
               console.log(response);
               // 触发父组件的方法，将用户名回传
               context.emit('hindenUserInfo', username.value);
+              // 修改用户名和密码
+              RegisterStore.commit('changeUsernamePassword', user);
             }).finally(() => {
               (nextStepRef.value as HTMLElement).removeAttribute('disabled');
             });
