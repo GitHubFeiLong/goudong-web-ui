@@ -21,10 +21,10 @@
             <a href="/login.html">你好，请登录</a>&nbsp;
             <a href="/register.html">免费注册</a>
           </li>
-          <li class="li1 li1-username"
+          <li v-else class="li1 li1-username"
               @mouseenter="showDetail.showUserBoxCard=true"
               @mouseleave="showDetail.showUserBoxCard=false"
-              v-else>
+          >
             <div class="header">
               <a class="username" href="/login.html">{{user.username}}</a>
               <span class="user-icon"></span>
@@ -32,7 +32,7 @@
             </div>
             <el-card class="username-box-card" v-show="showDetail.showUserBoxCard">
               <div class="top">
-
+                <img src="@/assets/imgs/default_head_portrait.jpg" alt="头像" class="head-portrait"/>
               </div>
               <div class="bottom">
 
@@ -366,6 +366,11 @@ export default defineComponent({
                 width: 255px;
                 height: 64px;
                 padding: 10px 0 10px 15px;
+                .head-portrait{
+                  width: 60px;
+                  height: 60px;
+                  border-radius: 50%;
+                }
               }
               .bottom{
 
