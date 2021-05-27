@@ -140,6 +140,7 @@ export default defineComponent({
         if (result.code !== '1') {
           hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
         } else {
+          // 跳转登录
           window.location.href = '/index.html';
         }
       });

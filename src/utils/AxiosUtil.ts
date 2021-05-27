@@ -3,8 +3,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage } from 'element-plus';
 
 import Result from '@/pojo/Result';
-import { AUTHORIZATION } from '@/pojo/ProjectConst';
+import { AUTHORIZATION, USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
+import AuthorityUser from "@/pojo/AuthorityUser";
 
 /**
  * 初始化 axios
@@ -79,6 +80,12 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   if (response.headers[AUTHORIZATION.toLowerCase()]) {
     LocalStorageUtil.set(AUTHORIZATION, response.headers[AUTHORIZATION.toLowerCase()]);
   }
+
+  // 登录接口，保存用户信息
+  if (response.config.url?.startsWith('/api/oauth2/user/login')) {
+    LocalStorageUtil.set(USER_LOCAL_STORAGE, response.data.data);
+  }
+
   return response;
 }, (error) => {
   console.log(error);

@@ -35,7 +35,7 @@ export default defineComponent({
       const password: string = (user as AuthorityUser).password as string;
       // 登录
       loginApi(username, password).then((response) => {
-        const result: Result<object> = response.data;
+        const result: Result<AuthorityUser> = response.data;
 
         if (result.code === '1') {
           window.location.href = '/index.html';
