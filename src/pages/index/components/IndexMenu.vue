@@ -30,12 +30,28 @@
               <span class="user-icon"></span>
               <span class="iconfont icon-xia"></span>
             </div>
-            <el-card class="username-box-card" v-show="showDetail.showUserBoxCard">
+            <el-card class="username-box-card" v-if="showDetail.showUserBoxCard">
               <div class="top">
-                <img src="@/assets/imgs/default_head_portrait.jpg" alt="头像" class="head-portrait"/>
+                <a href="#"><img src="@/assets/imgs/default_head_portrait.jpg" alt="头像" class="head-portrait"/></a>
+                <a href="#" class="user-icon"></a>
+                <a href="#" class="describe">开通PLUS平均省1210元/年></a>
+                <a href="#" class="exit">退出</a>
               </div>
               <div class="bottom">
-
+                <el-carousel
+                  :interval="4000"
+                  height="88px"
+                  indicator-position="none"
+                  autoplay="false"
+                  loop=false
+                >
+                  <el-carousel-item v-for="item in privilegeArr" :key="item">
+                    <a href="#" class="item" v-for="a in item" :key="a">
+                      <div class="img" :style="{ backgroundPosition: a.position }"></div>
+                      <span class="describe">{{a.describe}}</span>
+                    </a>
+                  </el-carousel-item>
+                </el-carousel>
               </div>
             </el-card>
           </li>
@@ -74,7 +90,9 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, onMounted, ref, reactive } from 'vue';
+import {
+  defineComponent, onMounted, ref, reactive,
+} from 'vue';
 import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
@@ -147,6 +165,29 @@ export default defineComponent({
       });
     };
 
+    // 特权数组
+    const privilegeArr = [
+      [
+        { position: '-176px -59px', describe: '免费试用' },
+        { position: '0 -59px', describe: '运费单免' },
+        { position: '0 -118px', describe: '生日特权' },
+      ],
+      [
+        { position: '0 -118px', describe: '生日特权' },
+        { position: '-176px 0px', describe: '闪电退款' },
+        { position: '-176px -118px', describe: '上门换新' },
+      ],
+      [
+        { position: '-176px -118px', describe: '上门换新' },
+        { position: '-59px -177px', describe: '京享值礼包' },
+        { position: '-176px -177px', describe: '贵宾专线' },
+      ],
+      [
+        { position: '-176px -177px', describe: '贵宾专线' },
+        { position: '-117px -58px', describe: '运费双免' },
+      ],
+    ];
+
     onMounted(() => {
       city.value = '重庆';
       user.value = LocalStorageUtil.get(USER_LOCAL_STORAGE) as AuthorityUser;
@@ -158,6 +199,7 @@ export default defineComponent({
       showDetail,
       checkedCity,
       user,
+      privilegeArr,
     };
   },
 });
@@ -297,11 +339,6 @@ export default defineComponent({
             line-height: 30px;
             padding: 0 2px;
             position: relative;
-            /*div {
-              float: left;
-              padding: 0 8px;
-            }*/
-
             .icon-xia {
               font-size: 6px;
             }
@@ -327,10 +364,17 @@ export default defineComponent({
 
           .li1-username{
             width: 130px;
+            a:nth-child(2){
+              color: @a-link-color-01;
+              &:hover{
+                color: @a-hover-color-01;
+              }
+            }
             .header{
               position: relative;
               display: inline-block;
               width: 100%;
+              padding:0 5px;
               .username{
                 width: 60px;
                 height: 28px;
@@ -350,10 +394,11 @@ export default defineComponent({
                 top: 0;
                 bottom: 0;
                 margin: auto;
+                margin-left: -5px;
               }
               .icon-xia{
                 position: absolute;
-                right: 10px;
+                right: 15px;
               }
             }
             .username-box-card {
@@ -366,14 +411,68 @@ export default defineComponent({
                 width: 255px;
                 height: 64px;
                 padding: 10px 0 10px 15px;
+                position: relative;
                 .head-portrait{
                   width: 60px;
                   height: 60px;
                   border-radius: 50%;
                 }
+                .user-icon{
+                  background-image: url(/img/vip-all.png);
+                  width: 55px;
+                  height: 16px;
+                  background-position: 0px -42px;
+                  position: absolute;
+                  margin-top: 10px;
+                  margin-left: 10px;
+                }
+                .describe{
+                  position: absolute;
+                  bottom: 17px;
+                  margin-left: 10px;
+                }
+                .exit{
+                  position: absolute;
+                  right: 12px;
+                }
               }
               .bottom{
-
+                padding-top: 10px;
+                border-top: 1px solid #d8d8d8;
+                height: 88px;
+                .el-carousel__item {
+                  width: 210px;
+                  position: absolute;
+                  left: 0;
+                  right: 0;
+                  margin: 0 auto;
+                  .item{
+                    width: 70px;
+                    height: 80px;
+                    position: relative;
+                    .img{
+                      width: 55px;
+                      height: 55px;
+                      display: block;
+                      background-image: url('~@/assets/imgs/privilege-all.png');
+                      position: absolute;
+                      margin: 0 auto;
+                      left: 0;
+                      right: 0;
+                    }
+                    .describe{
+                      position: absolute;
+                      bottom: 0;
+                      margin: 0 auto;
+                      left: 0;
+                      right: 0;
+                      text-align: center;
+                    }
+                  }
+                  &:nth-child(1){
+                    margin-left: 30px;
+                  }
+                }
               }
             }
             &:hover{
