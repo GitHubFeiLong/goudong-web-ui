@@ -13,7 +13,17 @@
             </ul>
           </div>
           <div class="body">
-            
+            <div v-for="d in a.detailTypes" :key="d">
+              <div class="title">
+                <a href="#">{{d.name}}</a>
+                <span class="iconfont icon-arrow-right"></span>
+              </div>
+              <ul class="body-ul">
+                <li class="body-li" v-for="e in d.detailTypes" :key="e">
+                  <a class="body-a" href="#">{{e.name}}</a>
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="right"></div>
         </div>
@@ -31,7 +41,7 @@ export default defineComponent({
   setup() {
     const outTypes = [new Type('1', '家用电器'), new Type('2', '手机'), new Type('3', '数码')];
     const inTypes = [new Type('1', '玩3C'), new Type('2', '手机频道'), new Type('3', '网上营业厅'), new Type('3', '智能数码'), new Type('3', '配件频道'), new Type('3', '影像Club')];
-    const detailTypes = [new Type('1', '手机频道', [new Type('1', '玩3C'), new Type('1', '玩3C'),new Type('1', '玩3C'),new Type('1', '玩3C')])];
+    const detailTypes = [new Type('1', '电视', [new Type('1', '玩3C'), new Type('1', '玩3C'),new Type('1', '玩3C'),new Type('1', '玩3C')])];
 
     const indexMainType = new IndexMainType(outTypes, inTypes, detailTypes);
 
@@ -93,7 +103,6 @@ export default defineComponent({
           background-color: #fff;
           box-shadow: 2px 0 5px rgba(0, 0, 0, .3);
           .top{
-            position: absolute;
             padding-left: 20px;
             width: 780px;
             height: 24px;
@@ -117,6 +126,34 @@ export default defineComponent({
                   color: #fff;
                   float: right;
                   margin-top: 2px;
+                }
+              }
+            }
+          }
+          .body{
+            width: 780px;
+            padding: 10px 0 10px 20px;
+            font-size: 12px;
+            .title{
+              display: inline-block;
+              width: 70px;
+              color: #333;
+              font-weight: 700;
+              text-align: right;
+              .icon-arrow-right{
+                float: right;
+              }
+              &:hover{
+                a,.icon-arrow-right{
+                  color: @a-hover-color-01;
+                }
+              }
+            }
+            .body-ul{
+              .body-li{
+                padding: 0 10px;
+                .body-a{
+
                 }
               }
             }
