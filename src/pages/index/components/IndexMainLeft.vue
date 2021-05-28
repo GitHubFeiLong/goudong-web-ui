@@ -13,7 +13,7 @@
             </ul>
           </div>
           <div class="body">
-            <div v-for="d in a.detailTypes" :key="d">
+            <div class="body-item" v-for="d in a.detailTypes" :key="d">
               <div class="title">
                 <a href="#">{{d.name}}</a>
                 <span class="iconfont icon-arrow-right"></span>
@@ -25,7 +25,14 @@
               </ul>
             </div>
           </div>
-          <div class="right"></div>
+          <div class="right">
+            <div class="right-top">
+              <img v-for="f in a.littleBrand" :key="f" :src="f.name" />
+            </div>
+            <div class="right-bottom">
+              <img v-for="g in a.bigBrand" :key="g" :src="g.name" />
+            </div>
+          </div>
         </div>
       </li>
     </ul>
@@ -41,9 +48,12 @@ export default defineComponent({
   setup() {
     const outTypes = [new Type('1', '家用电器'), new Type('2', '手机'), new Type('3', '数码')];
     const inTypes = [new Type('1', '玩3C'), new Type('2', '手机频道'), new Type('3', '网上营业厅'), new Type('3', '智能数码'), new Type('3', '配件频道'), new Type('3', '影像Club')];
-    const detailTypes = [new Type('1', '电视', [new Type('1', '玩3C'), new Type('1', '玩3C'),new Type('1', '玩3C'),new Type('1', '玩3C')])];
+    const detailTypes = Array(2).fill(new Type('1', '电视', Array(30).fill(new Type('1', '玩3C'))));
+    // eslint-disable-next-line import/no-unresolved
+    const littleBrand = Array(8).fill(new Type('1', require('@/assets/imgs/little-brand1.jpg'), []));
+    const bigBrand = Array(2).fill(new Type('1', require('@/assets/imgs/big-brand1.jpg'), []));
 
-    const indexMainType = new IndexMainType(outTypes, inTypes, detailTypes);
+    const indexMainType = new IndexMainType(outTypes, inTypes, detailTypes, littleBrand, bigBrand);
 
     const arr = Array(15).fill(indexMainType);
     onMounted(() => {
@@ -106,6 +116,7 @@ export default defineComponent({
             padding-left: 20px;
             width: 780px;
             height: 24px;
+            position: absolute;
             .top-ul{
               .top-li{
                 height: 24px;
@@ -134,27 +145,67 @@ export default defineComponent({
             width: 780px;
             padding: 10px 0 10px 20px;
             font-size: 12px;
-            .title{
-              display: inline-block;
-              width: 70px;
-              color: #333;
-              font-weight: 700;
-              text-align: right;
-              .icon-arrow-right{
-                float: right;
+            top: 50px;
+            position: absolute;
+            .body-item{
+              margin-bottom: 5px;
+              .title{
+                display: inline-block;
+                width: 70px;
+                color: #333;
+                font-weight: 700;
+                text-align: right;
+                float: left;
+                .icon-arrow-right{
+                  float: right;
+                }
+                &:hover{
+                  a,.icon-arrow-right{
+                    color: @a-hover-color-01;
+                  }
+                }
               }
-              &:hover{
-                a,.icon-arrow-right{
-                  color: @a-hover-color-01;
+              .body-ul{
+                height: 25px;
+                width: 700px;
+                .body-li{
+                  padding: 0 7px;
+                  height: 25px;
+                  line-height: 25px;
+                  .body-a{
+
+                  }
                 }
               }
             }
-            .body-ul{
-              .body-li{
-                padding: 0 10px;
-                .body-a{
-
-                }
+          }
+          .right{
+            width: 168px;
+            height: 424px;
+            position: absolute;
+            right: 0;
+            padding: 0 15px;
+            .right-top{
+              display: flex;
+              flex-wrap: wrap;
+              margin-bottom: 10px;
+              img{
+                width: 83px;
+                height: 35px;
+                margin-left: 1px;
+                margin-bottom: 1px;
+              }
+            }
+            .right-bottom{
+              width: 168px;
+              height: 424px;
+              display: flex;
+              justify-content: flex-start;
+              flex-direction: column;
+              img{
+                width: 168px;
+                height: 134px;
+                margin-bottom: 1px;
               }
             }
           }

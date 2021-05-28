@@ -17,10 +17,23 @@ export default class IndexMainType {
      */
     detailTypes: Array<Type> = [];
 
-    constructor(outTypes: Array<Type>, inTypes: Array<Type>, detailTypes: Array<Type>) {
+  /**
+   * 品牌 小图片
+   */
+  littleBrand: Array<Type> = [];
+
+  /**
+   * 品牌大图片
+   */
+  bigBrand: Array<Type> = [];
+
+
+    constructor(outTypes: Array<Type>, inTypes: Array<Type>, detailTypes: Array<Type>, littleBrand: Array<Type>, bigBrand: Array<Type>) {
         this.outTypes = outTypes;
         this.inTypes = inTypes;
         this.detailTypes = detailTypes;
+        this.littleBrand = littleBrand;
+        this.bigBrand = bigBrand;
     }
 }
 

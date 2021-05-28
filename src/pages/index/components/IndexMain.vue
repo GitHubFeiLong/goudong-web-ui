@@ -31,6 +31,8 @@ export default defineComponent({
     padding-top: 10px;
     background-color: #f4f4f4;
     background-image: url('~@/assets/imgs/index-main1.png');
+    background-repeat: no-repeat;
+    background-position: top;
     .main{
       position: absolute;
       left: 0;

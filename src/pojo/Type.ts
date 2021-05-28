@@ -1,9 +1,9 @@
 export default class Type {
   uuid: string | undefined = '';
-  name: string | undefined = '';
+  name: any = '';
   detailTypes: Array<Type> | undefined = [];
 
-  constructor(uuid?: string, name?: string, detailTypes?: Array<Type>) {
+  constructor(uuid?: string, name?: any, detailTypes?: Array<Type>) {
     this.uuid = uuid;
     this.name = name;
     this.detailTypes = detailTypes;
