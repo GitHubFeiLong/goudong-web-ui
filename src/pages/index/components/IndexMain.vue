@@ -40,6 +40,7 @@ export default defineComponent({
       margin: 0 auto;
       width: @index-main-width;
       display: flex;
+      z-index: 10;
     }
   }
 </style>

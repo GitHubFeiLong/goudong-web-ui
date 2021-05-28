@@ -3,37 +3,43 @@
     <ul class="out-ul">
       <li class="out-li" v-for="a in arr" :key="a">
         <a class="out-a" href="#" v-for="b in a.outTypes" :key="b">{{b.name}}</a>
-        <div class="detail">
-          <div class="top">
-            <ul class="top-ul">
-              <li class="top-li" v-for="c in a.inTypes" :key="c">
-                <a href="#" class="top-a">{{c.name}}</a>
-                <span class="iconfont icon-arrow-right"></span>
-              </li>
-            </ul>
-          </div>
-          <div class="body">
-            <div class="body-item" v-for="d in a.detailTypes" :key="d">
-              <div class="title">
-                <a href="#">{{d.name}}</a>
-                <span class="iconfont icon-arrow-right"></span>
-              </div>
-              <ul class="body-ul">
-                <li class="body-li" v-for="e in d.detailTypes" :key="e">
-                  <a class="body-a" href="#">{{e.name}}</a>
+        <el-affix target=".container" :offset="0">
+          <div class="detail">
+            <div class="top">
+              <ul class="top-ul">
+                <li class="top-li" v-for="c in a.inTypes" :key="c">
+                  <a href="#" class="top-a">{{c.name}}</a>
+                  <span class="iconfont icon-arrow-right"></span>
                 </li>
               </ul>
             </div>
-          </div>
-          <div class="right">
-            <div class="right-top">
-              <img v-for="f in a.littleBrand" :key="f" :src="f.name" />
+            <div class="body">
+              <div class="body-item" v-for="d in a.detailTypes" :key="d">
+                <div class="title">
+                  <a href="#">{{d.name}}</a>
+                  <span class="iconfont icon-arrow-right"></span>
+                </div>
+                <ul class="body-ul">
+                  <li class="body-li" v-for="e in d.detailTypes" :key="e">
+                    <a class="body-a" href="#">{{e.name}}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div class="right-bottom">
-              <img v-for="g in a.bigBrand" :key="g" :src="g.name" />
+            <div class="right">
+              <div class="right-top">
+                <a href="#" v-for="f in a.littleBrand" :key="f" >
+                  <img :src="f.name" />
+                </a>
+              </div>
+              <div class="right-bottom">
+                <a href="#" v-for="g in a.bigBrand" :key="g">
+                  <img :src="g.name" />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+        </el-affix>
       </li>
     </ul>
   </div>
@@ -71,7 +77,9 @@ export default defineComponent({
     height: 470px;
     background-color: #fff;
     position: relative;
+    z-index:10;
     .out-ul{
+      z-index:10;
       &:first-child{
         margin-top: 10px;
       }
@@ -81,6 +89,7 @@ export default defineComponent({
         padding-left: 18px;
         line-height: 25px;
         position: unset;
+        z-index:10;
         &:hover{
           background-color: #d9d9d9;
           .detail{
@@ -102,16 +111,17 @@ export default defineComponent({
         }
         .detail{
           width: 998px;
-          height: 454px;
+          height: 438px;
           position: absolute;
           left: 190px;
-          top: 0;
+          top: -10px;
           padding: 20px 0 10px;
           display: none;
           border: 1px solid #f7f7f7;
-          min-height: 468px;
+          min-height: 438px;
           background-color: #fff;
           box-shadow: 2px 0 5px rgba(0, 0, 0, .3);
+          z-index:10;
           .top{
             padding-left: 20px;
             width: 780px;
@@ -189,11 +199,15 @@ export default defineComponent({
               display: flex;
               flex-wrap: wrap;
               margin-bottom: 10px;
-              img{
-                width: 83px;
+              a{
                 height: 35px;
-                margin-left: 1px;
                 margin-bottom: 1px;
+                img{
+                  width: 83px;
+                  height: 35px;
+                  margin-left: 1px;
+                  margin-bottom: 1px;
+                }
               }
             }
             .right-bottom{
@@ -202,10 +216,14 @@ export default defineComponent({
               display: flex;
               justify-content: flex-start;
               flex-direction: column;
-              img{
-                width: 168px;
+              a{
                 height: 134px;
                 margin-bottom: 1px;
+                img{
+                  width: 168px;
+                  height: 134px;
+                  margin-bottom: 1px;
+                }
               }
             }
           }

@@ -84,6 +84,7 @@ export default defineComponent({
     height: 470px;
     margin-left: 10px;
     position: relative;
+    z-index:5;
     .left{
       width: 590px;
       height: 470px;
@@ -95,7 +96,6 @@ export default defineComponent({
       margin-left: 10px;
       position: absolute;
       right: 0;
-      border: 1px solid;
       .el-carousel__item{
         display: flex;
         flex-direction: column;
