@@ -39,6 +39,7 @@ export default defineComponent({
       right: 0;
       margin: 0 auto;
       width: @index-main-width;
+      display: flex;
     }
   }
 </style>
