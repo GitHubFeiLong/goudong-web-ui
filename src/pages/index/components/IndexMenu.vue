@@ -242,7 +242,7 @@ export default defineComponent({
     color: @a-link-color-01;
     display: flex;
     justify-content: center;
-
+    z-index: 20;
     #menu-main {
       width: @regist-main-width;
       height: 30px;
@@ -250,11 +250,12 @@ export default defineComponent({
       font: 12px/150% tahoma, arial, Microsoft YaHei, Hiragino Sans GB, "\u5b8b\u4f53", sans-serif;
       -webkit-font-smoothing: antialiased;
       position: relative;
-
+      z-index: 20;
       #location {
         height: 30px;
         width: 70px;
-
+        margin-left: 10px;
+        z-index: 20;
         .header {
           width: 100%;
           height: 100%;
@@ -288,7 +289,7 @@ export default defineComponent({
           width: 300px;
           padding: 10px;
           color: @a-link-color-01;
-
+          z-index: 20;
           .city-item {
             height: 24px;
             width: 60px;

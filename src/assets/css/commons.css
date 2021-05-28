@@ -18,6 +18,9 @@ a{
     text-decoration: none;
     color: #333;
 }
+a:hover{
+ color:#f30213 !important;
+}
 /*去除浏览器对input添加的边框*/
 input:focus{
     outline:none;
@@ -44,4 +47,20 @@ button[disabled]{
 }
 .disabled{
     cursor: not-allowed;
+}
+
+/*ul li*/
+ul{
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+ul > li {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 2px;
+    position: relative;
 }
