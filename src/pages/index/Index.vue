@@ -21,12 +21,7 @@ export default defineComponent({
     IndexMain,
   },
   setup() {
-    onMounted(() => {
-
-    });
-    return {
-
-    };
+    return { };
   },
 });
 </script>

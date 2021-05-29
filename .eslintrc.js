@@ -25,7 +25,7 @@ module.exports = {
     'max-len' : ["error", {code : 300}], // 解决一行默认100个字符错误
     "global-require": 0, //  Unexpected require() (global-require)
     '@typescript-eslint/no-var-requires': 0, // Require statement not part of import statement (@typescript-eslint/no-var-requires)
-    "no-multiple-empty-lines": [3, {"max": 2}],//空行最多不能超过2行
+    "no-multiple-empty-lines": [1, {"max": 2}],//空行最多不能超过2行
     "no-unused-vars":"off", // 定义了不使用 不警告
     "@typescript-eslint/no-unused-vars": ["off"],
     "@typescript-eslint/ban-ts-ignore": "off",
@@ -40,6 +40,7 @@ module.exports = {
           "config", // axios 的配置修改，添加请求头
           "data",
           "state",
+          "pageParamObj",
         ]
       }
     ],

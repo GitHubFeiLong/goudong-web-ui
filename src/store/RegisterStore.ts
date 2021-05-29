@@ -1,11 +1,11 @@
-import {createStore} from 'vuex';
-import AuthorityUser from "@/pojo/AuthorityUser";
+import { createStore } from 'vuex';
+import AuthorityUser from '@/pojo/AuthorityUser';
 
 export default createStore({
   state() {
-    const accountRadio: string = "";
+    const accountRadio = '';
     const user: AuthorityUser = new AuthorityUser();
-    const password: string = "";
+    const password = '';
     return {
       accountRadio,
       user,
@@ -27,7 +27,7 @@ export default createStore({
      * @param value
      */
     changeUsernamePassword(state: any, user: AuthorityUser) {
-      console.log("changeUsernamePassword", user)
+      console.log('changeUsernamePassword', user);
       state.user = user;
     },
   },

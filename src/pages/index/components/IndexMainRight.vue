@@ -54,18 +54,42 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   setup() {
     const arr = [
-      {name: '话费', iconfont: 'icon-huafei', link: '#', color: '#5aaae5',},
-      { name: '机票', iconfont: 'icon-feijichang', link: '#', color: '#f2a53b'},
-      { name: '酒店', iconfont: 'icon-jiudian', link: '#', color: '#41d7c7' },
-      { name: '游戏', iconfont: 'icon-94', link: '#', color: '#f2a336' },
-      { name: '加油卡', iconfont: 'icon-jiayouqia', link: '#', color: '#41d7c7' },
-      { name: '火车票', iconfont: 'icon-huoche', link: '#', color: '#eb665d' },
-      { name: '众筹', iconfont: 'icon-zhongchou', link: '#', color: '#41d7c7' },
-      { name: '理财', iconfont: 'icon-licai', link: '#', color: '#5aaae5' },
-      { name: '白条', iconfont: 'icon-baitiao', link: '#', color: '#eb665d' },
-      { name: '电影票', iconfont: 'icon-dianying', link: '#', color: '#eb665d' },
-      { name: '企业购', iconfont: 'icon-company', link: '#', color: '#5aaae5' },
-      { name: '礼品卡', iconfont: 'icon-lipinqia', link: '#', color: '#f2a53b' },
+      {
+        name: '话费', iconfont: 'icon-huafei', link: '#', color: '#5aaae5',
+      },
+      {
+        name: '机票', iconfont: 'icon-feijichang', link: '#', color: '#f2a53b',
+      },
+      {
+        name: '酒店', iconfont: 'icon-jiudian', link: '#', color: '#41d7c7',
+      },
+      {
+        name: '游戏', iconfont: 'icon-94', link: '#', color: '#f2a336',
+      },
+      {
+        name: '加油卡', iconfont: 'icon-jiayouqia', link: '#', color: '#41d7c7',
+      },
+      {
+        name: '火车票', iconfont: 'icon-huoche', link: '#', color: '#eb665d',
+      },
+      {
+        name: '众筹', iconfont: 'icon-zhongchou', link: '#', color: '#41d7c7',
+      },
+      {
+        name: '理财', iconfont: 'icon-licai', link: '#', color: '#5aaae5',
+      },
+      {
+        name: '白条', iconfont: 'icon-baitiao', link: '#', color: '#eb665d',
+      },
+      {
+        name: '电影票', iconfont: 'icon-dianying', link: '#', color: '#eb665d',
+      },
+      {
+        name: '企业购', iconfont: 'icon-company', link: '#', color: '#5aaae5',
+      },
+      {
+        name: '礼品卡', iconfont: 'icon-lipinqia', link: '#', color: '#f2a53b',
+      },
     ];
     return {
       arr,

@@ -22,7 +22,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Type from "@/pojo/Type";
+import Type from '@/pojo/Type';
 
 export default defineComponent({
   setup() {

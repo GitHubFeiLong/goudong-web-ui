@@ -1,6 +1,8 @@
 export default class Type {
   uuid: string | undefined = '';
+
   name: any = '';
+
   detailTypes: Array<Type> | undefined = [];
 
   constructor(uuid?: string, name?: any, detailTypes?: Array<Type>) {

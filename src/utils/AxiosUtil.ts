@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus';
 import Result from '@/pojo/Result';
 import { AUTHORIZATION, USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
-import AuthorityUser from "@/pojo/AuthorityUser";
+import AuthorityUser from '@/pojo/AuthorityUser';
 
 /**
  * 初始化 axios
