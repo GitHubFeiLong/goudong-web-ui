@@ -33,6 +33,8 @@ export default defineComponent({
     background-image: url('~@/assets/imgs/index-main1.png');
     background-repeat: no-repeat;
     background-position: top;
+    background-position-y: 10px;
+    margin-bottom: 20px;
     .main{
       position: absolute;
       left: 0;

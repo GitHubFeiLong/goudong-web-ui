@@ -3,43 +3,41 @@
     <ul class="out-ul">
       <li class="out-li" v-for="a in arr" :key="a">
         <a class="out-a" href="#" v-for="b in a.outTypes" :key="b">{{b.name}}</a>
-        <el-affix target=".container" :offset="0">
-          <div class="detail">
-            <div class="top">
-              <ul class="top-ul">
-                <li class="top-li" v-for="c in a.inTypes" :key="c">
-                  <a href="#" class="top-a">{{c.name}}</a>
-                  <span class="iconfont icon-arrow-right"></span>
+        <div class="detail">
+          <div class="top">
+            <ul class="top-ul">
+              <li class="top-li" v-for="c in a.inTypes" :key="c">
+                <a href="#" class="top-a">{{c.name}}</a>
+                <span class="iconfont icon-arrow-right"></span>
+              </li>
+            </ul>
+          </div>
+          <div class="body">
+            <div class="body-item" v-for="d in a.detailTypes" :key="d">
+              <div class="title">
+                <a href="#">{{d.name}}</a>
+                <span class="iconfont icon-arrow-right"></span>
+              </div>
+              <ul class="body-ul">
+                <li class="body-li" v-for="e in d.detailTypes" :key="e">
+                  <a class="body-a" href="#">{{e.name}}</a>
                 </li>
               </ul>
             </div>
-            <div class="body">
-              <div class="body-item" v-for="d in a.detailTypes" :key="d">
-                <div class="title">
-                  <a href="#">{{d.name}}</a>
-                  <span class="iconfont icon-arrow-right"></span>
-                </div>
-                <ul class="body-ul">
-                  <li class="body-li" v-for="e in d.detailTypes" :key="e">
-                    <a class="body-a" href="#">{{e.name}}</a>
-                  </li>
-                </ul>
-              </div>
+          </div>
+          <div class="right">
+            <div class="right-top">
+              <a href="#" v-for="f in a.littleBrand" :key="f" >
+                <img :src="f.name" />
+              </a>
             </div>
-            <div class="right">
-              <div class="right-top">
-                <a href="#" v-for="f in a.littleBrand" :key="f" >
-                  <img :src="f.name" />
-                </a>
-              </div>
-              <div class="right-bottom">
-                <a href="#" v-for="g in a.bigBrand" :key="g">
-                  <img :src="g.name" />
-                </a>
-              </div>
+            <div class="right-bottom">
+              <a href="#" v-for="g in a.bigBrand" :key="g">
+                <img :src="g.name" />
+              </a>
             </div>
           </div>
-        </el-affix>
+        </div>
       </li>
     </ul>
   </div>
