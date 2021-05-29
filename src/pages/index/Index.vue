@@ -3,6 +3,7 @@
   <IndexMenu/>
   <IndexSearch/>
   <IndexMain/>
+  <IndexSecKill/>
   <div style="width: 100%; height: 1000px"></div>
 </template>
 
@@ -12,6 +13,7 @@ import IndexActivity from './components/IndexActivity.vue';
 import IndexMenu from './components/IndexMenu.vue';
 import IndexSearch from './components/IndexSearch.vue';
 import IndexMain from './components/IndexMain.vue';
+import IndexSecKill from './components/IndexSecKill.vue';
 
 export default defineComponent({
   components: {
@@ -19,6 +21,7 @@ export default defineComponent({
     IndexMenu,
     IndexSearch,
     IndexMain,
+    IndexSecKill,
   },
   setup() {
     return { };
@@ -27,5 +30,7 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-
+  html{
+    background-color: @index-background-color;
+  }
 </style>
