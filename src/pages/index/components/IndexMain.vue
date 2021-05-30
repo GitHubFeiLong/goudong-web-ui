@@ -1,3 +1,4 @@
+<!--首页主要分类和走马灯-->
 <template>
   <div class="container">
     <div class="main">

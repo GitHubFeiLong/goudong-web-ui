@@ -4,6 +4,7 @@
   <IndexSearch/>
   <IndexMain/>
   <IndexSecKill/>
+  <IndexActivityFloor/>
   <div style="width: 100%; height: 1000px"></div>
 </template>
 
@@ -14,6 +15,7 @@ import IndexMenu from './components/IndexMenu.vue';
 import IndexSearch from './components/IndexSearch.vue';
 import IndexMain from './components/IndexMain.vue';
 import IndexSecKill from './components/IndexSecKill.vue';
+import IndexActivityFloor from './components/IndexActivityFloor.vue';
 
 export default defineComponent({
   components: {
@@ -22,6 +24,7 @@ export default defineComponent({
     IndexSearch,
     IndexMain,
     IndexSecKill,
+    IndexActivityFloor,
   },
   setup() {
     return { };

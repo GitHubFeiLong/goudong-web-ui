@@ -1,3 +1,4 @@
+<!--main 左边的分类-->
 <template>
   <div class="left-container">
     <ul class="out-ul">

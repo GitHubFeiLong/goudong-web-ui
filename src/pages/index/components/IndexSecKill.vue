@@ -1,3 +1,4 @@
+<!--秒杀栏-->
 <template>
   <div class="sec-kill-container">
     <div class="sec-kill-main">

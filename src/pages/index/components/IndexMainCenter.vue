@@ -1,3 +1,4 @@
+<!--中间的走马灯-->
 <template>
   <div class="main-container">
     <div class="left">
