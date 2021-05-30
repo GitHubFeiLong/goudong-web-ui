@@ -35,6 +35,9 @@ export default class AuthorityUser {
   // 验证码
   code: string | undefined ='';
 
+  // 头像
+  headPortrait: string | undefined = undefined;
+
   constructor(phone?: string, username?: string, password?: string, email?: string) {
     this.phone = phone;
     this.username = username;

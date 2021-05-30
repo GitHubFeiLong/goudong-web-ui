@@ -189,7 +189,7 @@ export default defineComponent({
           bottom: 0;
           right: 230px;
           .item{
-            top: 0;
+            top: 5px;
             bottom: 0;
             margin: auto 0;
             left: 16px;
