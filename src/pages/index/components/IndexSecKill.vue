@@ -64,7 +64,7 @@ import SecKillCommodity from '@/pojo/SecKillCommodity';
 
 export default defineComponent({
   setup() {
-    /*走马灯*/
+    /* 走马灯 */
     const arr = [
       [
         new SecKillCommodity('', '【二手9成新】苹果8Plus手机 Apple iPhone 8Plus 苹果8P 二手手机 深空灰 64G 全网通', require('@/assets/imgs/sec-kill1.jpg'), 1618.00, 1909.00),
