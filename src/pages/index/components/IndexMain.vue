@@ -28,7 +28,7 @@ export default defineComponent({
 <style lang="less" scoped>
   .container{
     width: 100%;
-    height: 480px;
+    height: 710px;
     padding-top: 10px;
     background-color: #f4f4f4;
     background-image: url('~@/assets/imgs/index-main1.png');

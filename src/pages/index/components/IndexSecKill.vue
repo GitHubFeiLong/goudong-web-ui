@@ -15,7 +15,7 @@
           </p>
         </a>
       </div>
-      <div class="center">
+      <div class="center index-sec-kill-center">
         <el-carousel height="260px">
           <el-carousel-item class="item" v-for="item in arr" :key="item">
             <a class="item-a" href="#" v-for="a in item" :key="a">
@@ -39,6 +39,21 @@
           </p>
         </a>
       </div>
+      <div class="sidebar">
+        <a href="#" class="item">京东秒杀</a>
+        <a href="#" class="item img">
+          <img class="one" src="@/assets/imgs/sidebar1.gif"/>
+          <img class="two" src="@/assets/imgs/sidebar2.jpg"/>
+        </a>
+        <a href="#" class="item">特色优选</a>
+        <a href="#" class="item">频道广场</a>
+        <a href="#" class="item">为你推荐</a>
+        <a href="#" class="item"><span class="iconfont icon-jingdongkefu"></span><br/>客服</a>
+        <a href="#" class="item"><span class="iconfont icon-bianji1"></span><br/>反馈</a>
+        <a href="#" class="item top">
+          <span class="iconfont icon-arrow-up"></span><br/>顶部
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -49,6 +64,7 @@ import SecKillCommodity from '@/pojo/SecKillCommodity';
 
 export default defineComponent({
   setup() {
+    /*走马灯*/
     const arr = [
       [
         new SecKillCommodity('', '【二手9成新】苹果8Plus手机 Apple iPhone 8Plus 苹果8P 二手手机 深空灰 64G 全网通', require('@/assets/imgs/sec-kill1.jpg'), 1618.00, 1909.00),
@@ -81,12 +97,22 @@ export default defineComponent({
         new SecKillCommodity('', '乐高(LEGO)积木 悟空小侠齐天大圣黄金机甲10岁+80012 儿童节礼物 儿童玩具 男孩女孩', require('@/assets/imgs/sec-kill20.jpg'), 999.00, 1399.00),
       ],
     ];
+
     return {
       arr,
     };
   },
 });
 </script>
+<style lang="less">
+  .index-sec-kill-center{
+    .el-carousel__indicators{
+      .el-carousel__indicator--horizontal{
+        display: none;
+      }
+    }
+  }
+</style>
 <style lang="less" scoped>
   .sec-kill-container{
     width: 100%;
@@ -94,11 +120,13 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    margin-top: -230px;
     .sec-kill-main{
       width: @index-main-width;
       height: 260px;
       background-color: #fff;
       display: flex;
+      position: relative;
       .left{
         width: 190px;
         height: 260px;
@@ -297,6 +325,87 @@ export default defineComponent({
           }
 
         }
+      }
+      .sidebar{
+        width: 58px;
+        position: absolute;
+        right: -78px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        box-sizing: content-box;
+        .item{
+          width: 38px;
+          height: 40px;
+          display: block;
+          padding: 10px;
+          font-size: 14px;
+          text-align: center;
+          transition: background .2s ease;
+          position: relative;
+          &:hover{
+            background-color: #c81623;
+            color: #fff !important;
+            &::after{
+              content: "";
+              height: 0;
+            }
+          }
+          &::after{
+            position: absolute;
+            display: inline-block;
+            width: 40px;
+            height: 1px;
+            left: 50%;
+            bottom: 0;
+            margin-left: -20px;
+            background: -webkit-gradient(linear,right top,left top,from(white),color-stop(#eeeeee),color-stop(#eeeeee),to(white));
+            background: linear-gradient(
+              270deg
+              ,white,#eeeeee,#eeeeee,white);
+            z-index: 1;
+            content: "";
+          }
+        }
+
+        .top{
+          color: #e1251b;
+          /*display: none;*/
+          &:hover{
+            color: #fff;
+          }
+          &::after{
+            content: "";
+            height: 0;
+          }
+        }
+        .item[display=block]:last-child::after{
+          height: 0px;
+          content: "";
+        }
+        .img{
+          width: 58px;
+          height: 58px;
+          padding: 0;
+          img{
+            width: 58px;
+            height: 58px;
+          }
+          &:hover{
+            .one{
+              display: none;
+            }
+            .two{
+              display: block;
+            }
+          }
+          .two{
+            display: none;
+          }
+
+        }
+
       }
     }
   }
