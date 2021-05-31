@@ -40,7 +40,7 @@
           </p>
         </a>
       </div>
-      <div class="sidebar">
+      <div :class="sidebarClass">
         <a href="#" class="item">京东秒杀</a>
         <a href="#" class="item img">
           <img class="one" src="@/assets/imgs/sidebar1.gif"/>
@@ -51,7 +51,7 @@
         <a href="#" class="item">为你推荐</a>
         <a href="#" class="item"><span class="iconfont icon-jingdongkefu"></span><br/>客服</a>
         <a href="#" class="item"><span class="iconfont icon-bianji1"></span><br/>反馈</a>
-        <a href="#" class="item top">
+        <a href="javascript:void(0)" @click.prevent="goToTop" class="item top">
           <span class="iconfont icon-arrow-up"></span><br/>顶部
         </a>
       </div>
@@ -59,8 +59,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive, watch, computed } from 'vue';
-import { mapGetters } from 'vuex';
+import { defineComponent, onMounted, ref, reactive, watch, computed, toRaw } from 'vue';
 import IndexStore from '@/store/IndexStore';
 
 import moment from 'moment';
@@ -108,8 +107,8 @@ export default defineComponent({
       minute: '00',
       second: '00',
     });
-    let obj = {};
-
+    // 右侧的侧边栏的class
+    let sidebarClass =  IndexStore.getters.sidebarClass;
     /**
      * 初始化时间
      */
@@ -149,21 +148,45 @@ export default defineComponent({
       }, 1000);
     };
 
+    const ScrollTop = (number = 0, time?: number) => {
+      if (!time) {
+        document.body.scrollTop = document.documentElement.scrollTop = number;
+        return number;
+      }
+      const spacingTime = 20; // 设置循环的间隔时间  值越小消耗性能越高
+      let spacingInex = time / spacingTime; // 计算循环的次数
+      let nowTop = document.body.scrollTop + document.documentElement.scrollTop; // 获取当前滚动条位置
+      let everTop = (number - nowTop) / spacingInex; // 计算每次滑动的距离
+      let scrollTimer = setInterval(() => {
+        if (spacingInex > 0) {
+          spacingInex--;
+          ScrollTop(nowTop += everTop);
+        } else {
+          clearInterval(scrollTimer); // 清除计时器
+        }
+      }, spacingTime);
+    };
+
+    const goToTop = () => {
+      ScrollTop(0, 500);
+    }
+
     onMounted(() => {
       init();
       secKillInterval();
-      obj = IndexStore.getters.sidebarClass;
-      console.log("obj", obj);
     });
-    computed((sidebarClass) => {
-      console.log(1)
-    });
-    watch(IndexStore.getters.sidebarClass, () => {
-      console.log(IndexStore.getters.sidebarClass);
+    // 计算属性
+    const sidebarClassComputed = computed(() => {
+      return IndexStore.getters.sidebarClass;
+    })
+    watch(sidebarClassComputed, (now, old) => {
+      sidebarClass.value = toRaw(sidebarClassComputed.value)
     });
     return {
       arr,
       secKillTime,
+      sidebarClass,
+      goToTop,
     };
   },
 });
@@ -438,7 +461,7 @@ export default defineComponent({
 
         .top{
           color: #e1251b;
-          /*display: none;*/
+          display: none;
           &:hover{
             color: #fff;
           }
@@ -447,7 +470,7 @@ export default defineComponent({
             height: 0;
           }
         }
-        .item[display=block]:last-child::after{
+        .item:nth-child(7)::after{
           height: 0px;
           content: "";
         }
@@ -473,9 +496,16 @@ export default defineComponent({
 
         }
       }
-      .sidebar-fixed {
+      .fixed {
         position: fixed;
         top: 50px;
+        .top{
+          display: unset;
+        }
+        .item:nth-child(7)::after{
+          height: 1px;
+          content: "";
+        }
       }
     }
   }

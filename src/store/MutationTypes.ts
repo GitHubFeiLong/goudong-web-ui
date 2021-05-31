@@ -2,5 +2,7 @@
  * vuex 的Mutation 常量
  */
 
-// 修改侧边栏的class
-export const CHANGE_SIDEBAR_CLASS = "CHANGE_SIDEBAR_CLASS";
+// 修改fixed
+export const CHANGE_FIXED_SCROLL_CLASS = "CHANGE_FIXED_SCROLL_CLASS";
+// 修改absolute
+export const CHANGE_ABSOLUTE_SCROLL_CLASS = "CHANGE_ABSOLUTE_SCROLL_CLASS";
