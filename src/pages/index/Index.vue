@@ -30,7 +30,7 @@ export default defineComponent({
   },
   setup() {
     // 距顶部滚动条
-    let scrollHeight = 770;
+    let scrollHeight = 730;
     const handleScroll = () => {
       // 使用 document.documentElement.scrollTop=0 回到顶部
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
