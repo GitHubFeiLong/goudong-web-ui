@@ -246,7 +246,7 @@ export default defineComponent({
     color: @a-link-color-01;
     display: flex;
     justify-content: center;
-    z-index: 20;
+    z-index: 100;
     #menu-main {
       width: @regist-main-width;
       height: 30px;
@@ -254,7 +254,7 @@ export default defineComponent({
       font: 12px/150% tahoma, arial, Microsoft YaHei, Hiragino Sans GB, "\u5b8b\u4f53", sans-serif;
       -webkit-font-smoothing: antialiased;
       position: relative;
-      z-index: 20;
+      z-index: 100;
       #location {
         height: 30px;
         width: 70px;

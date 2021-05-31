@@ -3,25 +3,9 @@
   <div class="header">
     <div class="main">
       <!--logo-->
-      <a class="logo-a">
+      <a href="#" class="logo-a">
         <img class="logo" src="~@/assets/imgs/logo1.gif" alt="logo"/>
       </a>
-      <!--搜索框-->
-      <div class="search-div">
-        <div class="div-input">
-          <input class="search-input" type="text" :placeholder="randomObj.searchInputPlaceHolder">
-          <span class="iconfont icon-camera"></span>
-          <div class="btn">
-            <span class="iconfont icon-sousuo"></span>
-          </div>
-        </div>
-        <div class="gwc">
-          <el-badge :value="12" class="item">
-            <span class="iconfont icon-gouwuche"></span>
-          </el-badge>
-          <a href="#" class="txt">我的购物车</a>
-        </div>
-      </div>
       <!--小标签-->
       <div class="little-title">
         <ul>
@@ -57,11 +41,30 @@
         <img class="right-img" src="~@/assets/imgs/search-right1.png" alt="活动"/>
       </a>
     </div>
+    <!--搜索框-->
+    <div :class="searchClass">
+      <div class="one-div">
+        <div class="div-input">
+          <input class="search-input" type="text" :placeholder="randomObj.searchInputPlaceHolder">
+          <span class="iconfont icon-camera"></span>
+          <div class="btn">
+            <span class="iconfont icon-sousuo"></span>
+          </div>
+        </div>
+        <div class="gwc">
+          <el-badge :value="12" class="item">
+            <span class="iconfont icon-gouwuche"></span>
+          </el-badge>
+          <a href="#" class="txt">我的购物车</a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue';
+import { defineComponent, reactive, onMounted, watch, computed, toRaw } from 'vue';
+import IndexStore from "@/store/IndexStore";
 
 export default defineComponent({
   setup() {
@@ -82,6 +85,16 @@ export default defineComponent({
       searchInputPlaceHolder: searchInputPlaceHolderRandomArr[0],
       littleTitle: littleTitleRandomArr[0],
     });
+    // 搜索栏class对象
+    let searchClass =  IndexStore.getters.searchClass;
+
+    // 计算属性
+    const searchClassComputed = computed(() => {
+      return IndexStore.getters.sidebarClass;
+    })
+    watch(searchClassComputed, (now, old) => {
+      searchClass.value = toRaw(searchClassComputed.value)
+    });
 
     onMounted(() => {
       // 定时器，随机修改randomObj
@@ -92,6 +105,7 @@ export default defineComponent({
     });
     return {
       randomObj,
+      searchClass,
     };
   },
 });
@@ -117,7 +131,6 @@ export default defineComponent({
     height: 140px;
     position: relative;
     border-bottom: 1px solid #ddd;
-    /*z-index: 10;*/
     .main{
       width: @index-main-width;
       height: 100%;
@@ -143,21 +156,82 @@ export default defineComponent({
           width: 100%;
         }
       }
-      .search-div{
-        width: @index-main-width;
+
+      .little-title{
+        margin-left: 260px;
+        color:#999;
+        font: 12px/1.5 Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
+        margin-top: 60px;
+        ul{
+          li{
+            padding: 0;
+            margin-left: 10px;
+          }
+          li:first-child{
+            margin-left: 0 !important;
+            a{
+              color: @a-hover-color-01 !important;
+            }
+          }
+
+        }
+      }
+      .big-title{
+        width: 746px;
+        height: 40px;
+        line-height: 40px;
+        position: absolute;
+        bottom: 0px;
+        margin-left: 210px;
+        font-size: 15px;
+        margin-left: 210px;
+        ul{
+          li{
+            padding: 0;
+            margin: 0 11px;
+            a{
+              color: #333;
+              transition: color .2s ease;
+            }
+            &:nth-child(1),&:nth-child(2){
+              a{
+                color:@a-hover-color-01;
+              }
+              font-weight: bold;
+            }
+          }
+        }
+      }
+      .right{
+        position: absolute;
+        width: 190px;
+        height: 120px;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        .right-img{
+          width: 100%;
+        }
+      }
+    }
+    .search{
+      position: relative;
+      width: 800px;
+      margin: auto;
+      height: 61px;
+      z-index: 50;
+      .one-div{
         height: 61px;
         position: relative;
-        z-index: 0;
         .div-input{
           width: 546px;
           height: 32px;
-          position: absolute;
-          left: 0;
-          right: 0;
           bottom: 0px;
-          margin-left: 260px;
           border: 2px solid #e2231a;
           position: absolute;
+          left: 50%;
+          margin-left: -335px;
           .search-input{
             left: 0;
             padding: 2px 44px 2px 17px;
@@ -213,8 +287,9 @@ export default defineComponent({
           position: absolute;
           border-color: #eee;
           border: 1px solid #e3e4e5;
+          left: 50%;
+          margin-left: 233px;
           bottom: 0;
-          right: 230px;
           .item{
             top: 5px;
             bottom: 0;
@@ -242,64 +317,24 @@ export default defineComponent({
             border: 1px solid #c81623;
           }
         }
+      }
+    }
+    // 搜索栏 跟随滚动条修改样式
+    .search[class~='fixed']{
+      width: 100%;
+      position: fixed;
+      top: 0;
+      z-index:50;
+      .one-div{
+        height: 52px;
+        border-bottom: 2px solid #f10214;
+        box-shadow: 2px 2px 2px rgb(0 0 0 / 20%);
+        background-color: #fff;
+        .gwc,.div-input {
+          bottom: 6px !important;
+        }
+      }
 
-      }
-      .little-title{
-        margin-left: 260px;
-        color:#999;
-        font: 12px/1.5 Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
-        ul{
-          li{
-            padding: 0;
-            margin-left: 10px;
-          }
-          li:first-child{
-            margin-left: 0 !important;
-            a{
-              color: @a-hover-color-01 !important;
-            }
-          }
-
-        }
-      }
-      .big-title{
-        width: 746px;
-        height: 40px;
-        line-height: 40px;
-        position: absolute;
-        bottom: 0px;
-        margin-left: 210px;
-        font-size: 15px;
-        margin-left: 210px;
-        ul{
-          li{
-            padding: 0;
-            margin: 0 11px;
-            a{
-              color: #333;
-              transition: color .2s ease;
-            }
-            &:nth-child(1),&:nth-child(2){
-              a{
-                color:@a-hover-color-01;
-              }
-              font-weight: bold;
-            }
-          }
-        }
-      }
-      .right{
-        position: absolute;
-        width: 190px;
-        height: 120px;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto 0;
-        .right-img{
-          width: 100%;
-        }
-      }
     }
   }
 </style>

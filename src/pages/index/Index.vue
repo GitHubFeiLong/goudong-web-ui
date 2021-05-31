@@ -37,9 +37,9 @@ export default defineComponent({
       console.log(scrollTop, IndexStore.getters.fixed);
 
       if (scrollTop > scrollHeight && !IndexStore.getters.fixed) {
-        IndexStore.dispatch('changeFixedScrollClass');
+        IndexStore.dispatch('changeOneScrollClass');
       } else if (scrollTop < scrollHeight && IndexStore.getters.fixed) {
-        IndexStore.dispatch('changeAbsoluteScrollClass');
+        IndexStore.dispatch('changeRawScrollClass');
       }
     };
     onMounted(() => {
