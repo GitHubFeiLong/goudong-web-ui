@@ -97,6 +97,8 @@ import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
 import AuthorityUser from '@/pojo/AuthorityUser';
+import IndexStore from '@/store/IndexStore';
+import ForgotPwdStore from "@/store/ForgotPwdStore";
 
 export default defineComponent({
   setup() {
@@ -191,6 +193,8 @@ export default defineComponent({
     onMounted(() => {
       city.value = '重庆';
       user.value = LocalStorageUtil.get(USER_LOCAL_STORAGE) as AuthorityUser;
+
+      IndexStore.commit('initUser', user.value);
       console.log(user.value);
     });
     return {

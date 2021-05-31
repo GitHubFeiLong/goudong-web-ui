@@ -36,7 +36,7 @@ export default class AuthorityUser {
   code: string | undefined ='';
 
   // 头像
-  headPortrait: string | undefined = undefined;
+  headPortrait: any = require('@/assets/imgs/logo2.png');
 
   constructor(phone?: string, username?: string, password?: string, email?: string) {
     this.phone = phone;

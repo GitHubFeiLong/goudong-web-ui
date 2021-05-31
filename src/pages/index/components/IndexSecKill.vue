@@ -111,15 +111,6 @@ export default defineComponent({
      * 初始化时间
      */
     const init = () => {
-      // 当前时间
-      const killTime = moment().hour(12).minute(0).second(0);
-      const killHours = killTime.diff(moment(), 'hours');
-      const killMinutes = killTime.diff(moment(), 'minutes') % 60;
-      const killSeconds = killTime.diff(moment(), 'seconds') % 60;
-      secKillTime.hour = killHours < 10 ? `0${killHours}` : String(killHours);
-      secKillTime.minute = killMinutes < 10 ? `0${killMinutes}` : String(killMinutes);
-      secKillTime.second = killSeconds < 10 ? `0${killSeconds}` : String(killSeconds);
-
       // 当前时
       const nowHour = Number(moment().format('H'));
       let killHour = 0;
@@ -128,6 +119,17 @@ export default defineComponent({
       } else {
         killHour = nowHour === 23 ? 22 : nowHour - 1;
       }
+
+      // 当前时间
+      const killTime = moment().hour(killHour + 2).minute(0).second(0);
+      const killHours = killTime.diff(moment(), 'hours');
+      const killMinutes = killTime.diff(moment(), 'minutes') % 60;
+      const killSeconds = killTime.diff(moment(), 'seconds') % 60;
+      secKillTime.hour = killHours < 10 ? `0${killHours}` : String(killHours);
+      secKillTime.minute = killMinutes < 10 ? `0${killMinutes}` : String(killMinutes);
+      secKillTime.second = killSeconds < 10 ? `0${killSeconds}` : String(killSeconds);
+
+
       secKillTime.stage = killHour < 10 ? `0${killHour}` : String(killHour);
     };
 

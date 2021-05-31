@@ -3,15 +3,21 @@
   <div class="right-container">
     <div class="top">
       <div class="top-user">
-        <a href="#"><img class="head-portrait" src="~@/assets/imgs/logo2.png" alt="log"/></a>
+        <a href="#"><img class="head-portrait" :src="user === null ? require('/src/assets/imgs/logo2.png') : user.headPortrait" raw="~@/assets/imgs/logo2.png" alt="log"/></a>
         <div class="txt">
-          <p><a href="#">Hi~欢迎逛京东！</a></p>
-          <p><a href="#">登录</a> | <a href="#">注册</a></p>
+          <p class="username-p"><a href="/login.html" class="username-a">Hi~{{user === null ? '欢迎逛京东！' : user.username}}</a></p>
+          <p v-if="user === null"><a href="/login.html">登录</a> | <a href="/register.html">注册</a></p>
+          <p class="icon-p" v-else>
+            <a href="#" class="icon icon1"></a>
+            <a href="#" class="icon icon2"></a>
+            <a href="#" class="exit-a">退出</a>
+          </p>
         </div>
       </div>
       <div class="top-btn">
-        <button class="new-people-btn">新人福利</button>
-        <button class="plus-btn">PLUS会员</button>
+        <button v-if="user === null" class="new-people-btn">新人福利</button>
+        <button v-if="user === null" class="plus-btn">PLUS会员</button>
+        <button v-else class="open-plus-btn">开通PLUS 平均省1210元/年</button>
       </div>
     </div>
     <div class="body">
@@ -26,7 +32,7 @@
             <a href="#" class="body-li-a">OA走流程卡到崩溃？换上英特尔轻薄本体验顺滑操作</a>
           </li>
           <li class="body-li">
-            <span class="body-li-span">HOT</span>
+            <span class="body-li-span">热评</span>
             <a href="#" class="body-li-a">OA走流程卡到崩溃？换上英特尔轻薄本体验顺滑操作</a>
           </li>
           <li class="body-li">
@@ -34,7 +40,7 @@
             <a href="#" class="body-li-a">OA走流程卡到崩溃？换上英特尔轻薄本体验顺滑操作</a>
           </li>
           <li class="body-li">
-            <span class="body-li-span">HOT</span>
+            <span class="body-li-span">热议</span>
             <a href="#" class="body-li-a">OA走流程卡到崩溃？换上英特尔轻薄本体验顺滑操作</a>
           </li>
         </ul>
@@ -49,8 +55,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-
+import { defineComponent, onMounted, reactive } from 'vue';
+import AuthorityUser from '@/pojo/AuthorityUser';
+import LocalStorageUtil from '@/utils/LocalStorageUtil';
+import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
 
 export default defineComponent({
   setup() {
@@ -92,8 +100,16 @@ export default defineComponent({
         name: '礼品卡', iconfont: 'icon-lipinqia', link: '#', color: '#f2a53b',
       },
     ];
+    const user = reactive<AuthorityUser>(LocalStorageUtil.get(USER_LOCAL_STORAGE) as AuthorityUser);
+
+    onMounted(() => {
+      if (!user.headPortrait) {
+        user.headPortrait = require('@/assets/imgs/default_head_portrait.jpg');
+      }
+    });
     return {
       arr,
+      user,
     };
   },
 });
@@ -129,6 +145,36 @@ export default defineComponent({
           top: 17px;
           margin-left: 12px;
           font: 12px/1.5 Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
+          width: 106px;
+          .username-p{
+            .username-a{
+              width: 100%;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              display: inline-block;
+            }
+          }
+          .icon-p{
+            .icon{
+              width: 20px;
+              height: 20px;
+              display: inline-block;
+              margin-right: 5px;
+            }
+            .icon1{
+              background-image: url(/img/sprite1.png);
+              background-position: -111px -21px;
+            }
+            .icon2{
+              background-image: url(/img/sprite1.png);
+              background-position: -111px -46px;
+            }
+            .exit-a{
+              position: absolute;
+            }
+          }
+
         }
       }
       .top-btn{
@@ -158,6 +204,23 @@ export default defineComponent({
         .plus-btn{
           background-color: #363634;
           color: #e5d790;
+          &:hover{
+            background-color: #c81623;
+            color: #fff;
+          }
+        }
+        .open-plus-btn{
+          height: 25px;
+          width: 162px;
+          background-color: #fff;
+          color: #e1251b;
+          border-radius: 13px;
+          text-align: center;
+          transition: background .3s ease,color .3s ease;
+          border: unset;
+          cursor: pointer;
+          font-size: 12px;
+          box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, .2);
           &:hover{
             background-color: #c81623;
             color: #fff;
