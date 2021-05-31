@@ -163,11 +163,11 @@ export default defineComponent({
               margin-right: 5px;
             }
             .icon1{
-              background-image: url(/img/sprite1.png);
+              background-image: url('~@/assets/imgs/sprite1.png');
               background-position: -111px -21px;
             }
             .icon2{
-              background-image: url(/img/sprite1.png);
+              background-image: url('~@/assets/imgs/sprite1.png');
               background-position: -111px -46px;
             }
             .exit-a{

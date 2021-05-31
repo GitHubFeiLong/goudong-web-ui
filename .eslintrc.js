@@ -16,9 +16,14 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    // "off"或者0    //关闭规则关闭
+    // "warn"或者1    //在打开的规则作为警告（不影响退出代码）
+    // "error"或者2    //把规则作为一个错误（退出代码触发时为1）
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     "no-alert": 0, // 关闭alert 警告
+    "no-empty": 1,//块语句中的内容不能为空
+    "prefer-const": 0,//首选const
     "no-shadow": 0,//外部作用域中的变量不能与它所包含的作用域中的变量或参数同名
     "@typescript-eslint/no-explicit-any": ["off"], // any 类型的警告关闭
     "linebreak-style": [0 , "windows"],

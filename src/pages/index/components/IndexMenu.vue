@@ -98,7 +98,7 @@ import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import IndexStore from '@/store/IndexStore';
-import ForgotPwdStore from "@/store/ForgotPwdStore";
+import ForgotPwdStore from '@/store/ForgotPwdStore';
 
 export default defineComponent({
   setup() {

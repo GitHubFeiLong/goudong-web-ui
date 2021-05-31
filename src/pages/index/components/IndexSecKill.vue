@@ -59,11 +59,12 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from 'vue';
-
+import { defineComponent, onMounted, reactive, watch, computed } from 'vue';
+import IndexStore from '@/store/IndexStore';
 
 import moment from 'moment';
 import SecKillCommodity from '@/pojo/SecKillCommodity';
+
 
 export default defineComponent({
   setup() {
@@ -106,6 +107,7 @@ export default defineComponent({
       minute: '00',
       second: '00',
     });
+    let obj = {};
 
     /**
      * 初始化时间
@@ -149,6 +151,11 @@ export default defineComponent({
     onMounted(() => {
       init();
       secKillInterval();
+      obj = IndexStore.getters.sidebarClass;
+      console.log("obj", obj);
+    });
+    watch(IndexStore.getters.sidebarClass, () => {
+      console.log(IndexStore.getters.sidebarClass);
     });
     return {
       arr,
@@ -382,7 +389,9 @@ export default defineComponent({
       .sidebar{
         width: 58px;
         position: absolute;
-        right: -78px;
+        top: 0;
+        left: 50%;
+        margin-left: 615px;
         z-index: 100;
         display: flex;
         flex-direction: column;
@@ -400,9 +409,10 @@ export default defineComponent({
           &:hover{
             background-color: #c81623;
             color: #fff !important;
+            z-index: 2;
             &::after{
               content: "";
-              height: 0;
+              background: rgba(0,0,0,0)
             }
           }
           &::after{
@@ -413,11 +423,11 @@ export default defineComponent({
             left: 50%;
             bottom: 0;
             margin-left: -20px;
-            background: -webkit-gradient(linear,right top,left top,from(white),color-stop(#eeeeee),color-stop(#eeeeee),to(white));
-            background: linear-gradient(
-              270deg
-              ,white,#eeeeee,#eeeeee,white);
-            z-index: 1;
+            transition: background .2s ease;
+            background: #ece9e9;
+            /*background: linear-gradient(*/
+            /*  270deg*/
+            /*  ,white,#ece9e9,#ece9e9,white);*/
             content: "";
           }
         }
@@ -458,7 +468,10 @@ export default defineComponent({
           }
 
         }
-
+      }
+      .sidebar-fixed {
+        position: fixed;
+        top: 50px;
       }
     }
   }

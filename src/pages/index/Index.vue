@@ -10,6 +10,8 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
+import IndexStore from '@/store/IndexStore';
+
 import IndexActivity from './components/IndexActivity.vue';
 import IndexMenu from './components/IndexMenu.vue';
 import IndexSearch from './components/IndexSearch.vue';
@@ -27,6 +29,17 @@ export default defineComponent({
     IndexActivityFloor,
   },
   setup() {
+    const handleScroll = () => {
+      // 使用 document.documentElement.scrollTop=0 回到顶部
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      console.log(scrollTop);
+      if (scrollTop > 770) {
+        IndexStore.dispatch('changeSidebarClass');
+      }
+    };
+    onMounted(() => {
+      window.addEventListener('scroll', handleScroll, true);
+    });
     return { };
   },
 });
