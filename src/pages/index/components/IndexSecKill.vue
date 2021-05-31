@@ -60,6 +60,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive, watch, computed } from 'vue';
+import { mapGetters } from 'vuex';
 import IndexStore from '@/store/IndexStore';
 
 import moment from 'moment';
@@ -153,6 +154,9 @@ export default defineComponent({
       secKillInterval();
       obj = IndexStore.getters.sidebarClass;
       console.log("obj", obj);
+    });
+    computed((sidebarClass) => {
+      console.log(1)
     });
     watch(IndexStore.getters.sidebarClass, () => {
       console.log(IndexStore.getters.sidebarClass);
