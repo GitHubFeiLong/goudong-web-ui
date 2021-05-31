@@ -1,17 +1,18 @@
 <!--秒杀栏-->
 <template>
   <div class="sec-kill-container">
+
     <div class="sec-kill-main">
       <div class="left">
         <a class="left-a" href="#">
           <p class="title1">狗东秒杀</p>
           <p class="title2">
-            <strong class="title-hour">16:00</strong> 点场 距结束
+            <strong class="title-hour">{{secKillTime.stage}}:00</strong> 点场 距结束
           </p>
           <p class="title3">
-            <span class="hour">00</span>
-            <span class="minute">11</span>
-            <span class="second">09</span>
+            <span class="hour">{{secKillTime.hour}}</span>
+            <span class="minute">{{secKillTime.minute}}</span>
+            <span class="second">{{secKillTime.second}}</span>
           </p>
         </a>
       </div>
@@ -58,8 +59,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted, reactive } from 'vue';
 
+
+import moment from 'moment';
 import SecKillCommodity from '@/pojo/SecKillCommodity';
 
 export default defineComponent({
@@ -97,13 +100,57 @@ export default defineComponent({
         new SecKillCommodity('', '乐高(LEGO)积木 悟空小侠齐天大圣黄金机甲10岁+80012 儿童节礼物 儿童玩具 男孩女孩', require('@/assets/imgs/sec-kill20.jpg'), 999.00, 1399.00),
       ],
     ];
+    const secKillTime = reactive({
+      stage: '00',
+      hour: '00',
+      minute: '00',
+      second: '00',
+    });
+
+    /**
+     * 初始化时间
+     */
+    const init = () => {
+      // 当前时间
+      const killTime = moment().hour(12).minute(0).second(0);
+      const killHours = killTime.diff(moment(), 'hours');
+      const killMinutes = killTime.diff(moment(), 'minutes') % 60;
+      const killSeconds = killTime.diff(moment(), 'seconds') % 60;
+      secKillTime.hour = killHours < 10 ? `0${killHours}` : String(killHours);
+      secKillTime.minute = killMinutes < 10 ? `0${killMinutes}` : String(killMinutes);
+      secKillTime.second = killSeconds < 10 ? `0${killSeconds}` : String(killSeconds);
+
+      // 当前时
+      const nowHour = Number(moment().format('H'));
+      let killHour = 0;
+      if (nowHour % 2 === 0) {
+        killHour = nowHour;
+      } else {
+        killHour = nowHour === 23 ? 22 : nowHour - 1;
+      }
+      secKillTime.stage = killHour < 10 ? `0${killHour}` : String(killHour);
+    };
+
+    /**
+     * 定时器修改活动倒计时
+     */
+    const secKillInterval = () => {
+      setInterval(() => {
+        const second = Number(secKillTime.second);
+        secKillTime.second = (second - 1) < 10 ? `0${second - 1}` : String(second - 1);
+        if (second < 1) {
+          init();
+        }
+      }, 1000);
+    };
 
     onMounted(() => {
-      // 当前时间
-
+      init();
+      secKillInterval();
     });
     return {
       arr,
+      secKillTime,
     };
   },
 });
