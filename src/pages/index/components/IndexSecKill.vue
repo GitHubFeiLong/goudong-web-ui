@@ -58,7 +58,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 
 import SecKillCommodity from '@/pojo/SecKillCommodity';
 
@@ -98,6 +98,10 @@ export default defineComponent({
       ],
     ];
 
+    onMounted(() => {
+      // 当前时间
+
+    });
     return {
       arr,
     };

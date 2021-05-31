@@ -28,6 +28,11 @@ a:hover{
 input:focus{
     outline:none;
 }
+/*placeholder*/
+input::-webkit-input-placeholder{
+    color: #999;
+}
+
 /*去除浏览器对button添加的边框*/
 button:focus{
     outline: none;

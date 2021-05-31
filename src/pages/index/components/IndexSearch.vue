@@ -9,7 +9,7 @@
       <!--搜索框-->
       <div class="search-div">
         <div class="div-input">
-          <input class="search-input" type="text" placeholder="笔记本电脑">
+          <input class="search-input" type="text" :placeholder="randomObj.searchInputPlaceHolder">
           <span class="iconfont icon-camera"></span>
           <div class="btn">
             <span class="iconfont icon-sousuo"></span>
@@ -25,7 +25,7 @@
       <!--小标签-->
       <div class="little-title">
         <ul>
-          <li><a href="#">生鲜五折购</a></li>
+          <li><a href="#">{{randomObj.littleTitle}}</a></li>
           <li><a href="#">尾款免息</a></li>
           <li><a href="#">路由器</a></li>
           <li><a href="#">智能数码</a></li>
@@ -61,11 +61,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, onMounted } from 'vue';
 
 export default defineComponent({
   setup() {
-    return {};
+    const searchInputPlaceHolderRandomArr = [
+      '电脑数码预售尾款至高24期免息',
+      '京东图书超级品类日,5折叠每满200减30',
+      '格兰杜微波炉',
+      '格力变频空调',
+      '签字笔',
+    ];
+    const littleTitleRandomArr = [
+      '生鲜五折购',
+      '低至9块9',
+      '抢健康好物',
+      '图书品类日',
+    ];
+    const randomObj = reactive({
+      searchInputPlaceHolder: searchInputPlaceHolderRandomArr[0],
+      littleTitle: littleTitleRandomArr[0],
+    });
+
+    onMounted(() => {
+      // 定时器，随机修改randomObj
+      setInterval(() => {
+        randomObj.searchInputPlaceHolder = searchInputPlaceHolderRandomArr[Math.floor(Math.random() * searchInputPlaceHolderRandomArr.length)];
+        randomObj.littleTitle = littleTitleRandomArr[Math.floor(Math.random() * littleTitleRandomArr.length)];
+      }, 5000);
+    });
+    return {
+      randomObj,
+    };
   },
 });
 </script>
