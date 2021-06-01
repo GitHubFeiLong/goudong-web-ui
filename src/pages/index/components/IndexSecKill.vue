@@ -498,7 +498,7 @@ export default defineComponent({
       }
       .fixed {
         position: fixed;
-        top: 50px;
+        top: 70px;
         .top{
           display: unset;
         }
