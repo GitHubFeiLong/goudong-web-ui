@@ -219,11 +219,12 @@ export default defineComponent({
       position: relative;
       width: 800px;
       margin: auto;
-      height: 61px;
       z-index: 50;
       .one-div{
-        height: 61px;
+        height: 0px;
+        transition: .2s height;
         position: relative;
+        top: 60px;
         .div-input{
           width: 546px;
           height: 32px;
@@ -326,9 +327,10 @@ export default defineComponent({
       top: 0;
       z-index:50;
       .one-div{
+        top: 0;
         height: 52px;
         border-bottom: 2px solid #f10214;
-        box-shadow: 2px 2px 2px rgb(0 0 0 / 30%);
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
         background-color: #fff;
         .gwc,.div-input {
           bottom: 6px !important;

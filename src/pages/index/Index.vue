@@ -34,8 +34,6 @@ export default defineComponent({
     const handleScroll = () => {
       // 使用 document.documentElement.scrollTop=0 回到顶部
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-      console.log(scrollTop, IndexStore.getters.fixed);
-
       if (scrollTop > scrollHeight && !IndexStore.getters.fixed) {
         IndexStore.dispatch('changeOneScrollClass');
       } else if (scrollTop < scrollHeight && IndexStore.getters.fixed) {
