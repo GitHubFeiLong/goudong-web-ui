@@ -222,7 +222,7 @@ export default defineComponent({
       z-index: 50;
       .one-div{
         height: 0px;
-        transition: .2s height;
+        transition: .4s height;
         position: relative;
         top: 60px;
         .div-input{
