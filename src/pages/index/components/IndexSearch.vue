@@ -328,7 +328,7 @@ export default defineComponent({
       .one-div{
         height: 52px;
         border-bottom: 2px solid #f10214;
-        box-shadow: 2px 2px 2px rgb(0 0 0 / 20%);
+        box-shadow: 2px 2px 2px rgb(0 0 0 / 30%);
         background-color: #fff;
         .gwc,.div-input {
           bottom: 6px !important;
