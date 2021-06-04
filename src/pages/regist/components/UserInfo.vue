@@ -578,7 +578,6 @@ export default defineComponent({
         width: 398px;
         height: 165px;
         z-index: 10;
-        position: absolute;
         margin-left: -1px;
         border: solid 1px #f98;
         border-bottom: 5px solid RGBA(221, 221, 221, .15);
@@ -587,6 +586,7 @@ export default defineComponent({
         li {
           height: 40px;
           line-height: 40px;
+          width: 266px;
           color: #666;
           padding-left: 130px;
           background: #fdf2ef;
