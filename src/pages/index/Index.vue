@@ -5,6 +5,7 @@
   <IndexMain/>
   <IndexSecKill/>
   <IndexActivityFloor/>
+  <IndexDaySpecialPrice/>
   <div style="width: 100%; height: 1000px"></div>
 </template>
 
@@ -18,6 +19,7 @@ import IndexSearch from './components/IndexSearch.vue';
 import IndexMain from './components/IndexMain.vue';
 import IndexSecKill from './components/IndexSecKill.vue';
 import IndexActivityFloor from './components/IndexActivityFloor.vue';
+import IndexDaySpecialPrice from "@/pages/index/components/IndexDaySpecialPrice.vue";
 
 export default defineComponent({
   components: {
@@ -27,6 +29,7 @@ export default defineComponent({
     IndexMain,
     IndexSecKill,
     IndexActivityFloor,
+    IndexDaySpecialPrice,
   },
   setup() {
     // 距顶部滚动条
