@@ -103,7 +103,7 @@ export default defineComponent({
     const user = reactive<AuthorityUser>(LocalStorageUtil.get(USER_LOCAL_STORAGE) as AuthorityUser);
 
     onMounted(() => {
-      if (!user.headPortrait) {
+      if (user != null && !user.headPortrait) {
         user.headPortrait = require('@/assets/imgs/default_head_portrait.jpg');
       }
     });
