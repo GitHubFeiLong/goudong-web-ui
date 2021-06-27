@@ -1,4 +1,4 @@
-<!--每日特价组件-->
+<!--特色优选 之 每日特价和品牌闪购组件-->
 <template>
   <div class="day-special-price-container">
     <div class="one-container">
@@ -39,7 +39,19 @@
         </div>
       </div>
       <div class="brand-buy one-son-div">
-
+        <div class="box-hd">
+          <IndexDivTitle :title="brandBuy.brandBuyTitle"/>
+        </div>
+        <div class="box-bd">
+          <div v-for="(item, index) in brandBuy.brandBuyArrays" :key="item" :class="{'first-item':index==0, 'item':true,'item-other': index > 0}">
+            <a href="#" class="item-a">
+              <span class="span1" v-if="index==0">{{item.title}}</span>
+              <span class="span2">{{item.brandSpecial}}</span>
+              <span class="span3" v-if="index==0">{{item.discountInfo}}</span>
+              <img :src="item.picture"/>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <div class="two-container">
@@ -56,6 +68,7 @@
   import IndexDivTitle from "@/components/IndexDivTitle.vue";
 
   import DaySpecialPrice from "@/pojo/DaySpecialPrice";
+  import DiscountCommodity from "@/pojo/DiscountCommodity";
 
   export default defineComponent({
     components:{
@@ -64,7 +77,9 @@
     setup(){
       // 每日特价对象
       let daySpecialPrice = reactive<any>({
+        // 标题
         daySpecialPriceTitle : "每日特价",
+        // 标题类型数组
         daySpecialPriceTitleArrays :[
           {title : '精选', active : true, commodities : [
             new DaySpecialPrice("","香之渝香菇卤肉味煲仔饭250g*1", require('@/assets/imgs/day-choiceness-1.jpg'),9.9,19.9,"151天"),
@@ -107,8 +122,9 @@
             ]
           },
         ],
+        // 当前类型商品数组
         daySpecialPriceCommodities : [],
-
+        // 标题类型鼠标移入事件
         daySpecialPriceTitleMouseOver:(index:number)=>{
           daySpecialPrice.daySpecialPriceTitleArrays.forEach((item:any, idx:number)=>{
             item.active = false;
@@ -121,11 +137,26 @@
         },
       });
 
+      // 品牌闪购
+      let brandBuy = reactive<any>({
+        brandBuyTitle : "品牌闪购",
+        brandBuyArrays : [
+          new DiscountCommodity('', '梦花园',  require('@/assets/imgs/brand-buy-1.jpg'), '全场九折起 | 仅剩 2 天', 2, '梦花园户外专场'),
+          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-2.jpg'), '全场低至9折', -1, 'keep瑜伽闪购专场'),
+          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-3.jpg'), '爆品直降1000元', -1, '苏泊尔品牌特惠'),
+          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-4.jpg'), '夏爆款39元起', -1, '迪士尼童装'),
+          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-5.jpg'), '24小时限时底价', -1, '金帅品牌闪购专场'),
+          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-6.jpg'), '最高直降500元', -1, '海康威视闪购专场'),
+          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-7.jpg'), '低至5折', -1, '小米闪购专场'),
+        ],
+      });
+
       onMounted(()=>{
         daySpecialPrice.daySpecialPriceCommodities = daySpecialPrice.daySpecialPriceTitleArrays[0].commodities;
       })
       return {
         daySpecialPrice,
+        brandBuy,
       }
     }
   })
@@ -140,14 +171,17 @@
       width: 1190px;
       height: 340px;
       margin-top: 20px;
+      margin-bottom: 20px;
       display: flex;
       .one-son-div{
         width: 590px;
         height: 340px;
         background-color: #fff;
+      }
+      .day-special-price{
+        margin-right: 10px;
         .box-hd{
           height: 60px;
-          padding: 0 20px;
           box-sizing: border-box;
           position: relative;
           .title-ul{
@@ -346,11 +380,100 @@
           }
         }
       }
-      .day-special-price{
-        margin-right: 10px;
-      }
       .brand-buy{
-
+        .box-hd{
+          height: 60px;
+        }
+        .box-bd{
+          position: relative;
+          margin-left: 15px;
+          margin-top: -38px;
+          .item{
+            width: 135px;
+            height: 72px;
+            padding: 14px 0;
+            float: left;
+            .item-a{
+              display: block;
+              width: 100%;
+              height: 100%;
+              position: relative;
+              span{
+                display: block;
+                text-align: center;
+                font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+              }
+              &:hover{
+                opacity: .7;
+              }
+            }
+          }
+          .first-item {
+            margin-top: 38px;
+            width: 270px;
+            height: 265px;
+            background-color: #fbf7f7;
+            padding: unset;
+            margin-right: 15px;
+            .item-a{
+              .span1{
+                color: #000;
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                margin-top:17px;
+              }
+              .span2{
+                color: #333;
+                font-weight: 700;
+                font-size: 16px;
+                margin-top: 13px;
+              }
+              .span3{
+                text-align: center;
+                font-size: 12px;
+                color: #666;
+                margin-bottom: 13px;
+                margin-top: 4px;
+              }
+              img{
+                width: 130px;
+                height: 130px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+              }
+            }
+          }
+          .item-other{
+            .item-a{
+              .span2{
+                color: #666;
+                font-size: 12px;
+                text-align: center;
+                font-weight: 400;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+              }
+              img{
+                width: 100px;
+                height: 50px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+              }
+            }
+          }
+        }
       }
     }
   }
