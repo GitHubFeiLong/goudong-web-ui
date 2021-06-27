@@ -1,4 +1,4 @@
-<!--特色优选 之 每日特价和品牌闪购组件-->
+<!--特色优选-->
 <template>
   <div class="day-special-price-container">
     <div class="one-container">
@@ -54,9 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="two-container">
-
-    </div>
+    <IndexFeatureOptimizationDiscoverGoods/>
     <div class="three-container">
 
     </div>
@@ -66,6 +64,7 @@
 <script lang="ts">
   import {defineComponent, onMounted, reactive} from 'vue';
   import IndexDivTitle from "@/components/IndexDivTitle.vue";
+  import IndexFeatureOptimizationDiscoverGoods from "@/pages/index/components/IndexFeatureOptimizationDiscoverGoods.vue";
 
   import DaySpecialPrice from "@/pojo/DaySpecialPrice";
   import DiscountCommodity from "@/pojo/DiscountCommodity";
@@ -73,6 +72,7 @@
   export default defineComponent({
     components:{
       IndexDivTitle,
+      IndexFeatureOptimizationDiscoverGoods,
     },
     setup(){
       // 每日特价对象
@@ -166,9 +166,10 @@
     width:100%;
     height: 980px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     .one-container{
-      width: 1190px;
+      width: @index-main-width;
       height: 340px;
       margin-top: 20px;
       margin-bottom: 20px;
