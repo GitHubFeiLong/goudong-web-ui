@@ -25,7 +25,11 @@
           </div>
         </div>
         <div class="scroll-bar">
-          <div class="sliding-block" :style="slidingBlockStyle"></div>
+          <div class="sliding-block"
+               :style="slidingBlockStyle"
+               @mousedown="slidingBlock.onmousedown($event)"
+               ref="slidingBlockRef"
+          ></div>
         </div>
       </div>
     </div>
@@ -33,7 +37,7 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, onMounted, ref} from 'vue';
+  import {defineComponent, onMounted, ref, reactive, watch} from 'vue';
 
   import Commodity from "@/pojo/Commodity";
   export default defineComponent({
@@ -60,28 +64,39 @@
       const move = () => {
         intervalId = setInterval(()=>{
           val.value = val.value - 1;
-          val2.value = val2.value + 0.87;
-          boxDivStyle.value = `transform:translateX(${val.value}px)`;
-          slidingBlockStyle.value = `transform:translateX(${val2.value}px)`;
-          // 前5个已经隐藏了
-          if (val.value === -1000) {
-            // 移动+2000
-            top5ItemStyle.value = `transform:translateX(2000px)`;
-            val2.value = 0;
-          }
-          if (val.value === -2000) {
-            otherItemStyle.value = `transform:translateX(2000px)`;
-            // 完成一次完整的
-            val.value = 0;
-            val2.value = 0;
-            boxDivStyle.value = `transform:translateX(${val.value}px)`;
-            top5ItemStyle.value = `transform:translateX(0px)`;
-            otherItemStyle.value = `transform:translateX(0px)`;
-          }
-
+          val2.value = val2.value + 0.861;
         }, 10);
       };
 
+      watch(val, (v1,v2)=>{
+        boxDivStyle.value = `transform:translateX(${val.value}px)`;
+        // 前5个已经隐藏了
+        if (val.value <= -1000 && val.value >= -1001) {
+          // 移动+2000
+          console.log("移动位置")
+          top5ItemStyle.value = `transform:translateX(2000px)`;
+        }
+        if (val.value <= -2000) {
+          otherItemStyle.value = `transform:translateX(2000px)`;
+          // 完成一次完整的
+          val.value = 0;
+          boxDivStyle.value = `transform:translateX(${val.value}px)`;
+          top5ItemStyle.value = `transform:translateX(0px)`;
+          otherItemStyle.value = `transform:translateX(0px)`;
+        }
+      });
+      // 控制开关
+      let bool : boolean = false;
+      watch(val2, (v1, v2)=>{
+        if (val2.value < 0) {
+          val2.value = 0;
+        } else if (val2.value > 861) {
+          val2.value = 0;
+          bool=!bool;
+          val.value = bool ? -1000 : -2000;
+        }
+        slidingBlockStyle.value = `transform:translateX(${val2.value}px)`;
+      })
       const stop = () => {
         clearInterval(intervalId);
       }
@@ -89,6 +104,56 @@
       onMounted(()=>{
         move();
       });
+
+      let slidingBlockRef = ref(null);
+      let slidingBlock = reactive<any>({
+        isMouseUp: false,
+
+        // 鼠标按下事件
+        onmousedown : (e: any) => {
+          console.log("按下");
+          slidingBlock.isMouseUp = false;
+
+          let rawX : number = e.clientX;
+          let nowX : number = 0;
+          let moveX : number = 0;
+          let transformStr:string = (slidingBlockRef.value as any).style.transform
+          if (transformStr.indexOf("translateX") == -1) {
+            console.error("获取滑块的属性style中不存在translateX属性");
+            return false;
+          }
+          let translateX : number = Number(transformStr.substring(11, transformStr.indexOf("px")));
+          console.log(translateX);
+
+          // 移动
+          document.onmousemove = (e1) => {
+            // if (!slidingBlock.isMouseUp) {
+            if (false) {
+              nowX = e1.clientX;
+              moveX = nowX - rawX;
+              val2.value = translateX + moveX;
+              val.value = val2.value*0.861*-1;
+              if (val2.value < 0) {
+                val2.value = 0;
+                val.value = val.value + translateX;
+                translateX = 0;
+              } else if (val2.value > 861) {
+                val2.value = 0;
+                val.value = val.value + 861 - translateX;
+                translateX = 0;
+              }
+            }
+          };
+          // 松手
+          document.onmouseup = (e2) => {
+            if (!slidingBlock.isMouseUp) {
+              slidingBlock.isMouseUp = true;
+              console.log("松手" + val2.value);
+            }
+          };
+        },
+      })
+
 
       return {
         discoverGoods,
@@ -98,6 +163,8 @@
         slidingBlockStyle,
         move,
         stop,
+        slidingBlock,
+        slidingBlockRef
       }
     }
   });
@@ -234,7 +301,7 @@
           height: 3px;
           border-radius: 3px;
           background-color: #f3f3f3;
-          opacity: 0;
+          //opacity: 0;
           transition: opacity .3s ease;
           .sliding-block{
             height: 9px;
