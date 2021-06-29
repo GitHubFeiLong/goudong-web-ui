@@ -17,6 +17,7 @@
             :key="item"
             :class="{'item-div':true,'item-top-div': index%2==0, 'item-bottom-div':index%2==1}"
             :style="index<5 ? top5ItemStyle : otherItemStyle"
+            :ref="index==0 ? itemRef0:itemRef1"
           >
             <a href="#" :class="{'item-a':true, 'item-top-a': index%2==0, 'item-bottom-a':index%2==1}">
               <img class="item-title-img" :src="item.picture"/>
@@ -42,6 +43,11 @@
   import Commodity from "@/pojo/Commodity";
   export default defineComponent({
     setup() {
+
+      let itemRef0 = ref(null);
+      let itemRef1 = ref(null);
+
+
       let discoverGoods:Array<Commodity> = [
         new Commodity("", "索尼 主动降噪 真无线蓝牙耳机", -1, -1, require('@/assets/imgs/discover-goods-3.jpg')),
         new Commodity("", "索尼 新一代PS5 游戏主机套装", -1, -1, require('@/assets/imgs/discover-goods-4.jpg')),
@@ -102,7 +108,11 @@
       }
 
       onMounted(()=>{
-        move();
+        // move();
+        setInterval(()=>{
+          (itemRef0.value as any).style.transform = "translateX(-50px)";
+        }, 1000)
+
       });
 
       let slidingBlockRef = ref(null);
@@ -164,7 +174,9 @@
         move,
         stop,
         slidingBlock,
-        slidingBlockRef
+        slidingBlockRef,
+        itemRef0,
+        itemRef1,
       }
     }
   });
