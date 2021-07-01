@@ -1,6 +1,6 @@
 <!--div 左上角的title-->
 <template>
-  <a href="#" class="no-hover a-title">
+  <a href="#" class="no-hover#333 a-title">
     {{title}}
     <em class="img-em"></em>
   </a>

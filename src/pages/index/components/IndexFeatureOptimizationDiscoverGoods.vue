@@ -108,10 +108,10 @@
       }
 
       onMounted(()=>{
-        // move();
-        setInterval(()=>{
-          (itemRef0.value as any).style.transform = "translateX(-50px)";
-        }, 1000)
+        move();
+        // setInterval(()=>{
+        //   (itemRef0.value as any).style.transform = "translateX(-50px)";
+        // }, 1000)
 
       });
 
@@ -313,7 +313,7 @@
           height: 3px;
           border-radius: 3px;
           background-color: #f3f3f3;
-          //opacity: 0;
+          opacity: 0;
           transition: opacity .3s ease;
           .sliding-block{
             height: 9px;

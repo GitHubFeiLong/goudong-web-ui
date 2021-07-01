@@ -55,9 +55,7 @@
       </div>
     </div>
     <IndexFeatureOptimizationDiscoverGoods/>
-    <div class="three-container">
-
-    </div>
+    <IndexFeatureOptimizationThree/>
   </div>
 </template>
 
@@ -65,6 +63,7 @@
   import {defineComponent, onMounted, reactive} from 'vue';
   import IndexDivTitle from "@/components/IndexDivTitle.vue";
   import IndexFeatureOptimizationDiscoverGoods from "@/pages/index/components/IndexFeatureOptimizationDiscoverGoods.vue";
+  import IndexFeatureOptimizationThree from "@/pages/index/components/IndexFeatureOptimizationThree.vue";
 
   import DaySpecialPrice from "@/pojo/DaySpecialPrice";
   import DiscountCommodity from "@/pojo/DiscountCommodity";
@@ -73,6 +72,7 @@
     components:{
       IndexDivTitle,
       IndexFeatureOptimizationDiscoverGoods,
+      IndexFeatureOptimizationThree,
     },
     setup(){
       // 每日特价对象
