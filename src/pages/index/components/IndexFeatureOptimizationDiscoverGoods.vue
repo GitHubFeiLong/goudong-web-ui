@@ -59,6 +59,17 @@
         new Commodity("", "华为 Mate40Pro 5G手机", -1, -1, require('@/assets/imgs/discover-goods-10.jpg')),
         new Commodity("", "孩之宝 航行家级 变形金刚", -1, -1, require('@/assets/imgs/discover-goods-11.jpg')),
         new Commodity("", "雅培 全面营养 婴幼儿奶粉", -1, -1, require('@/assets/imgs/discover-goods-12.jpg')),
+
+        new Commodity("", "索尼 主动降噪 真无线蓝牙耳机", -1, -1, require('@/assets/imgs/discover-goods-3.jpg')),
+        new Commodity("", "索尼 新一代PS5 游戏主机套装", -1, -1, require('@/assets/imgs/discover-goods-4.jpg')),
+        new Commodity("", "耐克 气垫缓震 跑步鞋", -1, -1, require('@/assets/imgs/discover-goods-5.jpg')),
+        new Commodity("", "诗毅 家用 茶杯", -1, -1, require('@/assets/imgs/discover-goods-6.jpg')),
+        new Commodity("", "茅台 生肖 纪念酒", -1, -1, require('@/assets/imgs/discover-goods-7.jpg')),
+        new Commodity("", "华硕 吃鸡电竞游戏 独立显卡", -1, -1, require('@/assets/imgs/discover-goods-8.jpg')),
+        new Commodity("", "耐克 樱花粉 运动篮球鞋", -1, -1, require('@/assets/imgs/discover-goods-9.jpg')),
+        new Commodity("", "华为 Mate40Pro 5G手机", -1, -1, require('@/assets/imgs/discover-goods-10.jpg')),
+        new Commodity("", "孩之宝 航行家级 变形金刚", -1, -1, require('@/assets/imgs/discover-goods-11.jpg')),
+        new Commodity("", "雅培 全面营养 婴幼儿奶粉", -1, -1, require('@/assets/imgs/discover-goods-12.jpg')),
       ];
       let top5ItemStyle = ref<string>("transform:translateX(0px)");
       let otherItemStyle = ref<string>("transform:translateX(0px)");
@@ -68,16 +79,32 @@
       let val2 = ref(0);
       let intervalId:any = '';
       const move = () => {
-        intervalId = setInterval(()=>{
-          val.value = val.value - 1;
-          val2.value = val2.value + 0.861;
-        }, 10);
+        if(slidingBlock.isMouseUp){
+          intervalId = setInterval(()=>{
+            val.value = val.value - 1;
+            val2.value = val2.value + 0.861;
+          }, 10);
+        }
       };
 
       watch(val, (v1,v2)=>{
         boxDivStyle.value = `transform:translateX(${val.value}px)`;
         // 前5个已经隐藏了
-        if (val.value <= -1000 && val.value >= -1001) {
+        // if (val.value <= -1000 && val.value >= -1001) {
+        //   // 移动+2000
+        //   console.log("移动位置")
+        //   top5ItemStyle.value = `transform:translateX(2000px)`;
+        // }
+        // if (val.value <= -2000) {
+        //   otherItemStyle.value = `transform:translateX(2000px)`;
+        //   // 完成一次完整的
+        //   val.value = 0;
+        //   boxDivStyle.value = `transform:translateX(${val.value}px)`;
+        //   top5ItemStyle.value = `transform:translateX(0px)`;
+        //   otherItemStyle.value = `transform:translateX(0px)`;
+        // }
+
+        if (val.value <= -2000 && val.value >= -2002) {
           // 移动+2000
           console.log("移动位置")
           top5ItemStyle.value = `transform:translateX(2000px)`;
@@ -117,7 +144,7 @@
 
       let slidingBlockRef = ref(null);
       let slidingBlock = reactive<any>({
-        isMouseUp: false,
+        isMouseUp: true,
 
         // 鼠标按下事件
         onmousedown : (e: any) => {
@@ -134,11 +161,11 @@
           }
           let translateX : number = Number(transformStr.substring(11, transformStr.indexOf("px")));
           console.log(translateX);
-
+          stop();
           // 移动
           document.onmousemove = (e1) => {
-            // if (!slidingBlock.isMouseUp) {
-            if (false) {
+            if (!slidingBlock.isMouseUp) {
+            // if (false) {
               nowX = e1.clientX;
               moveX = nowX - rawX;
               val2.value = translateX + moveX;
@@ -160,6 +187,7 @@
               slidingBlock.isMouseUp = true;
               console.log("松手" + val2.value);
             }
+            // move();
           };
         },
       })

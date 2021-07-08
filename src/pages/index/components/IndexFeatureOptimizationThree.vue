@@ -53,6 +53,7 @@
   .three-new-product{
     .el-carousel__container{
       .el-carousel__item{
+        /*display: none;*/
         z-index:5;
         .item-img{
           width: 104px !important;
@@ -62,7 +63,11 @@
 
         }
       }
+      .el-carousel__item[class*=is-in-stage]{
+       display: unset;
+      }
       .el-carousel__item[class*=is-active]{
+        display: unset;
         z-index:10;
         .item-img{
           width: 130px !important;
