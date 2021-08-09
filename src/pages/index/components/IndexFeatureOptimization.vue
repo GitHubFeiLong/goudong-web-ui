@@ -55,7 +55,7 @@
       </div>
     </div>
     <IndexFeatureOptimizationDiscoverGoods/>
-    <IndexFeatureOptimizationThree/>
+<!--    <IndexFeatureOptimizationThree/>-->
   </div>
 </template>
 

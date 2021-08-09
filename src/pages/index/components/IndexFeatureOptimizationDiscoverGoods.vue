@@ -148,6 +148,7 @@
 
         // 鼠标按下事件
         onmousedown : (e: any) => {
+          return false;
           console.log("按下");
           slidingBlock.isMouseUp = false;
 
