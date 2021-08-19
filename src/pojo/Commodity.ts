@@ -5,7 +5,7 @@ export default class Commodity {
   /**
    * 主键uuid
    */
-  uuid: string | undefined = undefined;
+  id: string | undefined = undefined;
 
   /**
    * 商品标题
@@ -28,12 +28,12 @@ export default class Commodity {
   picture: any = undefined;
 
 
-  constructor(uuid: string | undefined
+  constructor(id: string | undefined
               , title: string | undefined
               , price: number | undefined
               , originalPrice: number | undefined
               , picture: any) {
-    this.uuid = uuid;
+    this.id = id;
     this.title = title;
     this.price = price;
     this.originalPrice = originalPrice;

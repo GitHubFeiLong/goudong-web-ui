@@ -17,8 +17,8 @@ export default class DiscountCommodity extends Commodity {
    */
   private brandSpecial : string;
 
-  constructor(uuid: string | undefined, title: string | undefined, picture: any, discountInfo: string, days: number, brandSpecial: string) {
-    super(uuid, title, -1, -1, picture);
+  constructor(id: string | undefined, title: string | undefined, picture: any, discountInfo: string, days: number, brandSpecial: string) {
+    super(id, title, -1, -1, picture);
     this.discountInfo = discountInfo;
     this.days = days;
     this.brandSpecial = brandSpecial;

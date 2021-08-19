@@ -1,3 +1,6 @@
+/**
+ * 用户信息对象
+ */
 export default class AuthorityUser {
   // 用户表主键id
   id: string ="";

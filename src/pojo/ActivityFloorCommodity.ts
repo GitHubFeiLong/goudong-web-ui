@@ -6,8 +6,8 @@ import Commodity from '@/pojo/Commodity';
 export default class ActivityFloorCommodity extends Commodity {
   type: string | undefined = undefined;
 
-  constructor(uuid: string, title: string, type: string, picture: any) {
-    super(uuid, title, 0,0, picture);
+  constructor(id: string, title: string, type: string, picture: any) {
+    super(id, title, 0,0, picture);
     this.type = type;
   }
 }

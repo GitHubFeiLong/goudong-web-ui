@@ -152,11 +152,11 @@ export default defineComponent({
       showCityBoxCard: false, // 城市
       showUserBoxCard: false, // 用户详情
     });
-    const checkedCity = (uuid: string) => {
+    const checkedCity = (id: string) => {
       cityArr.forEach((item: City) => {
         // eslint-disable-next-line no-param-reassign
         item.checked = false;
-        if (item.uuid === uuid) {
+        if (item.id === id) {
           // eslint-disable-next-line no-param-reassign
           item.checked = true;
           city.value = item.name as string;

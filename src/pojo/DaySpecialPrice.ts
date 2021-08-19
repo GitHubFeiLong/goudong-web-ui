@@ -11,8 +11,8 @@ export default class DaySpecialPrice extends Commodity{
    * @param originalPrice 原价
    * @param minimumPriceDays 最低价时间
    */
-  constructor(uuid: string, title: string, picture: any, price: number, originalPrice: number, minimumPriceDays:string) {
-    super(uuid, title, price, originalPrice, picture);
+  constructor(id: string, title: string, picture: any, price: number, originalPrice: number, minimumPriceDays:string) {
+    super(id, title, price, originalPrice, picture);
     this.minimumPriceDays = minimumPriceDays;
   }
 }

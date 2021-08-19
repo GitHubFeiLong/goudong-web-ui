@@ -1,12 +1,12 @@
 export default class City {
-  uuid: string | undefined;
+  id: string | undefined;
 
   name: string | undefined;
 
   checked: boolean | undefined;
 
-  constructor(uuid?: string, name?: string, checked?: boolean) {
-    this.uuid = uuid;
+  constructor(id?: string, name?: string, checked?: boolean) {
+    this.id = id;
     this.name = name;
     this.checked = checked;
   }
