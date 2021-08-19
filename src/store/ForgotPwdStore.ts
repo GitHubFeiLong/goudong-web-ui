@@ -11,6 +11,10 @@ export default createStore({
     changeAuthorityUser(state: any, value: AuthorityUser) {
       state.authorityUser = value;
     },
+    // 设置验证码
+    setCode(state:any, code:string) {
+      state.authorityUser.code = code;
+    }
   },
 
 });

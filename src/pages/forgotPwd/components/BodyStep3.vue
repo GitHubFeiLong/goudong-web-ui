@@ -175,6 +175,8 @@ export default defineComponent({
           showHint.value = false;
           dialogVisible.value = false;
           stepStatus.value = 2;
+          // 将验证码保存到对象
+          ForgotPwdStore.commit('setCode', phoneVerifyCode.value);
         } else {
           showHint.value = true;
           hint.value = HintEntity.EMAIL_CODE_HINT_2;
@@ -250,7 +252,12 @@ export default defineComponent({
 
     // 提交密码
     const clickSubmitBtn = () => {
-      const param = { uuid: ForgotPwdStore.state.authorityUser.uuid, password: newPassword.value };
+      console.log(ForgotPwdStore.state.authorityUser)
+      const param = {
+        id: ForgotPwdStore.state.authorityUser.id
+        , password: newPassword.value
+        , code: ForgotPwdStore.state.authorityUser.code
+      };
       updatePasswordApi(param).then((response) => {
         stepStatus.value = 3;
       });

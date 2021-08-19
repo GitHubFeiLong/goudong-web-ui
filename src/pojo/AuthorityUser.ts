@@ -1,7 +1,6 @@
 export default class AuthorityUser {
-  // 用户表主键uuid
-  uuid: string | undefined ='';
-
+  // 用户表主键id
+  id: string ="";
   // 用户名
   username: string | undefined ='';
 

@@ -63,6 +63,7 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
  * 响应拦截器
  */
 service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
+  console.log(response);
   // 响应码
   const { status } = response;
   const result = response.data;
