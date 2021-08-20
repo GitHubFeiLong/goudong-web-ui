@@ -117,7 +117,8 @@ export default defineComponent({
       if (username.value === '' && password.value === '') {
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_0;
         return;
-      } if (username.value === '') {
+      }
+      if (username.value === '') {
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_1;
       } else if (password.value === '') {
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_2;

@@ -35,6 +35,11 @@ export const createUserApi = (data: AuthorityUser): Promise<AxiosResponse> => Ax
 export const loginApi = (username: string, password: string): Promise<AxiosResponse> => AxiosUtil.post(`/api/oauth2/user/login?username=${username}&password=${password}`);
 
 /**
+ * 退出登录
+ */
+export const logoutApi = ():Promise<AxiosResponse> => AxiosUtil.put(`/api/oauth2/user/logout`)
+
+/**
  * 根据用户名，手机号，邮箱获取用户基本信息
  * @param paramObj 用户对象
  */

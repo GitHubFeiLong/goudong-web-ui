@@ -67,6 +67,14 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   // 响应码
   const { status } = response;
   const result = response.data;
+  // 响应码401，需要重新登录
+  if (status == 401) {
+    // 清除 token
+    LocalStorageUtil.remove(AUTHORIZATION);
+    // 清除 用户信息
+    LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+  }
+
   if (status < 200 || status >= 400) {
     // 弹出客户端提示
     ElMessage.error(result.clientMessage);
@@ -75,8 +83,7 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
     // 设置响应为错误，
     return Promise.reject(response);
   }
-  // 根据响应头
-  console.log(response);
+
   // 响应头有token，那就更新本地token值
   if (response.headers[AUTHORIZATION.toLowerCase()]) {
     LocalStorageUtil.set(AUTHORIZATION, response.headers[AUTHORIZATION.toLowerCase()]);

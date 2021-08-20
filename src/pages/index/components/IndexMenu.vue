@@ -35,7 +35,7 @@
                 <a href="#"><img src="@/assets/imgs/default_head_portrait.jpg" alt="头像" class="head-portrait"/></a>
                 <a href="#" class="user-icon"></a>
                 <a href="#" class="describe">开通PLUS平均省1210元/年></a>
-                <a href="#" class="exit">退出</a>
+                <a href="#" class="exit" @click="logout()">退出</a>
               </div>
               <div class="bottom">
                 <el-carousel
@@ -95,10 +95,13 @@ import {
 } from 'vue';
 import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
-import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
+import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import IndexStore from '@/store/IndexStore';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
+import {loginApi, logoutApi} from "@/api/Oauth2Api";
+import Result from "@/pojo/Result";
+import * as HintEntity from "@/pojo/HintEntity";
 
 export default defineComponent({
   setup() {
@@ -197,6 +200,20 @@ export default defineComponent({
       IndexStore.commit('initUser', user.value);
       console.log(user.value);
     });
+
+    /**
+     * 退出登录
+     */
+    const logout = () => {
+      console.log("退出登录")
+      // 清空本地缓存用户数据
+      logoutApi().then((response) => {
+        // 清除 token
+        LocalStorageUtil.remove(AUTHORIZATION);
+        // 清除 用户信息
+        LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+      });
+    }
     return {
       city,
       cityArr,
@@ -204,6 +221,7 @@ export default defineComponent({
       checkedCity,
       user,
       privilegeArr,
+      logout,
     };
   },
 });
