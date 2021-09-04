@@ -110,7 +110,7 @@ import QAEntity from '@/pojo/QAEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
 import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
-import { updatePasswordApi } from '@/api/Oauth2Api';
+import { updatePasswordApi } from '@/api/UserApi';
 
 declare let $: (selector: string) => any;
 

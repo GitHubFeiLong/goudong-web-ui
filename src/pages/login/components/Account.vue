@@ -38,6 +38,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 import Result from '@/pojo/Result';
 import { loginApi } from '@/api/Oauth2Api';
 import QuickLogin from './QuickLogin.vue';
+import {INDEX_PAGE} from "@/constants/PageUriConst";
 // 申明jquery
 declare let $: (selector: string) => any;
 
@@ -142,7 +143,7 @@ export default defineComponent({
           hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
         } else {
           // 跳转登录
-          window.location.href = '/index.html';
+          window.location.href = INDEX_PAGE;
         }
       });
     };

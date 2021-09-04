@@ -53,7 +53,7 @@ import PuzzleVerify from '@/components/PuzzleVerify.vue';
 // eslint-disable-next-line import/named
 import resolveBindPageParam from '@/utils/HtmlParamUtil';
 import BindPageParam from '@/pojo/BindPageParam';
-import { updateOpenIdApi } from '@/api/Oauth2Api';
+import { updateOpenIdApi } from '@/api/UserApi';
 
 export default defineComponent({
   components: {

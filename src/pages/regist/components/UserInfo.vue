@@ -68,7 +68,7 @@ import { defineComponent, ref, watch } from 'vue';
 import * as HintEntity from '@/pojo/HintEntity';
 import { BLANK } from '@/pojo/HintEntity';
 import * as Validate from '@/utils/ValidateUtil';
-import { checkUsernameApi, checkEmailApi, createUserApi } from '@/api/Oauth2Api';
+import { checkUsernameApi, checkEmailApi, createUserApi } from '@/api/UserApi';
 import { checkCodeApi, emailCodeApi } from '@/api/MessageApi';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import RegisterStore from '@/store/RegisterStore';

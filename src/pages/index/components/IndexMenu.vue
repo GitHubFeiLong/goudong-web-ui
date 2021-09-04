@@ -90,18 +90,14 @@
 </template>
 
 <script lang='ts'>
-import {
-  defineComponent, onMounted, ref, reactive,
-} from 'vue';
+import {defineComponent, onMounted, reactive, ref,} from 'vue';
 import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import IndexStore from '@/store/IndexStore';
-import ForgotPwdStore from '@/store/ForgotPwdStore';
-import {loginApi, logoutApi} from "@/api/Oauth2Api";
-import Result from "@/pojo/Result";
-import * as HintEntity from "@/pojo/HintEntity";
+import {logoutApi} from "@/api/Oauth2Api";
+import {LOGIN_PAGE} from "@/constants/PageUriConst"
 
 export default defineComponent({
   setup() {
@@ -212,6 +208,8 @@ export default defineComponent({
         LocalStorageUtil.remove(AUTHORIZATION);
         // 清除 用户信息
         LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+        // 重定向到登录页面
+        window.location.href=LOGIN_PAGE;
       });
     }
     return {

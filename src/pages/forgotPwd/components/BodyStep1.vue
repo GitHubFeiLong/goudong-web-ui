@@ -18,7 +18,7 @@ import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
 import * as HintEntity from '@/pojo/HintEntity';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
-import { getUserByLoginNameApi } from '@/api/Oauth2Api';
+import { getUserByLoginNameApi } from '@/api/UserApi';
 import Hint from './Hint.vue';
 
 export default defineComponent({

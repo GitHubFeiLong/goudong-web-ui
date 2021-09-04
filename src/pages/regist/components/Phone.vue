@@ -66,7 +66,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 import * as Validate from '@/utils/ValidateUtil';
 // 接口地址
 import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
-import { getUserByPhoneApi } from '@/api/Oauth2Api';
+import { getUserByPhoneApi } from '@/api/UserApi';
 import Result from '@/pojo/Result';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import RegisterStore from '@/store/RegisterStore';

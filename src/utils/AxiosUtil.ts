@@ -1,11 +1,10 @@
 // Axios.ts
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ElMessage } from 'element-plus';
+import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {ElMessage} from 'element-plus';
 
 import Result from '@/pojo/Result';
-import { AUTHORIZATION, USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
+import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
-import AuthorityUser from '@/pojo/AuthorityUser';
 
 /**
  * 初始化 axios
@@ -90,7 +89,7 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   }
 
   // 登录接口，保存用户信息
-  if (response.config.url?.startsWith('/api/oauth2/user/login')) {
+  if (response.config.url?.startsWith('/api/oauth2/login/login')) {
     LocalStorageUtil.set(USER_LOCAL_STORAGE, response.data.data);
   }
 
