@@ -8,9 +8,9 @@
           <a href="#">{{city}}</a>
         </div>
         <el-card class="location-box-card" v-show="showDetail.showCityBoxCard">
-          <div :key="item.uuid" class="city-item" v-for="item in cityArr">
+          <div :key="item.id" class="city-item" v-for="item in cityArr">
             <span :class="{'checked' : item.checked, 'city-span' : true}"
-                  @click="checkedCity(item.uuid)">{{item.name}}</span>
+                  @click="checkedCity(item.id)">{{item.name}}</span>
           </div>
         </el-card>
       </div>
@@ -159,6 +159,8 @@ export default defineComponent({
           // eslint-disable-next-line no-param-reassign
           item.checked = true;
           city.value = item.name as string;
+
+
         }
         // 重新渲染class
         showDetail.showCityBoxCard = false;

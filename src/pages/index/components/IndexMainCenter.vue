@@ -3,7 +3,7 @@
   <div class="main-container">
     <div class="left">
       <el-carousel height="470px" class="left-carousel">
-        <el-carousel-item v-for="item in mainArr" :key="item.uuid">
+        <el-carousel-item v-for="item in mainArr" :key="item.id">
           <a href="#">
             <img :src="item.name" />
           </a>
@@ -12,8 +12,8 @@
     </div>
     <div class="right">
       <el-carousel height="470px" class="right-carousel">
-        <el-carousel-item v-for="item in assistantArr" :key="item.uuid">
-          <a href="#" v-for="s in item" :key="s.uuid">
+        <el-carousel-item v-for="item in assistantArr" :key="item.id">
+          <a href="#" v-for="s in item" :key="s.id">
             <img class="img" :src="s.name" />
           </a>
         </el-carousel-item>

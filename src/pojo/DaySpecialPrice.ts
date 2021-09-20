@@ -4,7 +4,7 @@ export default class DaySpecialPrice extends Commodity{
 
   /**
    *
-   * @param uuid 主键
+   * @param id 主键
    * @param title 商品标题
    * @param picture 图片
    * @param price 价格

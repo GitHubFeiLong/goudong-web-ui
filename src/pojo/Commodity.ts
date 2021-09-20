@@ -3,7 +3,7 @@
  */
 export default class Commodity {
   /**
-   * 主键uuid
+   * 主键id
    */
   id: string | undefined = undefined;
 
