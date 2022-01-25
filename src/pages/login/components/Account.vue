@@ -36,7 +36,8 @@ import MiniPuzzleVerify from '@/components/MiniPuzzleVerify.vue';
 // 引入工具ts
 import * as HintEntity from '@/pojo/HintEntity';
 import Result from '@/pojo/Result';
-import { loginApi } from '@/api/Oauth2Api';
+// import { loginApi } from '@/api/Oauth2Api';
+import {loginApi} from '@/api/GoudongOauth2ServerApi';
 import QuickLogin from './QuickLogin.vue';
 import {INDEX_PAGE} from "@/constants/PageUriConst";
 // 申明jquery

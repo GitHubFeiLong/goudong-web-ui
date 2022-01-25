@@ -109,8 +109,8 @@ import * as HintEntity from '@/pojo/HintEntity';
 import QAEntity from '@/pojo/QAEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
-import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
-import { updatePasswordApi } from '@/api/UserApi';
+import { phoneCodeApi, checkCodeApi } from '@/api/GoudongMessageServerApi';
+import { updatePasswordApi } from '@/api/GoudongUserServerApi';
 
 declare let $: (selector: string) => any;
 

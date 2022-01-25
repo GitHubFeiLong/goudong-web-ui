@@ -17,7 +17,7 @@ import { defineComponent, onMounted } from 'vue';
 
 import RegisterStore from '@/store/RegisterStore';
 import AuthorityUser from '@/pojo/AuthorityUser';
-import { loginApi } from '@/api/Oauth2Api';
+import { loginApi } from '@/api/GoudongOauth2ServerApi';
 import Result from '@/pojo/Result';
 
 export default defineComponent({

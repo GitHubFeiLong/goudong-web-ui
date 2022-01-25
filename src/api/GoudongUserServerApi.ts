@@ -1,14 +1,14 @@
-/** ===================认证服务相关的接口======================== */
+/** ===================用户服务相关的接口======================== */
 import AuthorityUser from '@/pojo/AuthorityUser';
 import { CONTENT_TYPE_0, CONTENT_TYPE_1, CONTENT_TYPE_2 } from '@/pojo/ProjectConst';
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';
 
 /**
- * 根据手机号获取用户
+ * 检查手机号是否可用
  * @param phone 手机号
  */
-export const getUserByPhoneApi = (phone: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/open/user/phone/${phone}`);
+export const checkRegistryPhoneApi = (phone: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/base-user/check-registry/phone/${phone}`);
 
 /**
  * 根据用户名，查询当前用户名是否可用，当用户名不可用时，返回三条可用用户名

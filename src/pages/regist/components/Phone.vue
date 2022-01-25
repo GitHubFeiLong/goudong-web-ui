@@ -65,8 +65,8 @@ import * as HintEntity from '@/pojo/HintEntity';
 // 验证
 import * as Validate from '@/utils/ValidateUtil';
 // 接口地址
-import { phoneCodeApi, checkCodeApi } from '@/api/MessageApi';
-import { getUserByPhoneApi } from '@/api/UserApi';
+import { phoneCodeApi, checkCodeApi } from '@/api/GoudongMessageServerApi';
+import {checkRegistryPhoneApi} from '@/api/GoudongUserServerApi';
 import Result from '@/pojo/Result';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import RegisterStore from '@/store/RegisterStore';
@@ -130,15 +130,16 @@ export default defineComponent({
         // 验证码验证
         // showPhoneButton.value = false;
         // 检查手机号是否被使用
-        getUserByPhoneApi(phone.value).then((response) => {
+        checkRegistryPhoneApi(phone.value).then((response) => {
           const result: Result<AuthorityUser> = response.data;
-          // 用户不为null
+          console.log("result.data", result.data == true)
+          // 是否可以使用
           if (result.data) {
-            username.value = result.data.username;
-            dialogVisible.value = true;
-          } else {
             // 验证码验证
             showPhoneButton.value = false;
+          } else {
+            username.value = result.data.username;
+            dialogVisible.value = true;
           }
         });
       }, 600);

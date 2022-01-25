@@ -96,7 +96,7 @@ import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import IndexStore from '@/store/IndexStore';
-import {logoutApi} from "@/api/Oauth2Api";
+import {logoutApi} from "@/api/GoudongOauth2ServerApi";
 import {LOGIN_PAGE} from "@/constants/PageUriConst"
 
 export default defineComponent({
