@@ -109,7 +109,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 import QAEntity from '@/pojo/QAEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
-import { phoneCodeApi } from '@/api/GoudongMessageServerApi';
+import {phoneCodeApi, checkPhoneCodeApi} from '@/api/GoudongMessageServerApi';
 import { updatePasswordApi } from '@/api/GoudongUserServerApi';
 
 declare let $: (selector: string) => any;

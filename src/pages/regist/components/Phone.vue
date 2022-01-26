@@ -65,7 +65,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 // 验证
 import * as Validate from '@/utils/ValidateUtil';
 // 接口地址
-import {phoneCodeApi} from '@/api/GoudongMessageServerApi';
+import {phoneCodeApi, checkPhoneCodeApi} from '@/api/GoudongMessageServerApi';
 import {checkRegistryPhoneApi} from '@/api/GoudongUserServerApi';
 import Result from '@/pojo/Result';
 import AuthorityUser from '@/pojo/AuthorityUser';
