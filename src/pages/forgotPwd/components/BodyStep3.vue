@@ -109,7 +109,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 import QAEntity from '@/pojo/QAEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
-import { phoneCodeApi, checkCodeApi } from '@/api/GoudongMessageServerApi';
+import { phoneCodeApi } from '@/api/GoudongMessageServerApi';
 import { updatePasswordApi } from '@/api/GoudongUserServerApi';
 
 declare let $: (selector: string) => any;
@@ -167,7 +167,7 @@ export default defineComponent({
     // 弹框中点击下一步
     const clickDialogNextStep = () => {
       // 验证码检查是否正确(目前只有手机验证码)
-      checkCodeApi(ForgotPwdStore.state.authorityUser.phone, phoneVerifyCode.value).then((response) => {
+      checkPhoneCodeApi(ForgotPwdStore.state.authorityUser.phone, phoneVerifyCode.value).then((response) => {
         const result: Result<boolean> = response.data;
         const { data } = result;
         if (data) {

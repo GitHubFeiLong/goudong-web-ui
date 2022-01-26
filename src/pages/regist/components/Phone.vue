@@ -57,7 +57,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, watch } from 'vue';
+import {defineComponent, ref, watch} from 'vue';
 import PuzzleVerify from '@/components/PuzzleVerify.vue';
 
 // 提示对象
@@ -65,7 +65,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 // 验证
 import * as Validate from '@/utils/ValidateUtil';
 // 接口地址
-import { phoneCodeApi, checkCodeApi } from '@/api/GoudongMessageServerApi';
+import {phoneCodeApi} from '@/api/GoudongMessageServerApi';
 import {checkRegistryPhoneApi} from '@/api/GoudongUserServerApi';
 import Result from '@/pojo/Result';
 import AuthorityUser from '@/pojo/AuthorityUser';
@@ -243,7 +243,7 @@ export default defineComponent({
           phoneRef.value && phoneRef.value.focus();
         } else if (authCode.value.length === 6) {
           // 将手机号和验证码 拿去请求查看是否正确
-          checkCodeApi(phone.value, authCode.value).then((response) => {
+          checkPhoneCodeApi(phone.value, authCode.value).then((response) => {
             console.log(response);
             const boo: boolean = response.data.data;
             if (boo) {

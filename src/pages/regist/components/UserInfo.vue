@@ -69,7 +69,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 import { BLANK } from '@/pojo/HintEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import { checkUsernameApi, checkEmailApi, createUserApi } from '@/api/GoudongUserServerApi';
-import { checkCodeApi, emailCodeApi } from '@/api/GoudongMessageServerApi';
+import { emailCodeApi } from '@/api/GoudongMessageServerApi';
 import AuthorityUser from '@/pojo/AuthorityUser';
 import RegisterStore from '@/store/RegisterStore';
 import Hint from './Hint.vue';
@@ -398,7 +398,7 @@ export default defineComponent({
         // 禁用按钮点击
         (nextStepRef.value as HTMLElement).setAttribute('disabled', 'disabled');
 
-        checkCodeApi(email.value, emailCode.value).then((response) => {
+        checkEmail(email.value, emailCode.value).then((response) => {
           const boo: boolean = response.data.data;
           emailCodeSure.value = boo;
           if (boo) {
