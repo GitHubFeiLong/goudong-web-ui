@@ -174,7 +174,7 @@ export default defineComponent({
       // 鼠标松开
       if (now) {
         // 判断是否成功（重叠,这里设置的误差是1像素）
-        if (Math.abs(moveX - needX) <= 1) {
+        if (Math.abs(moveX - needX) <= 5) {
           console.log('成功');
           statusTxt.value = '拼接成功';
           (STATUS.value as any).style.backgroundImage = 'linear-gradient(to top, #4fcffd, #30b2fb)';

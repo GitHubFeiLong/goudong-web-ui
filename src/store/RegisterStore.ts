@@ -3,7 +3,7 @@ import AuthorityUser from '@/pojo/AuthorityUser';
 
 export default createStore({
   state() {
-    const accountRadio = '';
+    const accountRadio = 'BLANK';
     const user: AuthorityUser = new AuthorityUser();
     const password = '';
     return {
