@@ -16,7 +16,7 @@
 import { defineComponent, onMounted } from 'vue';
 
 import RegisterStore from '@/store/RegisterStore';
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 import { loginApi } from '@/api/GoudongOauth2ServerApi';
 import Result from '@/pojo/Result';
 
@@ -31,17 +31,17 @@ export default defineComponent({
     onMounted(() => {
       // 进行登录
       const { user } = RegisterStore.state;
-      const username: string = (user as AuthorityUser).username as string;
-      const password: string = (user as AuthorityUser).password as string;
+      const username: string = (user as User).username as string;
+      const password: string = (user as User).password as string;
       // 登录
       loginApi(username, password).then((response) => {
-        const result: Result<AuthorityUser> = response.data;
+        const result: Result<User> = response.data;
 
-        if (result.code === '1') {
-          window.location.href = '/index.html';
-        }
-
-        setTimeout(goShopping, 3000);
+        // if (result.code === '1') {
+        //   window.location.href = '/index.html';
+        // }
+        //
+        // setTimeout(goShopping, 3000);
       });
     });
 

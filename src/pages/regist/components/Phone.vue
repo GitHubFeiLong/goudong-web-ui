@@ -68,7 +68,7 @@ import * as Validate from '@/utils/ValidateUtil';
 import {phoneCodeApi, checkPhoneCodeApi} from '@/api/GoudongMessageServerApi';
 import {checkRegistryPhoneApi} from '@/api/GoudongUserServerApi';
 import Result from '@/pojo/Result';
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 import RegisterStore from '@/store/RegisterStore';
 import Hint from './Hint.vue';
 
@@ -131,7 +131,7 @@ export default defineComponent({
         // showPhoneButton.value = false;
         // 检查手机号是否被使用
         checkRegistryPhoneApi(phone.value).then((response) => {
-          const result: Result<AuthorityUser> = response.data;
+          const result: Result<User> = response.data;
           console.log("result.data", result.data == true)
           // 是否可以使用
           if (result.data) {

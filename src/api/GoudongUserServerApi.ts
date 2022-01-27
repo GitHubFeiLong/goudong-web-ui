@@ -1,5 +1,5 @@
 /** ===================用户服务相关的接口======================== */
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 import { CONTENT_TYPE_0, CONTENT_TYPE_1, CONTENT_TYPE_2 } from '@/pojo/ProjectConst';
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';
@@ -26,7 +26,7 @@ export const checkEmailApi = (email: string): Promise<AxiosResponse> => AxiosUti
  * 注册用户
  * @param paramObj 用户对象
  */
-export const createUserApi = (data: AuthorityUser): Promise<AxiosResponse> => AxiosUtil.post('/api/user/base-user', data);
+export const createUserApi = (data: User): Promise<AxiosResponse> => AxiosUtil.post('/api/user/base-user', data);
 
 /**
  * 根据用户名，手机号，邮箱获取用户基本信息

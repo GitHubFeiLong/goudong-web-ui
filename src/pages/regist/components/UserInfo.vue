@@ -70,7 +70,7 @@ import { BLANK } from '@/pojo/HintEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import { checkUsernameApi, checkEmailApi, createUserApi } from '@/api/GoudongUserServerApi';
 import { emailCodeApi,checkEmailCodeApi } from '@/api/GoudongMessageServerApi';
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 import RegisterStore from '@/store/RegisterStore';
 import Hint from './Hint.vue';
 
@@ -406,7 +406,7 @@ export default defineComponent({
 
             // 保存到数据库
             const phone: string = props.phone as string;
-            const user = new AuthorityUser(phone, username.value, password.value, email.value);
+            const user = new User(phone, username.value, password.value, email.value);
             // 单选框值
             user.accountRadio = RegisterStore.state.accountRadio;
             createUserApi(user).then().then((response) => {

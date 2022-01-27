@@ -94,15 +94,15 @@ import {defineComponent, onMounted, reactive, ref,} from 'vue';
 import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
-import AuthorityUser from '@/pojo/AuthorityUser';
 import IndexStore from '@/store/IndexStore';
 import {logoutApi} from "@/api/GoudongOauth2ServerApi";
 import {LOGIN_PAGE} from "@/constants/PageUriConst"
+import User from "@/pojo/User";
 
 export default defineComponent({
   setup() {
     const city = ref<string>('');
-    const user = ref<AuthorityUser>(new AuthorityUser());
+    const user = ref<User>(new User());
     const tempArr = [
       { name: '北京', id: '1', checked: true },
       { name: '上海', id: '2', checked: false },
@@ -193,7 +193,7 @@ export default defineComponent({
 
     onMounted(() => {
       city.value = '重庆';
-      user.value = LocalStorageUtil.get(USER_LOCAL_STORAGE) as AuthorityUser;
+      user.value = LocalStorageUtil.get(USER_LOCAL_STORAGE) as User;
 
       IndexStore.commit('initUser', user.value);
       console.log(user.value);

@@ -1,10 +1,10 @@
 import { createStore } from 'vuex';
 import { CHANGE_RAW_SCROLL_CLASS, CHANGE_ONE_SCROLL_CLASS } from './MutationTypes';
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 
 export default createStore({
   state: {
-    user : new AuthorityUser(),
+    user : new User(),
     scrollObj : {
       // 秒杀右侧侧边栏
       sidebarClass: {sidebar:true, fixed: false},
@@ -24,7 +24,7 @@ export default createStore({
      * @param state
      * @param user
      */
-    initUser(state: any, user: AuthorityUser) {
+    initUser(state: any, user: User) {
       state.user = user;
     },
     // 我们可以使用 ES2015 风格的计算属性命名功能来使用一个常量作为函数名

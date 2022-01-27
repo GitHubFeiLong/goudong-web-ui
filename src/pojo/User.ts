@@ -1,7 +1,7 @@
 /**
  * 用户信息对象
  */
-export default class AuthorityUser {
+export default class User {
   // 用户表主键id
   id: string ="";
   // 用户名
@@ -31,8 +31,8 @@ export default class AuthorityUser {
   // 是否被删除
   isDelete: boolean | undefined =false;
 
-  // 账号是否是你的 空字符串、MY_SELF、NOT_MY_SELF
-  accountRadio: string | undefined ='';
+  // 账号是否是你的 BLACK、MY_SELF、NOT_MY_SELF
+  accountRadio: string | undefined ='BLACK';
 
   // 验证码
   code: string | undefined ='';

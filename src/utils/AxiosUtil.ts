@@ -3,8 +3,19 @@ import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {ElMessage} from 'element-plus';
 
 import Result from '@/pojo/Result';
-import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
+import {Dispose401StatusEnum} from '@/enumerate/Dispose401StatusEnum';
+import {refreshToken} from '@/utils/RefreshTokenUtil';
+import {
+  AUTHORIZATION,
+  BEARER,
+  DISPOSE_401_STATUS,
+  TOKEN_LOCAL_STORAGE,
+  USER_LOCAL_STORAGE,
+} from '@/pojo/ProjectConst';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
+import Token from "@/pojo/Token";
+import {logoutApi, refreshTokenApi} from "@/api/GoudongOauth2ServerApi";
+import AxiosUtil from "@/utils/AxiosUtil";
 
 /**
  * 初始化 axios
@@ -45,10 +56,13 @@ const service = axios.create({
  */
 service.interceptors.request.use((config: AxiosRequestConfig) => {
   // 获取token，并将其添加至请求头中
-  const token = LocalStorageUtil.get(AUTHORIZATION);
+  const token:Token = LocalStorageUtil.get(TOKEN_LOCAL_STORAGE);
   if (token) {
-    config.headers[AUTHORIZATION.toLowerCase()] = token;
+
   }
+
+
+
   return config;
 }, (error) => {
   console.log(`请求：${error}`);
@@ -66,14 +80,14 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   // 响应码
   const { status } = response;
   const result = response.data;
+
+
+
   // 响应码401，需要重新登录
   if (status == 401) {
-    // 清除 token
-    LocalStorageUtil.remove(AUTHORIZATION);
-    // 清除 用户信息
-    LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+    refreshToken();
   }
-
+  // TODO 有些接口并不希望直接弹出提示框
   if (status < 200 || status >= 400) {
     // 弹出客户端提示
     ElMessage.error(result.clientMessage);
@@ -83,20 +97,11 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
     return Promise.reject(response);
   }
 
-  // 响应头有token，那就更新本地token值
-  if (response.headers[AUTHORIZATION.toLowerCase()]) {
-    LocalStorageUtil.set(AUTHORIZATION, response.headers[AUTHORIZATION.toLowerCase()]);
-  }
-
-  // 登录接口，保存用户信息
-  if (response.config.url?.startsWith('/api/oauth2/login/login')) {
-    LocalStorageUtil.set(USER_LOCAL_STORAGE, response.data.data);
-  }
-
   return response;
 }, (error) => {
   console.log(error);
   if (axios.isCancel(error)) {
+    // 取消请求
     console.log(`repeated request: ${error.message}`);
   } else {
     // handle error code
@@ -109,3 +114,5 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
 });
 
 export default service;
+
+

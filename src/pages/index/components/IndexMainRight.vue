@@ -56,7 +56,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
 
@@ -100,7 +100,7 @@ export default defineComponent({
         name: '礼品卡', iconfont: 'icon-lipinqia', link: '#', color: '#f2a53b',
       },
     ];
-    const user = reactive<AuthorityUser>(LocalStorageUtil.get(USER_LOCAL_STORAGE) as AuthorityUser);
+    const user = reactive<User>(LocalStorageUtil.get(USER_LOCAL_STORAGE) as User);
 
     onMounted(() => {
       if (user != null && !user.headPortrait) {

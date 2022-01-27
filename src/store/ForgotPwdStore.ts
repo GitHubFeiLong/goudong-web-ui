@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import AuthorityUser from '@/pojo/AuthorityUser';
+import User from '@/pojo/User';
 
 export default createStore({
   state() {
@@ -8,7 +8,7 @@ export default createStore({
     };
   },
   mutations: {
-    changeAuthorityUser(state: any, value: AuthorityUser) {
+    changeAuthorityUser(state: any, value: User) {
       state.authorityUser = value;
     },
     // 设置验证码
