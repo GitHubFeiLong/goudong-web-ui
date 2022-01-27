@@ -93,7 +93,7 @@
 import {defineComponent, onMounted, reactive, ref,} from 'vue';
 import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
-import {AUTHORIZATION, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
 import IndexStore from '@/store/IndexStore';
 import {logoutApi} from "@/api/GoudongOauth2ServerApi";
 import {LOGIN_PAGE} from "@/constants/PageUriConst"
@@ -207,7 +207,7 @@ export default defineComponent({
       // 清空本地缓存用户数据
       logoutApi().then((response) => {
         // 清除 token
-        LocalStorageUtil.remove(AUTHORIZATION);
+        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
         // 清除 用户信息
         LocalStorageUtil.remove(USER_LOCAL_STORAGE);
         // 重定向到登录页面

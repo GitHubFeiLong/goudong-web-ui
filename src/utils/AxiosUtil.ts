@@ -16,6 +16,7 @@ import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import Token from "@/pojo/Token";
 import {logoutApi, refreshTokenApi} from "@/api/GoudongOauth2ServerApi";
 import AxiosUtil from "@/utils/AxiosUtil";
+import {validateHeaderNeedlessToken} from "@/utils/ValidateUtil";
 
 /**
  * 初始化 axios
@@ -56,22 +57,25 @@ const service = axios.create({
  */
 service.interceptors.request.use((config: AxiosRequestConfig) => {
   // 获取token，并将其添加至请求头中
-  const token:Token = LocalStorageUtil.get(TOKEN_LOCAL_STORAGE);
-  if (token) {
-
-  }
-
-
-
+  const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
+  validateHeaderNeedlessToken(config.url).then(boo => {
+    if (!boo) {
+      config.headers[AUTHORIZATION] = `Bearer ${token.accessToken}`;
+    }
+  });
   return config;
 }, (error) => {
-  console.log(`请求：${error}`);
+  console.error(`请求：${error}`);
   // 错误抛到业务代码
   error.data = {};
   error.data.msg = '服务器异常，请联系管理员！';
   return Promise.resolve(error);
 });
 
+// 重试队列，每一项将是一个待执行的函数形式
+let requests: any[] = [];
+// 是否正在刷新的标记
+let isRefreshing = false
 /**
  * 响应拦截器
  */
@@ -79,13 +83,51 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   console.log(response);
   // 响应码
   const { status } = response;
+  const config  = response.config;
   const result = response.data;
-
-
-
-  // 响应码401，需要重新登录
+  // 获取token
+  const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
+  // 响应码401，需要重新登录（或使用无感刷新token）
   if (status == 401) {
-    refreshToken();
+    if (!isRefreshing) {
+      isRefreshing = true
+      if (token) {
+        // 不是登录请求 && 不是 刷新令牌的请求
+        validateHeaderNeedlessToken(config.url).then(boo => {
+          // 请求刷新令牌
+          refreshTokenApi(token.refreshToken).then((res)=>{
+            // 这个是才后端反的data一层数据
+            let result = res.data.data;
+            // 生成token对象
+            const newToken = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
+            // 设置token对象
+            LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
+            // 刷新token获取后，补偿本次失败的请求
+            requests.forEach((cb) => cb(newToken.accessToken))
+            requests = [] // 重新请求完清空
+            return service(config);
+          }).catch(err=>{
+            console.error("抱歉，您的登录状态已失效，请重新登录！", err)
+            return Promise.reject(err)
+          }).finally(()=>{
+            isRefreshing = false;
+          })
+        })
+      } else {
+        // token 无效，删除缓存
+        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+        LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+      }
+    } else {
+      // 正在刷新token，返回一个未执行resolve的promise
+      return new Promise((resolve) => {
+        // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+        requests.push(() => {
+          config.baseURL = ''
+          resolve(service(config))
+        })
+      })
+    }
   }
   // TODO 有些接口并不希望直接弹出提示框
   if (status < 200 || status >= 400) {

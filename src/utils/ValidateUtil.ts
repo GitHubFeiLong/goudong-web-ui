@@ -1,4 +1,5 @@
 import * as HintEntity from '@/pojo/HintEntity';
+import {loginApi} from '@/api/GoudongOauth2ServerApi'
 
 /**
  * 邮箱验证
@@ -91,6 +92,19 @@ function validatePhone(value: string): Promise<string|void> {
   });
 }
 
+/**
+ * 判断是否需要请求头带token的
+ * @param url
+ */
+function validateHeaderNeedlessToken(url: string | undefined):Promise<Boolean> {
+  return new Promise((resolve => {
+    if (url?.startsWith("/api/oauth2/authentication/login") || url?.startsWith("/api/oauth2/authentication/refresh-token")) {
+      resolve(true);
+    }
+    resolve(false);
+  }))
+}
+
 export {
-  validateEmail, validateUsername, validatePassword, validatePhone,
+  validateEmail, validateUsername, validatePassword, validatePhone, validateHeaderNeedlessToken
 };

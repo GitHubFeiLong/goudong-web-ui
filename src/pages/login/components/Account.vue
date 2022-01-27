@@ -157,7 +157,7 @@ export default defineComponent({
         // 修改按钮文字
         btnValue.value = LoginBtnValue1;
         // 跳转登录
-        // window.location.href = INDEX_PAGE;
+        window.location.href = INDEX_PAGE;
       }, (response)=>{
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
         btnValue.value = LoginBtnValue1;

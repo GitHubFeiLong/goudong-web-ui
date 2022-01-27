@@ -1,6 +1,6 @@
 <!-- 提示模板 -->
 <template>
-    <div class="row" id="header-hint">
+    <div class="row" id="header-hint" @click="demo">
         <p class="hint">
             <i class='header-i'></i>
             <span v-html="hint"></span>
@@ -13,6 +13,7 @@ import { defineComponent, onMounted } from 'vue';
 
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
+import {currentUserInfoApi} from "@/api/GoudongOauth2ServerApi";
 
 export default defineComponent({
   props: {
@@ -22,8 +23,13 @@ export default defineComponent({
     const notDone = () => {
       NotDone();
     };
+    const demo = () =>{
+      currentUserInfoApi().then((response) => {
+      })
+    }
     return {
       notDone,
+      demo,
     };
   },
 

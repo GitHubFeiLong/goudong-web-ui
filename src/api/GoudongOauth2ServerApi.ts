@@ -17,3 +17,8 @@ export const logoutApi = ():Promise<AxiosResponse> => AxiosUtil.put(`/api/oauth2
  * 刷新令牌
  */
 export const refreshTokenApi = (refreshToken : string):Promise<AxiosResponse> => AxiosUtil.post(`/api/oauth2/authentication/refresh-token?refreshToken=${refreshToken}`)
+
+/**
+ * 获取当前用户
+ */
+export const currentUserInfoApi = ():Promise<AxiosResponse> => AxiosUtil.get(`/api/oauth2/authentication/current-user-info`);
