@@ -38,7 +38,7 @@ export const getUserByLoginNameApi = (loginName: string): Promise<AxiosResponse>
  * 修改密码
  * @param paramObj 用户对象
  */
-export const updatePasswordApi = (data: object): Promise<AxiosResponse> => AxiosUtil.patch('/api/user/open/user/password', data);
+export const updatePasswordApi = (data: object): Promise<AxiosResponse> => AxiosUtil.patch('/api/user/base-user/password', data);
 
 /**
  * 绑定openId
