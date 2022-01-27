@@ -94,24 +94,33 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
       if (token) {
         // 不是登录请求 && 不是 刷新令牌的请求
         validateHeaderNeedlessToken(config.url).then(boo => {
-          // 请求刷新令牌
-          refreshTokenApi(token.refreshToken).then((res)=>{
-            // 这个是才后端反的data一层数据
-            let result = res.data.data;
-            // 生成token对象
-            const newToken = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
-            // 设置token对象
-            LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
-            // 刷新token获取后，补偿本次失败的请求
-            requests.forEach((cb) => cb(newToken.accessToken))
-            requests = [] // 重新请求完清空
-            return service(config);
-          }).catch(err=>{
-            console.error("抱歉，您的登录状态已失效，请重新登录！", err)
-            return Promise.reject(err)
-          }).finally(()=>{
-            isRefreshing = false;
+          return new Promise((resolve) => {
+            // 模拟请求时长
+            setTimeout(()=>{
+              // 请求刷新令牌
+              refreshTokenApi(token.refreshToken).then((res)=>{
+                // 这个是才后端反的data一层数据
+                let result = res.data.data;
+                // 生成token对象
+                const newToken = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
+                // 设置token对象
+                LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
+                // 刷新token获取后，补偿本次失败的请求
+                requests.forEach((cb) => cb(newToken.accessToken))
+                requests = [] // 重新请求完清空
+                return service(config);
+              }).catch(err=>{
+                console.error("抱歉，您的登录状态已失效，请重新登录！", err)
+                return Promise.reject(err)
+              }).finally(()=>{
+                isRefreshing = false;
+              })
+              resolve()
+            }, 5000)
           })
+
+          console.log("2")
+
         })
       } else {
         // token 无效，删除缓存
@@ -128,9 +137,8 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
         })
       })
     }
-  }
-  // TODO 有些接口并不希望直接弹出提示框
-  if (status < 200 || status >= 400) {
+  } else if (status < 200 || status >= 400) {
+    // TODO 有些接口并不希望直接弹出提示框
     // 弹出客户端提示
     ElMessage.error(result.clientMessage);
     // 打印服务端提示

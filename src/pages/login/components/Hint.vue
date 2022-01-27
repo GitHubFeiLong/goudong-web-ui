@@ -24,8 +24,10 @@ export default defineComponent({
       NotDone();
     };
     const demo = () =>{
-      currentUserInfoApi().then((response) => {
-      })
+      for (let i = 0; i < 5; i++) {
+        currentUserInfoApi().then((response) => {
+        })
+      }
     }
     return {
       notDone,
