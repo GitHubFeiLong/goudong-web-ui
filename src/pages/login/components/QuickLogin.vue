@@ -30,6 +30,7 @@ export default defineComponent({
   setup() {
     function qq() {
       window.location.href = `${baseUrl.gatewayUrl}api/oauth2/qq/login`;
+      // window.location.href = `http://www.goudong.shop/api/oauth2/qq/login`;
     }
     function wechat() {
       NotDone();
