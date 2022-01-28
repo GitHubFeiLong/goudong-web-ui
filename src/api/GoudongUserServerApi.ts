@@ -44,4 +44,4 @@ export const updatePasswordApi = (data: object): Promise<AxiosResponse> => Axios
  * 绑定openId
  * @param paramObj 用户对象
  */
-export const updateOpenIdApi = (data: object): Promise<AxiosResponse> => AxiosUtil.patch('/api/user/open/user/bind-open-id', data);
+export const updateOpenIdApi = (data: object): Promise<AxiosResponse> => AxiosUtil.patch('/api/user/base-user/bind-open-id', data);

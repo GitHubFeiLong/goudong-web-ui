@@ -14,6 +14,7 @@ switch (process.env.NODE_ENV) {
     break;
 }
 
+// commonjs 导出是module.exports，导入是require
 module.exports = {
   gatewayUrl,
 };

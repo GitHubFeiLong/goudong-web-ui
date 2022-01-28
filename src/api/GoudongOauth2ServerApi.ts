@@ -2,6 +2,8 @@
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';
 
+// 认证相关请求
+//==================================================================================================
 /**
  * 登录
  * @param paramObj 用户对象

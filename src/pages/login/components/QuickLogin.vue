@@ -24,12 +24,12 @@
 import { defineComponent } from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
-
+const baseUrl = require('@/config/BaseUrl')
 export default defineComponent({
   name: 'QuickLogin',
   setup() {
     function qq() {
-      window.location.href = 'http://www.goudong.shop/api/oauth2/qq/login';
+      window.location.href = `${baseUrl.gatewayUrl}api/oauth2/qq/login`;
     }
     function wechat() {
       NotDone();
