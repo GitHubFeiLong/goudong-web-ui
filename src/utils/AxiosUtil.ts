@@ -72,21 +72,22 @@ let isRefreshing = false
  * 响应拦截器
  */
 service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
-  console.log(response);
+  console.log("响应拦截:", response);
   // 响应码
   const { status } = response;
   const config  = response.config;
   const result = response.data;
-  // 获取token
-  const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
+
   // 响应码401，需要重新登录（或使用无感刷新token）
   if (status == 401) {
     // 这里进行判断，只有一个请求进入判断
     if (!isRefreshing) {
-      isRefreshing = true
+      // 获取token
+      const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
       if (token) {
         // 不是认证相关请求（不是登录请求 && 不是 刷新令牌的请求）
         if (validateUrlNotAuthentication(config.url)) {
+          isRefreshing = true
           return new Promise((resolve) => {
             // 请求刷新令牌
             refreshTokenApi(token.refreshToken).then((res)=>{
@@ -104,16 +105,23 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
               return service(config);
             }).catch(err=>{
               console.error("抱歉，您的登录状态已失效，请重新登录！", err)
+              // 弹出客户端提示
+              ElMessage.error("登录状态已失效");
               return Promise.reject(err)
             }).finally(()=>{
               isRefreshing = false;
             })
+
+            // 设置响应为错误，
+            return Promise.reject(response);
           })
         }
       } else {
         // token 无效，删除缓存
         LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
         LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+        // 设置响应为错误，
+        return Promise.reject(response);
       }
     } else {
       // 正在刷新token，返回一个未执行resolve的promise
