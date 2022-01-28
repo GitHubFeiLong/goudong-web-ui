@@ -19,6 +19,10 @@ import RegisterStore from '@/store/RegisterStore';
 import User from '@/pojo/User';
 import { loginApi } from '@/api/GoudongOauth2ServerApi';
 import Result from '@/pojo/Result';
+import LocalStorageUtil from "@/utils/LocalStorageUtil";
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/pojo/ProjectConst";
+import Token from "@/pojo/Token";
+import {INDEX_PAGE} from "@/constants/PageUriConst";
 
 export default defineComponent({
   props: {
@@ -26,7 +30,7 @@ export default defineComponent({
   },
   setup() {
     const goShopping = () => {
-      window.location.href = '/index';
+      window.location.href = INDEX_PAGE;
     };
     onMounted(() => {
       // 进行登录
@@ -35,13 +39,18 @@ export default defineComponent({
       const password: string = (user as User).password as string;
       // 登录
       loginApi(username, password).then((response) => {
-        const result: Result<User> = response.data;
+        // 这个是才后端反的data一层数据
+        let result = response.data.data;
+        // 用户信息
+        const user: Result<User> = result.user;
+        // 设置用户信息
+        LocalStorageUtil.set(USER_LOCAL_STORAGE, user);
+        // 生成token对象
+        const token = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
+        // 设置token对象
+        LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, token);
 
-        // if (result.code === '1') {
-        //   window.location.href = '/index.html';
-        // }
-        //
-        // setTimeout(goShopping, 3000);
+        setTimeout(goShopping, 3000);
       });
     });
 

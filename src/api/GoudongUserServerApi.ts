@@ -30,9 +30,9 @@ export const createUserApi = (data: User): Promise<AxiosResponse> => AxiosUtil.p
 
 /**
  * 根据用户名，手机号，邮箱获取用户基本信息
- * @param paramObj 用户对象
+ * @param loginName 用户名/手机号/邮箱
  */
-export const getUserByLoginNameApi = (loginName: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/open/user/info/${loginName}`);
+export const getUserByLoginNameApi = (loginName: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/base-user/user-basic-info/${loginName}`);
 
 /**
  * 修改密码

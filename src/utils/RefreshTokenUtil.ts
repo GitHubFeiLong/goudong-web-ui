@@ -1,9 +1,5 @@
 import Token from "@/pojo/Token";
-import LocalStorageUtil from "@/utils/LocalStorageUtil";
-import {DISPOSE_401_STATUS, TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/pojo/ProjectConst";
-import {Dispose401StatusEnum} from "@/enumerate/Dispose401StatusEnum";
 import {refreshTokenApi} from "@/api/GoudongOauth2ServerApi";
-import * as HintEntity from "@/pojo/HintEntity";
 import {AxiosResponse} from "axios";
 
 /**

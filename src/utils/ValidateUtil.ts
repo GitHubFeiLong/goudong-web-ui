@@ -96,15 +96,26 @@ function validatePhone(value: string): Promise<string|void> {
  * 判断是否需要请求头带token的
  * @param url
  */
-function validateHeaderNeedlessToken(url: string | undefined):Promise<Boolean> {
-  return new Promise((resolve => {
-    if (url?.startsWith("/api/oauth2/authentication/login") || url?.startsWith("/api/oauth2/authentication/refresh-token")) {
-      resolve(true);
-    }
-    resolve(false);
-  }))
+function validateUrlAuthentication(url: string | undefined):Boolean {
+  return !validateUrlNotAuthentication(url);
+}
+
+/**
+ * 判断url不是认证相关地址（登录，刷新令牌）
+ * @param url
+ * @return true url不是认证地址，需要携token； false：url是认证地址，不需要带token
+ */
+function validateUrlNotAuthentication(url: string | undefined):Boolean {
+  // url类型是undefined直接返回
+  if (url === undefined) {
+    return false;
+  }
+  // 不是登录请求，也不是刷新token 的请求
+  return !url?.startsWith("/api/oauth2/authentication/login")
+    && !url?.startsWith("/api/oauth2/authentication/refresh-token")
 }
 
 export {
-  validateEmail, validateUsername, validatePassword, validatePhone, validateHeaderNeedlessToken
+  validateEmail, validateUsername, validatePassword, validatePhone,validateUrlAuthentication,
+  validateUrlNotAuthentication,
 };

@@ -22,9 +22,3 @@ export const USER_LOCAL_STORAGE = 'user';
  * 保存令牌信息
  */
 export const TOKEN_LOCAL_STORAGE = 'token';
-
-/**
- * 处理服务器返回的401请求的一个全局变量，用于刷新token获取等操作
- * 对应的值参考枚举{@link Dispose401StatusEnum}
- */
-export const DISPOSE_401_STATUS = "dispose_401_status"

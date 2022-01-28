@@ -620,21 +620,18 @@ export default defineComponent({
         width: 398px;
         height: auto;
         z-index: 10;
-        position: absolute;
         margin-left: -1px;
         background: #fff;
         border: solid 1px #ccc;
         list-style: none;
-
         li {
           height: 40px;
           line-height: 40px;
           cursor: pointer;
           padding-left: 130px;
           color: #333;
-          padding-right: 12px;
-          text-align: right;
-
+          text-align: left;
+          width: 268px;
           &:hover {
             background: #f6f6f6;
           }

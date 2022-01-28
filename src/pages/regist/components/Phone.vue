@@ -134,11 +134,11 @@ export default defineComponent({
           const result: Result<User> = response.data;
           console.log("result.data", result.data == true)
           // 是否可以使用
-          if (result.data) {
+          if (response.data.data) {
             // 验证码验证
             showPhoneButton.value = false;
           } else {
-            username.value = result.data.username;
+            username.value = response.data.dataMap.username;
             dialogVisible.value = true;
           }
         });
@@ -311,8 +311,8 @@ export default defineComponent({
     });
 
     /**
-       * 选中了单选，‘继续注册’就可以点击
-       */
+     * 选中了单选，‘继续注册’就可以点击
+     */
     watch(myAccountRadio, () => {
       // 修改vuex 的state
       RegisterStore.commit('changeAccountRadio', myAccountRadio);
