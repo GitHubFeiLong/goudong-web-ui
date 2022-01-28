@@ -82,12 +82,13 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   if (status == 401) {
     // 这里进行判断，只有一个请求进入判断
     if (!isRefreshing) {
+      isRefreshing = true
       // 获取token
       const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
+      // 判断token是否有效
       if (token) {
         // 不是认证相关请求（不是登录请求 && 不是 刷新令牌的请求）
         if (validateUrlNotAuthentication(config.url)) {
-          isRefreshing = true
           return new Promise((resolve) => {
             // 请求刷新令牌
             refreshTokenApi(token.refreshToken).then((res)=>{
@@ -99,8 +100,6 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
               LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
               // 其它失败的请求进行补发
               requests.forEach((cb) => cb(newToken.accessToken))
-              // 执行完成后，清空
-              requests = []
               // 刷新token获取后，补偿本次失败的请求
               return service(config);
             }).catch(err=>{
@@ -109,6 +108,8 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
               ElMessage.error("登录状态已失效");
               return Promise.reject(err)
             }).finally(()=>{
+              // 执行完成后，清空，还原初始状态
+              requests = []
               isRefreshing = false;
             })
 
@@ -116,13 +117,13 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
             return Promise.reject(response);
           })
         }
-      } else {
-        // token 无效，删除缓存
-        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
-        LocalStorageUtil.remove(USER_LOCAL_STORAGE);
-        // 设置响应为错误，
-        return Promise.reject(response);
       }
+      // token 无效，删除缓存
+      LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+      LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+      isRefreshing = false;
+      // 设置响应为错误，
+      return Promise.reject(response);
     } else {
       // 正在刷新token，返回一个未执行resolve的promise
       return new Promise((resolve) => {
