@@ -68,70 +68,69 @@ let requests: any[] = [];
 // 是否正在刷新的标记
 let isRefreshing = false
 
+let count = 1;
 /**
  * 响应拦截器
  */
-service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
+service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) => {
   console.log("响应拦截:", response);
   // 响应码
-  const { status } = response;
-  const config  = response.config;
+  const {status} = response;
+  const config = response.config;
   const result = response.data;
 
   // 响应码401，需要重新登录（或使用无感刷新token）
   if (status == 401) {
+    // 获取token
+    const token: Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
+    if (!token) {
+      // 登录
+      window.location.href = "/login.html"
+    }
     // 这里进行判断，只有一个请求进入判断
     if (!isRefreshing) {
       isRefreshing = true
-      // 获取token
-      const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
-      // 判断token是否有效
-      if (token) {
-        // 不是认证相关请求（不是登录请求 && 不是 刷新令牌的请求）
-        if (validateUrlNotAuthentication(config.url)) {
-          return new Promise((resolve) => {
-            // 请求刷新令牌
-            refreshTokenApi(token.refreshToken).then((res)=>{
-              // 这个是才后端反的data一层数据
-              let result = res.data.data;
-              // 生成token对象
-              const newToken = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
-              // 设置token对象
-              LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
-              // 其它失败的请求进行补发
-              requests.forEach((cb) => cb(newToken.accessToken))
-              // 刷新token获取后，补偿本次失败的请求
-              return service(config);
-            }).catch(err=>{
-              console.error("抱歉，您的登录状态已失效，请重新登录！", err)
-              // 弹出客户端提示
-              ElMessage.error("登录状态已失效");
-              return Promise.reject(err)
-            }).finally(()=>{
-              // 执行完成后，清空，还原初始状态
-              requests = []
-              isRefreshing = false;
-            })
-
+      // 不是认证相关请求（不是登录请求 && 不是 刷新令牌的请求）
+      if (validateUrlNotAuthentication(config.url)) {
+        return await new Promise((resolve, reject) => {
+          // 请求刷新令牌
+          refreshTokenApi(token.refreshToken).then((response) => {
+            // 这个是才后端反的data一层数据
+            let result = response.data.data;
+            // 生成token对象
+            const newToken = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
+            // 设置token对象
+            LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
+            // 其它失败的请求进行补发
+            requests.forEach((cb) => cb())
+            // 刷新token获取后，补偿本次失败的请求【成功】
+            requests = [];
+            return service(config);
+          }, (error) => {
+            // 执行失败后，还原
+            console.error("刷新令牌执行失败");
+            // token 无效，删除缓存
+            LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+            LocalStorageUtil.remove(USER_LOCAL_STORAGE);
             // 设置响应为错误，
             return Promise.reject(response);
           })
-        }
+        })
+
       }
       // token 无效，删除缓存
       LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
       LocalStorageUtil.remove(USER_LOCAL_STORAGE);
-      isRefreshing = false;
       // 设置响应为错误，
       return Promise.reject(response);
     } else {
       // 正在刷新token，返回一个未执行resolve的promise
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
         requests.push(() => {
-          config.baseURL = ''
-          resolve(service(config))
+          service(config)
         })
+        console.log(requests.length);
       })
     }
   } else if (status < 200 || status >= 400) {
@@ -142,8 +141,12 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
     console.error(result.serverMessage);
     // 设置响应为错误，
     return Promise.reject(response);
+  } else if (status == 200){ //保证未执行的请求进行重新执行请求
+    if (requests.length > 0) {
+      requests.forEach(cb=>cb());
+      requests = [];
+    }
   }
-
   return response;
 }, (error) => {
   console.log(error);
@@ -159,6 +162,16 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   }
   return Promise.reject(error);
 });
+
+/**
+ * 初始全局变量，刷新令牌使用的
+ */
+function initGRefreshTokenlobalVariable() {
+  // 执行完成后，清空，还原初始状态
+  console.log("开始将全局变量重置为初始值...", requests.length);
+  requests = []
+  isRefreshing = false;
+}
 
 export default service;
 
