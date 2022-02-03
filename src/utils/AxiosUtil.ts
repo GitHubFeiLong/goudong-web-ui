@@ -7,7 +7,8 @@ import {AUTHORIZATION, TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE,} from '@/pojo/Pr
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import Token from "@/pojo/Token";
 import {refreshTokenApi} from "@/api/GoudongOauth2ServerApi";
-import {validateUrlNotAuthentication} from "@/utils/ValidateUtil";
+import {validateUrlAuthentication, validateUrlNotAuthentication} from "@/utils/ValidateUtil";
+import {LOGIN_PAGE} from "@/constants/PageUriConst";
 
 /**
  * 初始化 axios
@@ -71,8 +72,8 @@ let isRefreshing = false
 /**
  * 响应拦截器
  */
-service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) => {
-  // console.log("响应拦截:", response);
+service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
+  console.log("响应拦截:", response);
   // 响应码
   const {status} = response;
   const config = response.config;
@@ -80,19 +81,19 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
 
   // 响应码401，需要重新登录（或使用无感刷新token）
   if (status == 401) {
-    // 获取token
-    const token: Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
-    if (!token) {
-      // 登录
-      window.location.href = "/login.html";
-      return Promise.resolve(response);
+    // 登录或刷新令牌 请求返回401，返回reject
+    if (validateUrlAuthentication(config.url)) {
+      return Promise.reject();
     }
+
+    // 其它请求，获取token
+    const token: Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
     // 这里进行判断，只有一个请求进入判断
     if (!isRefreshing) {
       isRefreshing = true
       // 不是认证相关请求（不是登录请求 && 不是 刷新令牌的请求）
       if (validateUrlNotAuthentication(config.url)) {
-        return await new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           // 请求刷新令牌
           refreshTokenApi(token.refreshToken).then((response) => {
             // 这个是才后端反的data一层数据
@@ -111,11 +112,14 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
             }, 3000);
             return service(config);
           }).catch(()=>{
+            ElMessage.error(result.clientMessage);
+            console.error("刷新令牌时，refresh_token无效，跳转到登录页")
             // 刷新令牌失败，直接跳转登录界面
             LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
             LocalStorageUtil.remove(USER_LOCAL_STORAGE);
             requests = [];
-            window.location.href = "/login.html";
+            isRefreshing = false;
+            window.location.href = LOGIN_PAGE
           }).finally(()=>{
             isRefreshing = false;
           })
@@ -130,7 +134,9 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
         })
       })
     }
-  } else if (status < 200 || status >= 400) {
+  }
+
+  if (status < 200 || status >= 400) {
     // TODO 有些接口并不希望直接弹出提示框
     // 弹出客户端提示
     ElMessage.error(result.clientMessage);
@@ -140,7 +146,6 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
     return Promise.reject(response);
   }
 
-  console.log(requests.length)
   return Promise.resolve(response);
 }, (error) => {
   // console.log(error);

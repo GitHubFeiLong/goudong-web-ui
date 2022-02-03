@@ -24,7 +24,7 @@ export default defineComponent({
       NotDone();
     };
     const demo = () =>{
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 1; i++) {
         setTimeout(()=>{
           currentUserInfoApi(i).then((response) => {
           })
