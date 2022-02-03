@@ -91,40 +91,36 @@ service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
     // 这里进行判断，只有一个请求进入判断
     if (!isRefreshing) {
       isRefreshing = true
-      // 不是认证相关请求（不是登录请求 && 不是 刷新令牌的请求）
-      if (validateUrlNotAuthentication(config.url)) {
-        return new Promise((resolve, reject) => {
-          // 请求刷新令牌
-          refreshTokenApi(token.refreshToken).then((response) => {
-            // 这个是才后端反的data一层数据
-            let result = response.data.data;
-            // 生成token对象
-            const newToken = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
-            // 设置token对象
-            LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
+      return new Promise((resolve, reject) => {
+        // 请求刷新令牌
+        refreshTokenApi(token.refreshToken).then((response) => {
+          // 这个是才后端反的data一层数据
+          let result = response.data.data;
+          // 生成token对象
+          const newToken = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
+          // 设置token对象
+          LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
 
-            // 防止刷新令牌处理完成后，其它请求又401，所以延时补发请求。
-            setTimeout(()=>{
-              // 其它失败的请求进行补发
-              requests.forEach((cb) => cb())
-              // 刷新token获取后，补偿本次失败的请求【成功】
-              requests = [];
-            }, 3000);
-            return service(config);
-          }).catch(()=>{
-            ElMessage.error(result.clientMessage);
-            console.error("刷新令牌时，refresh_token无效，跳转到登录页")
-            // 刷新令牌失败，直接跳转登录界面
-            LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
-            LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+          // 防止刷新令牌处理完成后，其它请求又401，所以延时补发请求。
+          setTimeout(()=>{
+            // 其它失败的请求进行补发
+            requests.forEach((cb) => cb())
+            // 刷新token获取后，补偿本次失败的请求【成功】
             requests = [];
-            isRefreshing = false;
-            window.location.href = LOGIN_PAGE
-          }).finally(()=>{
-            isRefreshing = false;
-          })
+          }, 3000);
+          return service(config);
+        }).catch(()=>{
+          ElMessage.error(result.clientMessage);
+          console.error("刷新令牌时，refresh_token无效，跳转到登录页")
+          // 刷新令牌失败，直接跳转登录界面
+          LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+          LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+          requests = [];
+          window.location.href = LOGIN_PAGE
+        }).finally(()=>{
+          isRefreshing = false;
         })
-      }
+      })
     } else {
       // 正在刷新token，返回一个未执行resolve的promise
       return new Promise(resolve => {
