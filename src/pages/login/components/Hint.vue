@@ -25,8 +25,10 @@ export default defineComponent({
     };
     const demo = () =>{
       for (let i = 0; i < 5; i++) {
-        currentUserInfoApi().then((response) => {
-        })
+        setTimeout(()=>{
+          currentUserInfoApi(i).then((response) => {
+          })
+        }, i*100)
       }
     }
     return {

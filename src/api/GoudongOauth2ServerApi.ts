@@ -23,4 +23,4 @@ export const refreshTokenApi = (refreshToken : string):Promise<AxiosResponse> =>
 /**
  * 获取当前用户信息
  */
-export const currentUserInfoApi = ():Promise<AxiosResponse> => AxiosUtil.get(`/api/oauth2/authentication/current-user-info`);
+export const currentUserInfoApi = (i:number):Promise<AxiosResponse> => AxiosUtil.get(`/api/oauth2/authentication/current-user-info?${i}`);

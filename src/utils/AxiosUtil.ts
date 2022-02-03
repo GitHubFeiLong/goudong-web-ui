@@ -29,7 +29,7 @@ const service = axios.create({
   // 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
   // 后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream
   transformRequest: [(data) => JSON.stringify(data)],
-  // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 rejecte
+  // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 reject
   validateStatus(status) {
     return status < 500;
   },
@@ -60,20 +60,19 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
   // 错误抛到业务代码
   error.data = {};
   error.data.msg = '服务器异常，请联系管理员！';
-  return Promise.resolve(error);
+  return Promise.reject(error);
 });
+
 
 // 重试队列，每一项将是一个待执行的函数形式
 let requests: any[] = [];
 // 是否正在刷新的标记
 let isRefreshing = false
-
-let count = 1;
 /**
  * 响应拦截器
  */
 service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) => {
-  console.log("响应拦截:", response);
+  // console.log("响应拦截:", response);
   // 响应码
   const {status} = response;
   const config = response.config;
@@ -85,7 +84,8 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
     const token: Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
     if (!token) {
       // 登录
-      window.location.href = "/login.html"
+      window.location.href = "/login.html";
+      return Promise.resolve(response);
     }
     // 这里进行判断，只有一个请求进入判断
     if (!isRefreshing) {
@@ -101,28 +101,26 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
             const newToken = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
             // 设置token对象
             LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
-            // 其它失败的请求进行补发
-            requests.forEach((cb) => cb())
-            // 刷新token获取后，补偿本次失败的请求【成功】
-            requests = [];
+
+            // 防止刷新令牌处理完成后，其它请求又401，所以延时补发请求。
+            setTimeout(()=>{
+              // 其它失败的请求进行补发
+              requests.forEach((cb) => cb())
+              // 刷新token获取后，补偿本次失败的请求【成功】
+              requests = [];
+            }, 3000);
             return service(config);
-          }, (error) => {
-            // 执行失败后，还原
-            console.error("刷新令牌执行失败");
-            // token 无效，删除缓存
+          }).catch(()=>{
+            // 刷新令牌失败，直接跳转登录界面
             LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
             LocalStorageUtil.remove(USER_LOCAL_STORAGE);
-            // 设置响应为错误，
-            return Promise.reject(response);
+            requests = [];
+            window.location.href = "/login.html";
+          }).finally(()=>{
+            isRefreshing = false;
           })
         })
-
       }
-      // token 无效，删除缓存
-      LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
-      LocalStorageUtil.remove(USER_LOCAL_STORAGE);
-      // 设置响应为错误，
-      return Promise.reject(response);
     } else {
       // 正在刷新token，返回一个未执行resolve的promise
       return new Promise(resolve => {
@@ -130,7 +128,6 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
         requests.push(() => {
           service(config)
         })
-        console.log(requests.length);
       })
     }
   } else if (status < 200 || status >= 400) {
@@ -141,15 +138,12 @@ service.interceptors.response.use(async (response: AxiosResponse<Result<any>>) =
     console.error(result.serverMessage);
     // 设置响应为错误，
     return Promise.reject(response);
-  } else if (status == 200){ //保证未执行的请求进行重新执行请求
-    if (requests.length > 0) {
-      requests.forEach(cb=>cb());
-      requests = [];
-    }
   }
-  return response;
+
+  console.log(requests.length)
+  return Promise.resolve(response);
 }, (error) => {
-  console.log(error);
+  // console.log(error);
   if (axios.isCancel(error)) {
     // 取消请求
     console.log(`repeated request: ${error.message}`);
