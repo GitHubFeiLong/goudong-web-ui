@@ -111,9 +111,12 @@ export default defineComponent({
     // 后端返回账号名
     const username = ref('');
     // 账号是不是我的 单选框
-    const myAccountRadio = ref('');
+    const myAccountRadio = ref('BLANK');
     // 继续注册按钮
     const goOnRegistRef = ref<HTMLElement | null>(null);
+    // 邮箱
+    let oldEmail = '';
+
     // 清除phone值
     const cleanPhone = () => {
       hint.value = HintEntity.BLANK;
@@ -139,6 +142,7 @@ export default defineComponent({
             showPhoneButton.value = false;
           } else {
             username.value = response.data.dataMap.username;
+            oldEmail = response.data.dataMap.email;
             dialogVisible.value = true;
           }
         });
@@ -317,8 +321,11 @@ export default defineComponent({
       // 修改vuex 的state
       RegisterStore.commit('changeAccountRadio', myAccountRadio);
       // 单选框选中
-      if (myAccountRadio.value !== '') {
+      if (myAccountRadio.value !== 'BLANK') {
         (goOnRegistRef.value as HTMLElement).classList.remove('disabled');
+      }
+      if (myAccountRadio.value === 'MY_SELF') {
+        RegisterStore.commit('setOldEmail', oldEmail);
       }
     });
 

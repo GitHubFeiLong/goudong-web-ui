@@ -14,13 +14,13 @@ export const checkRegistryPhoneApi = (phone: string): Promise<AxiosResponse> => 
  * 根据用户名，查询当前用户名是否可用，当用户名不可用时，返回三条可用用户名
  * @param username 用户名
  */
-export const checkUsernameApi = (username: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/base-user/check-registry/username/${username}`);
+export const checkRegistryUsernameApi = (username: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/base-user/check-registry/username/${username}`);
 
 /**
  * 检查邮箱是否能使用，true 表示可以使用
  * @param email 邮箱
  */
-export const checkEmailApi = (email: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/base-user/check-registry/email/${email}`);
+export const checkRegistryEmailApi = (email: string): Promise<AxiosResponse> => AxiosUtil.get(`/api/user/base-user/check-registry/email/${email}`);
 
 /**
  * 注册用户

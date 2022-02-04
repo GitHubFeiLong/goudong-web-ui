@@ -68,7 +68,10 @@ import { defineComponent, ref, watch } from 'vue';
 import * as HintEntity from '@/pojo/HintEntity';
 import { BLANK } from '@/pojo/HintEntity';
 import * as Validate from '@/utils/ValidateUtil';
-import { checkUsernameApi, checkEmailApi, createUserApi } from '@/api/GoudongUserServerApi';
+import {
+  createUserApi,
+  checkRegistryUsernameApi, checkRegistryEmailApi
+} from '@/api/GoudongUserServerApi';
 import { emailCodeApi,checkEmailCodeApi } from '@/api/GoudongMessageServerApi';
 import User from '@/pojo/User';
 import RegisterStore from '@/store/RegisterStore';
@@ -185,7 +188,7 @@ export default defineComponent({
           hintUsername.value = resolve;
           if (username.value !== oldUsername) {
             // 当符合条件时，查寻用户名是否被使用
-            checkUsernameApi(username.value).then((response) => {
+            checkRegistryUsernameApi(username.value).then((response) => {
               const { data } = response.data;
               usableUsernames.value = data;
             });
@@ -284,21 +287,27 @@ export default defineComponent({
         hintEmail.value = BLANK;
         emailSure.value = true;
         console.log(value);
+        // 当邮箱是已经被自己使用了，就不再验证邮箱是否可用
+        if (RegisterStore.state.oldEmail === email.value) {
+          emailSure.value = true;
+          hintEmail.value = HintEntity.BLANK;
+          return;
+        }
         // 比较本次和上次是否一致，不一致才调用接口
         if (email.value !== oldEmail) {
-          checkEmailApi(email.value).then((response) => {
+          checkRegistryEmailApi(email.value).then((response) => {
             const { data } = response.data;
 
             console.log(data);
             // 不可以使用
-            if (!data) {
+            if (data) {
+              emailSure.value = true;
+              hintEmail.value = HintEntity.BLANK;
+            } else {
               emailSure.value = false;
               hintEmail.value = HintEntity.EMAIL_HINT_32;
               // 不能用
               invalidEmail = email.value;
-            } else {
-              emailSure.value = true;
-              hintEmail.value = HintEntity.BLANK;
             }
           });
         }
@@ -398,6 +407,7 @@ export default defineComponent({
         // 禁用按钮点击
         (nextStepRef.value as HTMLElement).setAttribute('disabled', 'disabled');
 
+        // 检查邮箱和邮箱验证码是否匹配
         checkEmailCodeApi(email.value, emailCode.value).then((response) => {
           const boo: boolean = response.data.data;
           emailCodeSure.value = boo;
