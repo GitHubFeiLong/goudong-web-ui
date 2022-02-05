@@ -14,6 +14,7 @@ import { defineComponent, onMounted } from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
 import {currentUserInfoApi} from "@/api/GoudongOauth2ServerApi";
+import {pubKeyEncrypt, pubKeyDecrypt} from "@/utils/RSAUtil";
 
 export default defineComponent({
   props: {
@@ -24,12 +25,22 @@ export default defineComponent({
       NotDone();
     };
     const demo = () =>{
-      for (let i = 0; i < 1; i++) {
-        setTimeout(()=>{
-          currentUserInfoApi(i).then((response) => {
-          })
-        }, i*100)
-      }
+      // 测试加密
+      var encrypt1 = pubKeyEncrypt("中文中洒几滴哦就%......asd.撒旦。hello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello world");
+      // var encrypt1 = pubKeyEncrypt("hello");
+      console.log("加密后数据 = ", encrypt1)
+
+      var encrypt2 = pubKeyDecrypt(encrypt1);
+      console.log("解密后数据 = ", encrypt2)
+
+
+
+      // for (let i = 0; i < 1; i++) {
+      //   setTimeout(()=>{
+      //     currentUserInfoApi(i).then((response) => {
+      //     })
+      //   }, i*100)
+      // }
     }
     return {
       notDone,
