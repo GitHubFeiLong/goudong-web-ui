@@ -15,6 +15,7 @@
     "encryptlong": "^3.1.4",
     "glob": "^7.1.7",
     "http-proxy-middleware": "^2.0.0",
+    "js-base64": "^3.7.2",
     "jsencrypt": "^3.2.1",
     "mockjs": "^1.1.0",
     "moment": "^2.29.1",

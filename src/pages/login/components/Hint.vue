@@ -26,11 +26,11 @@ export default defineComponent({
     };
     const demo = () =>{
       // 测试加密
-      var encrypt1 = pubKeyEncrypt("中文中洒几滴哦就%......asd.撒旦。hello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello world");
-      // var encrypt1 = pubKeyEncrypt("hello");
+      // var encrypt1 = pubKeyEncrypt("中文中洒几滴哦就%......asd.撒旦。hello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello world");
+      var encrypt1 = pubKeyEncrypt("hello");
       console.log("加密后数据 = ", encrypt1)
-
-      var encrypt2 = pubKeyDecrypt(encrypt1);
+      var s = window.atob("kJjz9XUo6AulEXaYcYi+8JL5UazWevtxqkYxt2/3gIy/MAA3Eh03hUVWWGd0VwX+z5ITWjleyK6AYg+vnCESFV5WxKldQ0MinHOqrUXNl2a9zy4ypwozFDfVXCyV2rahIimDduO7ZcVDGmISLMgjAOwLYhBZuicOzEHbYR2nX7k=");
+      var encrypt2 = pubKeyDecrypt(s);
       console.log("解密后数据 = ", encrypt2)
 
 
