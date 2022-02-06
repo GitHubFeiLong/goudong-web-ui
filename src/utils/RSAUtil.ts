@@ -28,6 +28,7 @@ export function pubKeyDecrypt(str: any) {
   // return enc.decryptLong(data)
   let a = "kJjz9XUo6AulEXaYcYi+8JL5UazWevtxqkYxt2/3gIy/MAA3Eh03hUVWWGd0VwX+z5ITWjleyK6AYg+vnCESFV5WxKldQ0MinHOqrUXNl2a9zy4ypwozFDfVXCyV2rahIimDduO7ZcVDGmISLMgjAOwLYhBZuicOzEHbYR2nX7k=";
   console.log("解密1：", enc.decrypt(a))
+  console.log("解密1：", enc.decrypt(window.btoa(a)))
   console.log("解密2：", enc.decrypt(window.atob(a)))
   // return enc.decrypt(data)
 }
