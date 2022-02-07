@@ -14,8 +14,9 @@ import { defineComponent, onMounted } from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
 import {currentUserInfoApi} from "@/api/GoudongOauth2ServerApi";
-import {clientPublicKeyEncrypt, clientPrivateKeyEncrypt, clientPrivateKeyDecrypt, clientPublicDecrypt
-, serverPublicKeyEncrypt, serverPrivateKeyDecrypt
+import {
+  uiPublicKeyEncrypt, uiPrivateKeyEncrypt, uiPrivateKeyDecrypt, uiPublicDecrypt
+  , serverPublicKeyEncrypt, serverPrivateKeyDecrypt, serverPrivateKeyEncrypt, serverPublicKeyDecrypt
 } from "@/utils/RSAUtil";
 
 export default defineComponent({
@@ -27,23 +28,27 @@ export default defineComponent({
       NotDone();
     };
     const demo = () =>{
+      console.log("前端RSA示例=========")
       // 测试加密
-      let encrypt1 = clientPublicKeyEncrypt("hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实");
-      // var encrypt1 = clientPublicKeyEncrypt("hello我操你啊实打实的我去恶趣味");
+      let encrypt1 = uiPublicKeyEncrypt("hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实");
+      // var encrypt1 = uiPublicKeyEncrypt("hello我操你啊实打实的我去恶趣味");
       console.log("公钥加密后数据 = ", encrypt1)
-      let encrypt2 = clientPrivateKeyDecrypt(encrypt1);
+      let encrypt2 = uiPrivateKeyDecrypt(encrypt1);
       console.log("私钥解密后数据 = ", encrypt2)
-      console.log("===============");
-      let encrypt3 = clientPrivateKeyEncrypt(encrypt2);
+      let encrypt3 = uiPrivateKeyEncrypt(encrypt2);
       console.log("私钥加密后数据 = ", encrypt3)
-      let encrypt4 = clientPublicDecrypt(encrypt3);
+      let encrypt4 = uiPublicDecrypt(encrypt3);
       console.log("公钥解密后数据 = ", encrypt4)
 
-      console.log("======后端示例=======");
+      console.log("后端RSA示例=========")
       let encrypt5 = serverPublicKeyEncrypt(encrypt4);
       console.log("服务端公钥加密后数据 = ", encrypt5)
       let encrypt6 = serverPrivateKeyDecrypt(encrypt5)
       console.log("服务端私钥解密后数据 = ", encrypt6)
+      let encrypt7 = serverPrivateKeyEncrypt(encrypt6)
+      console.log("服务端私钥加密后数据 = ", encrypt7)
+      let encrypt8 = serverPublicKeyDecrypt(encrypt7)
+      console.log("服务端公钥解密后数据 = ", encrypt8)
       // for (let i = 0; i < 1; i++) {
       //   setTimeout(()=>{
       //     currentUserInfoApi(i).then((response) => {
