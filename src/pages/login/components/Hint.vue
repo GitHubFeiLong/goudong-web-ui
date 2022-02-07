@@ -14,7 +14,9 @@ import { defineComponent, onMounted } from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
 import {currentUserInfoApi} from "@/api/GoudongOauth2ServerApi";
-import {pubKeyEncrypt, pubKeyDecrypt} from "@/utils/RSAUtil";
+import {clientPublicKeyEncrypt, clientPrivateKeyEncrypt, clientPrivateKeyDecrypt, clientPublicDecrypt
+, serverPublicKeyEncrypt
+} from "@/utils/RSAUtil";
 
 export default defineComponent({
   props: {
@@ -26,14 +28,20 @@ export default defineComponent({
     };
     const demo = () =>{
       // 测试加密
-      // var encrypt1 = pubKeyEncrypt("hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实");
-      var encrypt1 = pubKeyEncrypt("hello我操你啊实打实的我去恶趣味");
-      console.log("加密后数据 = ", encrypt1)
-      var encrypt2 = pubKeyDecrypt("kJjz9XUo6AulEXaYcYi+8JL5UazWevtxqkYxt2/3gIy/MAA3Eh03hUVWWGd0VwX+z5ITWjleyK6AYg+vnCESFV5WxKldQ0MinHOqrUXNl2a9zy4ypwozFDfVXCyV2rahIimDduO7ZcVDGmISLMgjAOwLYhBZuicOzEHbYR2nX7k=");
-      // console.log("解密后数据 = ", encrypt2)
+      let encrypt1 = clientPublicKeyEncrypt("hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实hello我哦阿松大送到收到送到收到送哦啊实打实");
+      // var encrypt1 = clientPublicKeyEncrypt("hello我操你啊实打实的我去恶趣味");
+      console.log("公钥加密后数据 = ", encrypt1)
+      let encrypt2 = clientPrivateKeyDecrypt(encrypt1);
+      console.log("私钥解密后数据 = ", encrypt2)
+      console.log("===============");
+      let encrypt3 = clientPrivateKeyEncrypt(encrypt2);
+      console.log("私钥加密后数据 = ", encrypt3)
+      let encrypt4 = clientPublicDecrypt(encrypt3);
+      console.log("公钥解密后数据 = ", encrypt4)
 
-
-
+      console.log("======后端示例=======");
+      let encrypt5 = serverPublicKeyEncrypt(encrypt4);
+      console.log("服务端公钥加密后数据 = ", encrypt5)
       // for (let i = 0; i < 1; i++) {
       //   setTimeout(()=>{
       //     currentUserInfoApi(i).then((response) => {
