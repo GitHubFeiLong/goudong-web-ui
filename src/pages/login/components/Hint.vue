@@ -15,7 +15,7 @@ import { defineComponent, onMounted } from 'vue';
 import NotDone from '@/utils/NotDone';
 import {currentUserInfoApi} from "@/api/GoudongOauth2ServerApi";
 import {clientPublicKeyEncrypt, clientPrivateKeyEncrypt, clientPrivateKeyDecrypt, clientPublicDecrypt
-, serverPublicKeyEncrypt
+, serverPublicKeyEncrypt, serverPrivateKeyDecrypt
 } from "@/utils/RSAUtil";
 
 export default defineComponent({
@@ -42,6 +42,8 @@ export default defineComponent({
       console.log("======后端示例=======");
       let encrypt5 = serverPublicKeyEncrypt(encrypt4);
       console.log("服务端公钥加密后数据 = ", encrypt5)
+      let encrypt6 = serverPrivateKeyDecrypt(encrypt5)
+      console.log("服务端私钥解密后数据 = ", encrypt6)
       // for (let i = 0; i < 1; i++) {
       //   setTimeout(()=>{
       //     currentUserInfoApi(i).then((response) => {

@@ -16,8 +16,7 @@ const SERVER_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjue12N3M+rKyLo
 
 // 声明goudong-java的encrypt对象
 const serverJsEncrypt = new JSEncrypt();
-
-serverJsEncrypt.setKey(SERVER_PUBLIC_KEY);
+serverJsEncrypt.setPublicKey(SERVER_PUBLIC_KEY);
 
 /**
  * 客户端公钥
@@ -116,7 +115,7 @@ export function clientPrivateKeyDecrypt(data: string) {
  * @return result 加密后的字符串
  */
 export function serverPublicKeyEncrypt(data: string) {
-  return serverJsEncrypt.encryptLong(data);
+  return serverJsEncrypt.encryptLong(Base64.encode(data));
 }
 
 /**
@@ -127,4 +126,8 @@ export function serverPublicKeyEncrypt(data: string) {
  */
 export function serverPublicKeyDecrypt(data: string) {
   return serverJsEncrypt.decryptLong(data);
+}
+
+export function serverPrivateKeyDecrypt(data: string) {
+  return Base64.decode(serverJsEncrypt.decryptLong(data));
 }
