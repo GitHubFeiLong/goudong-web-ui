@@ -110,9 +110,11 @@ export function serverPrivateKeyEncrypt(data: string) {
  * @return result 解密后的字符串
  */
 export function serverPublicKeyDecrypt(data: string) {
+  // return serverJsEncrypt.decryptLong(data);
   return Base64.decode(serverJsEncrypt.decryptLong(data));
 }
 
 export function serverPrivateKeyDecrypt(data: string) {
+  // return serverJsEncrypt.decryptLong(data);
   return Base64.decode(serverJsEncrypt.decryptLong(data));
 }
