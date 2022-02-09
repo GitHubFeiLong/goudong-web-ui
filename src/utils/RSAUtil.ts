@@ -101,7 +101,9 @@ export function serverPublicKeyEncrypt(data: string) {
  * @return result 加密后的字符串
  */
 export function serverPrivateKeyEncrypt(data: string) {
-  return serverJsEncrypt.encryptLong(Base64.encode(data));
+  const jsEncrypt = new JSEncrypt();
+  jsEncrypt.setPrivateKey(SERVER_PRIVATE_KEY)
+  return jsEncrypt.encryptLong(Base64.encode(data));
 }
 /**
  * 使用服务端公钥解密
