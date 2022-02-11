@@ -20,6 +20,7 @@
     "jsencrypt": "^3.2.1",
     "mockjs": "^1.1.0",
     "moment": "^2.29.1",
+    "node-rsa": "^1.1.1",
     "server": "^1.0.32",
     "vue": "^3.0.0",
     "vue-axios": "^3.2.4",

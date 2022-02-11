@@ -1,122 +1,44 @@
 /**
- * 使用RSA加密解密（暂时不使用分段加密解密，原因：性能较差，安全性较高。只在特殊场景使用，比如支付时）
- */
-// import JSEncrypt from 'jsencrypt'
-/**
  * encryptlong 分段加密，分段解密
  */
 //@ts-ignore
 import { JSEncrypt } from 'encryptlong'
 import {Base64} from 'js-base64';
 
-/**
- * 服务端公钥
- */
-const SERVER_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjue12N3M+rKyLolo5x9AoQHPm+VNYxnT1Ac31sdIqrfmxsZ8ms/STvNDpMIW0I7T15lpjnreObXRSLpBzVObZlfwE/MSRplG5edc/ujieT8q3njf9ubYsmcZFjq9qHrrc+MCdqpYvScQ4PmCge2A0mu9tk5Pb26ePzKlhLoQduQIDAQAB";
-const SERVER_PRIVATE_KEY = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKO57XY3cz6srIuiWjnH0ChAc+b5U1jGdPUBzfWx0iqt+bGxnyaz9JO80OkwhbQjtPXmWmOet45tdFIukHNU5tmV/AT8xJGmUbl51z+6OJ5PyreeN/25tiyZxkWOr2oeutz4wJ2qli9JxDg+YKB7YDSa722Tk9vbp4/MqWEuhB25AgMBAAECgYApleIQssjc1HMHDHeqUWw3rRdDRXS8CbxPNuQfUck1+faAAcOQywiGNeFCOYbcWG1wP9AZmYi57mcrMJSUFq6DkadmfSIJv2DyGDQzni5cmswJFmTy7UqTjnGi1Vy0gwFBAcqUhw50srqxsaq6CHSuXMXuOpau1v/d9yVPevpMAQJBAM/q7Xnd7Mo4VjyI6tsERbh77hX2jGaW7G/1GoLs1i6c8zA0YZzfOHEFcriHHIJfFjHVJ9+cEqYZfXS0gvA11/kCQQDJlsuXj/Q5iCAD6B/+JcEugUNbzz+GCNCeX0BI0nN2Oddnmr9dm/Zd99JILFIwFMqaX2ay0Nreh4FdaW6OX2PBAkEAtasQym3Viy/Eceo0QyAthy+J7Vjafn0apAxmmMU1s87hUlpCfB4yo9Zd0cwEZgmNTAdyaphlVwpoqwNacWaqiQJBAK1IuYN0E9ysfdC95Vpi+9dM+CjgUtuVkjbA7BJtDSFQgTAm3l7KJRILaC/wIUoBZVMjtLT7QVjOJE62xXkO2EECQQCMK9R7y75IRg/GCSbRi5h4ZMwxrkfydAMOu1YgyFv3kIpqNvSK+hg62Cvb+hImMVklMGTV3mw2L+xqxo/0ma2c";
 
-// 声明goudong-java的encrypt对象
-const serverJsEncrypt = new JSEncrypt();
-serverJsEncrypt.setPublicKey(SERVER_PUBLIC_KEY);
-serverJsEncrypt.setPrivateKey(SERVER_PRIVATE_KEY)
-/**
- * 客户端公钥
- */
-const UI_PUBLIC_KEY = `MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDMs43erPTKo6nHyK1Gq8+5YSzHYbIb1CyAJh3nZanss1ovt84RxiUMhj4N1wsl2aHBomyoNOh67BDbVYBElnmz8bCUsvFO8BHSK60guGOJo6ac5w37mVkSK9YH64kVQwrnjPp6tbjHRsEV5uMQrRtB1VQWbWVCjdBeyRgo9oe+qQIDAQAB`;
-
-/**
- * 客户端私钥
- */
-const UI_PRIVATE_KEY = `MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMyzjd6s9MqjqcfIrUarz7lhLMdhshvULIAmHedlqeyzWi+3zhHGJQyGPg3XCyXZocGibKg06HrsENtVgESWebPxsJSy8U7wEdIrrSC4Y4mjppznDfuZWRIr1gfriRVDCueM+nq1uMdGwRXm4xCtG0HVVBZtZUKN0F7JGCj2h76pAgMBAAECgYEAltgBxYOiZ+ku5aAFwDw/uJXZT5u4ijVSDaUJCEmsbFbGML+7xPFEv/P0qnI7LssvHee5NkK2xk5LJbXd7a0NRLFPPSBjb086VynbTVHvbe0fyYjilmVNkZocHlgXSFrOVVsPIherapMbMJn2WMFm6+WBOJ+gZBMMV0dNbgbUfQECQQDtLvWKLt4wlsJu0dpRc7k7uS5l6trpiorieX+sC/0GvJX4yY+CovwmNcsRoejRnyz5gpLRCVTsQ62IXQtqG5xZAkEA3PDn4OMuH4jEduH1XdNvGbAulUI3PLmjZLnbWpayC4YSgyw3UNNZ4yPfvSQijBcM+rS4GG+2cQCGceiZtDqq0QJBALUKaxGWxLKB4NeGBwa1NmaH6wqQQZiRz4EfDHzeibxipnbII2qrzZu848wJshSPU10AdeBpJxFQd1zm6JeNi8ECQF0yrc16Z1FcAuvXAwayErJ2VCAYD27pK9hoYfRDjxU3WAXHGApbLRaYYl/Jp10KuCnlI6cDMKVYQF46bOPOv5ECQQCin5UCSNHkNVhOtSrVD4E7zOjsB69EDkETtdSfDAkMQTW6U5mL2ygl4kghgEHZJihXKVjTz2ATeDHqMHuxPNX0`;
-
-// 声明goudong-web-ui的encrypt对象
-const UiJsEncrypt = new JSEncrypt();
-UiJsEncrypt.setPublicKey(UI_PUBLIC_KEY);
-UiJsEncrypt.setPrivateKey(UI_PRIVATE_KEY);
 
 //~客户端相关
 //==================================================================================================
+// 声明goudong-web-ui的encrypt对象
+const UiJsEncrypt = new JSEncrypt();
 /**
- * 使用客户端公钥加密
- * 防止中文加密解密出现问题，使用Base64先进行编码，解密后再进行节码。
- * @param data 加密前的字符串
- * @return result 加密后的字符串
+ * 客户端公钥
  */
-export function uiPublicKeyEncrypt(data: string) {
-  let result = UiJsEncrypt.encryptLong(Base64.encode(data));
-  return result;
-}
+const UI_PUBLIC_KEY = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5K+TItaOQFziqBUSnmDwbYRVghXOb4E7A7OXC5H8NwkyJiKOxka98ok6Nbo5Iu98eoWuCt19FSfiArtqilQl4sQR5cPoA/7XavZBc4V70UPAvZCTuV671CdYK1+HSnKyYsLJ/AukCixqtrkRf3McUkfP4+EZwNr7Oeze5hyeH9QgrzWpFG1NyDQjJZHbpVmQyZEKS2MZUZs1fEnDL9rYS0X+nmFNZ4M8yR4gmVsBRKDkHP2yod8qyNGqeFy3miSusRWxokOmueVLUBvbPOyOzo/Nml47cCLDOiQurl7ow7n7HpzNn3MVXgPlpOGUO6hGP2OqprbtnN/pmj8+r/G1QIDAQAB`;
+/**
+ * 客户端私钥
+ */
+const UI_PRIVATE_KEY = `MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCLkr5Mi1o5AXOKoFRKeYPBthFWCFc5vgTsDs5cLkfw3CTImIo7GRr3yiTo1ujki73x6ha4K3X0VJ+ICu2qKVCXixBHlw+gD/tdq9kFzhXvRQ8C9kJO5XrvUJ1grX4dKcrJiwsn8C6QKLGq2uRF/cxxSR8/j4RnA2vs57N7mHJ4f1CCvNakUbU3INCMlkdulWZDJkQpLYxlRmzV8ScMv2thLRf6eYU1ngzzJHiCZWwFEoOQc/bKh3yrI0ap4XLeaJK6xFbGiQ6a55UtQG9s87I7Oj82aXjtwIsM6JC6uXujDufsenM2fcxVeA+Wk4ZQ7qEY/Y6qmtu2c3+maPz6v8bVAgMBAAECggEBAIjRzOJUKJmBJrZZ/McU32fhBpWDj532+/Q7f2c1pyghZZ2OitLsBVeqPQxSv/JqWkTu6F6ZnANrgQdnTxtjbLFhjQ/gsVyCzjJA53mdUDtBQznwFYgpxJ0cNWo0KFCGS1fOiZ0ZAUwn2CJYeTVzWhojSBKSqYQiAoY1i+g4xN4A3U7yN02hxIzhis4vWUIFS7MEpdsYXEs17WrpP+yfrpIGUszIKiABwG/I9gW6d57Mf4mIY5BBamuw7Tba/xprD9slk477xpZnMYyQjziIwXOAfGi4sfWVXvWWQAInW8aicAcwgeh/awpaJ4tYkTC1Wj/8hI1nd/J0S0OxTcmiL/ECgYEAwHXd70Ejo9VQflR8AjZQWuvnktlQv2uJL76qejMLtPLqyz6GmAKEkHC/zy3E1OFaCjOD85KE+KkpaBZeHldKMPuV9kG/kD/gtgdRyS1hRZm/d/USRrmJfIbgbCLUM8jh8gloCPGlJv89up1hncug5hzPvjQIiDjL82MB71wGQv8CgYEAuacFWzPWDwdJWVhWz0/Vaj3iWmmMNuCkWuDE6yY+ZzCiZOK7s5QfRUICUzto1F9+A/6PyHbWn9E4dY2xwNxy3dtXDyF47jFGX67fqtm0VcnxDDxEfRv5YrwTsUmOjDEVXB1gIWQIuGzLBU2b0oT9m6i981zIJcT7SSi/+Oc7eisCgYEAo2hwEyAffo8zVM+uqsIq38fESu6wnJZVWHBulmqY2f4WVJK1/ILGw0y3ztRxdr4PkPHEax5QQECAo5u6NdCvcX9rCDcyyusxg9wbGNCq8klkRBmUdvA5R73M9oNr4LwC+1n5Nv7U1pOIedX+d9fYuQhlan0LcX2nzPKXRf/AYUkCgYA9oJbjlop5RKbxlKSEfvDOKqrH7n+P+/QzAqf7kx9l67wMl0NNsl7LA8V30aHT1bskIk2icuh99tqyEw4tgkBTKyt0J11YXF0LCCbRNSFq1PVCZYMqsK2RO/Ohh1RdbzGy+UFe9DD834hpQ0D1mhYBpPshHOyHtSLhPziyrDePLwKBgExghqizg3beOweEU5fxeDLrW+tF4jBPtBuq29skn2cxi4E+68GEO6igAlO/kb04wiG9YrLxbx/bXskJqvozx4P9jKrxK0BIFBiufQYMUD7PzmdIbG71wvbZoMnhJt0tVUaxh54xngM5GW5Cccl5jFqoLuTCRMOojicYP7jas5id`;
 
-/**
- * 使用客户端公钥解密
- * 加密时先使用Base64编码，所以这里需要先解码再解密
- * @see uiPublicKeyEncrypt
- * @param data 解密前的字符串
- * @return result 解密后的字符串
- */
-export function uiPublicDecrypt(data: string) {
-  let result = Base64.decode(UiJsEncrypt.decryptLong(data));
-  return result;
-}
 
-/**
- * 使用客户端私钥加密
- * 防止中文加密解密出现问题，使用Base64先进行编码，解密后再进行节码。
- * @param data 加密前的字符串
- * @return result 加密后的字符串
- */
-export function uiPrivateKeyEncrypt(data: string) {
-  let result = UiJsEncrypt.encryptLong(Base64.encode(data));
-  return result;
-}
-
-/**
- * 使用客户端私钥解密
- * 加密时先使用Base64编码，所以这里需要先解码再解密
- * @see uiPrivateKeyEncrypt
- * @param data 解密前的字符串
- * @return result 解密后的字符串
- */
-export function uiPrivateKeyDecrypt(data: string) {
-  let result = Base64.decode(UiJsEncrypt.decryptLong(data));
-  return result;
-}
+UiJsEncrypt.setPublicKey(UI_PUBLIC_KEY);
+UiJsEncrypt.setPrivateKey(UI_PRIVATE_KEY);
 
 //~ 服务端相关
 //==================================================================================================
 /**
+ * 服务端公钥
+ */
+const SERVER_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgMMsJimfsZqN//iyRVfC/v2Yec7mf5lUeuFIsrquofl5VFwoUx13UQvV8WI4alHNCXKsnvNuIqQ7ESOznQ3aS4ZEvhpwnjMxDDvjZ9xCXRVU06e7ppI8I8neT2PtSh7IvV3gSRauLxMRkNw5UIhiPQ4hps0kLzfZwsRm17/FE/gBbN1MvNY77JneRgwsbuMIUaxn22Aqq2uZgTOOlLsHaGnthDBXb7QPlngxe/wAQF5cckJg4qzQ2AUtBV9PXrnK07cBT+cUWTYhKrvK2VWDXEgmv8b62WacpPVLuCJE9JWmuVqTgYhzTGfXGBr8l8hjCO8FOBzGPmgZTee3HcAcDQIDAQAB";
+
+// 声明goudong-java的encrypt对象
+const serverJsEncrypt = new JSEncrypt();
+serverJsEncrypt.setPublicKey(SERVER_PUBLIC_KEY);
+/**
  * 使用服务端公钥加密
- * 防止中文加密解密出现问题，使用Base64先进行编码，解密后再进行节码。
  * @param data 加密前的字符串
- * @return result 加密后的字符串
+ * @return result 加密后的字符串(Base64编码后的密文)
  */
 export function serverPublicKeyEncrypt(data: string) {
-  return serverJsEncrypt.encryptLong(Base64.encode(data));
-}
-
-/**
- * 使用服务端公钥加密
- * 防止中文加密解密出现问题，使用Base64先进行编码，解密后再进行节码。
- * @param data 加密前的字符串
- * @return result 加密后的字符串
- */
-export function serverPrivateKeyEncrypt(data: string) {
-  const jsEncrypt = new JSEncrypt();
-  jsEncrypt.setPrivateKey(SERVER_PRIVATE_KEY)
-  return jsEncrypt.encryptLong(Base64.encode(data));
-}
-/**
- * 使用服务端公钥解密
- * 防止中文加密解密出现问题，使用Base64先进行编码，解密后再进行节码。
- * @param data 解密前的字符串
- * @return result 解密后的字符串
- */
-export function serverPublicKeyDecrypt(data: string) {
-  // return serverJsEncrypt.decryptLong(data);
-  return Base64.decode(serverJsEncrypt.decryptLong(data));
-}
-
-export function serverPrivateKeyDecrypt(data: string) {
-  // return serverJsEncrypt.decryptLong(data);
-  return Base64.decode(serverJsEncrypt.decryptLong(data));
+  return serverJsEncrypt.encryptLong(data);
 }
