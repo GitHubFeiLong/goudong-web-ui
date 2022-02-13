@@ -45,3 +45,5 @@ export const updatePasswordApi = (data: object): Promise<AxiosResponse> => Axios
  * @param paramObj 用户对象
  */
 export const updateOpenIdApi = (data: object): Promise<AxiosResponse> => AxiosUtil.patch('/api/user/base-user/bind-open-id', data);
+
+export const demoSecrypt = (data: object): Promise<AxiosResponse> => AxiosUtil.post('/api/user/demo/secrypt', data)

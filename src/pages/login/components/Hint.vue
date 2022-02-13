@@ -13,7 +13,8 @@ import { defineComponent, onMounted } from 'vue';
 
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
-
+import {generateKey, encrypt, decrypt} from '@/utils/AESUtil';
+import {serverPublicKeyEncrypt} from '@/utils/RSAUtil';
 export default defineComponent({
   props: {
     hint: String,
@@ -23,6 +24,35 @@ export default defineComponent({
       NotDone();
     };
     const demo = () =>{
+      var s = generateKey();
+      var s1 = encrypt("hello world", s);
+      var s2 = decrypt(s1, s);
+      console.log("密钥：%o,加密:%o, 解密：%o", s, s1, s2)
+      console.log("rsa公钥AES密钥，%o",serverPublicKeyEncrypt(s));
+
+      console.log("==============")
+      let obj = {
+        "accountRadio": "accountRadio",
+        "code": "54321",
+        "createTime": "",
+        "createUserId": 0,
+        "deleted": true,
+        "email": "1123123@11.com",
+        "id": 0,
+        "loginName": "",
+        "nickname": "",
+        "password": "",
+        "phone": "",
+        "qqOpenId": "",
+        "remark": "",
+        "updateTime": "",
+        "updateUserId": 0,
+        "userType": "",
+        "username": "",
+        "validTime": ""
+      }
+      let jsonString = JSON.stringify(obj);
+      console.log("使用AES加密：%o", encrypt(jsonString, s))
 
       // for (let i = 0; i < 1; i++) {
       //   setTimeout(()=>{
