@@ -47,3 +47,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
       1. 清除本地令牌信息
       2. 将isRefreshing和requests恢复默认值
       3. 跳转到登录页面
+
+### 安全
+使用RSA和AES组合加密传输数据。
+1. 生成随机的AES密钥
+2. AES使用随机密钥进行加密参数
+3. 使用RSA公钥加密随机AES密钥，并放在一个请求头中（Aes-key）
+4. 接收到的响应，如果有必要的地方可以在后端生成一个摘要，前端使用RSA公钥验签。
+![前端使用RSA和AES组合加密](./README/前端使用RSA和AES组合加密.svg)

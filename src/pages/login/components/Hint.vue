@@ -13,10 +13,6 @@ import { defineComponent, onMounted } from 'vue';
 
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
-import {currentUserInfoApi} from "@/api/GoudongOauth2ServerApi";
-import {
-  serverPublicKeyEncrypt, verify
-} from "@/utils/RSAUtil";
 
 export default defineComponent({
   props: {
@@ -27,10 +23,6 @@ export default defineComponent({
       NotDone();
     };
     const demo = () =>{
-      console.log("加密：%o", serverPublicKeyEncrypt("我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》我是中文·!@#$%^&*()_+！@#￥%……&*（）——+{}【】[]\\|''\";:：；，。,.<>/?？。，《》"));
-      // sign("hello world");
-      let signStr = "dBV8vdKk2GGVhyqwWWcI0pR+noahW2xOYUSGrAJKzPJKlORyES1vDa7ea4Y3JtTjSRfjrgdqnbTrunEGZnRDX35xuh9h+3KcIE0EwFXUose2kd2cnMdAYt5WQC0Fvfo1LRQedxaXmgQXgkh5KDzXD4zT0Q0814VKZJ5fqe6cpjJEh2wyaKkmGpZSPQbROe9SsICAM/YFeu7iKDaiwluzJulPK11U2LqFU8hlIKqQa95Pk1PknRkog8qOKEm4zFsfmHhjfb2lSBQskPXqlQIMx7H673QnGR+dR33kQdCAvtcHUN7Zz0vClsnEGe6fWWJYLpoq25U26SLMsaEL13M6CA==";
-      console.log(verify("hello world 我草拟", signStr));
 
       // for (let i = 0; i < 1; i++) {
       //   setTimeout(()=>{
