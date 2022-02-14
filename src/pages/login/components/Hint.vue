@@ -14,7 +14,7 @@ import { defineComponent, onMounted } from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
 import {generateKey, encrypt, decrypt} from '@/utils/AESUtil';
-import {serverPublicKeyEncrypt} from '@/utils/RSAUtil';
+import * as RSAUtil from '@/utils/RSAUtil';
 export default defineComponent({
   props: {
     hint: String,
@@ -28,7 +28,7 @@ export default defineComponent({
       var s1 = encrypt("hello world", s);
       var s2 = decrypt(s1, s);
       console.log("密钥：%o,加密:%o, 解密：%o", s, s1, s2)
-      console.log("rsa公钥AES密钥，%o",serverPublicKeyEncrypt(s));
+      console.log("rsa公钥AES密钥，%o",RSAUtil.encrypt(s));
 
       console.log("==============")
       let obj = {

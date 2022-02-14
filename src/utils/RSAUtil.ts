@@ -20,7 +20,7 @@ serverJsEncrypt.setPublicKey(SERVER_PUBLIC_KEY);
  * @param data 加密前的字符串
  * @return result 加密后的字符串(Base64编码后的密文)
  */
-export function serverPublicKeyEncrypt(data: string): string {
+export function encrypt(data: string): string {
   return serverJsEncrypt.encryptLong(data);
 }
 
