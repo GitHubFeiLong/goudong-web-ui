@@ -8,7 +8,7 @@ import { defineComponent, onMounted } from 'vue';
 import { resolvePageParam } from '@/utils/HtmlParamUtil';
 
 import PageParam from '@/pojo/PageParam';
-import { AUTHORIZATION } from '@/pojo/ProjectConst';
+import { AUTHORIZATION } from '@/constant/HttpHeaderConst';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 
 export default defineComponent({

@@ -3,13 +3,16 @@ import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {ElMessage} from 'element-plus';
 
 import Result from '@/pojo/Result';
-import {AUTHORIZATION, TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE,} from '@/pojo/ProjectConst';
+import {AUTHORIZATION} from '@/constant/HttpHeaderConst';
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE,} from '@/constant/LocalStorageConst';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import Token from "@/pojo/Token";
 import {refreshTokenApi} from "@/api/GoudongOauth2ServerApi";
 import {validateUrlAuthentication, validateUrlNotAuthentication} from "@/utils/ValidateUtil";
-import {LOGIN_PAGE} from "@/constants/PageUriConst";
-
+import {LOGIN_PAGE} from "@/constant/PageUriConst";
+import {CustomAxiosRequestConfig} from "@/pojo/CustomAxiosRequestConfig";
+import * as AESUtil from '@/utils/AESUtil';
+import * as RSAUtil from '@/utils/RSAUtil';
 /**
  * 初始化 axios
  */
@@ -48,6 +51,35 @@ const service = axios.create({
  * 请求拦截器
  */
 service.interceptors.request.use((config: AxiosRequestConfig) => {
+  // 获取other属性，判断是否需要加密请求
+  let c = config as CustomAxiosRequestConfig;
+  // 当配置了自定义参数，那么需要判断属性进行处理
+  let other = c._other;
+  if (other !== undefined && other !== null) {
+    if (other._needAesEncrypt) {
+      console.log("本次请求体需要加密----")
+      let data = config.data;
+      console.log("加密前数据：", data);
+      if (typeof(data) === "object") {
+        let key = AESUtil.generateKey();
+        // 加密
+        config.data = AESUtil.encrypt(JSON.stringify(data), key)
+        console.log("加密后：", config.data)
+      }
+    } else if (other._needRsaEncrypt) {
+      console.log("本次请求体需要加密----")
+      let data = config.data;
+      console.log("加密前数据：", data);
+      if (typeof(data) === "object") {
+        // 加密
+        config.data = RSAUtil.encrypt(JSON.stringify(data))
+        console.log("加密后：", config.data)
+      }
+    }
+  }
+
+
+  // 不是登录和刷新令牌url，就进入if，携带令牌请求
   if (validateUrlNotAuthentication(config.url)) {
     // 获取token，并将其添加至请求头中
     const token:Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
@@ -158,15 +190,6 @@ service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
   return Promise.reject(error);
 });
 
-/**
- * 初始全局变量，刷新令牌使用的
- */
-function initGRefreshTokenlobalVariable() {
-  // 执行完成后，清空，还原初始状态
-  console.log("开始将全局变量重置为初始值...", requests.length);
-  requests = []
-  isRefreshing = false;
-}
 
 export default service;
 

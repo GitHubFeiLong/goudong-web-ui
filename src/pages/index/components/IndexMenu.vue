@@ -93,10 +93,10 @@
 import {defineComponent, onMounted, reactive, ref,} from 'vue';
 import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
-import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/pojo/ProjectConst';
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/constant/LocalStorageConst';
 import IndexStore from '@/store/IndexStore';
 import {logoutApi} from "@/api/GoudongOauth2ServerApi";
-import {LOGIN_PAGE} from "@/constants/PageUriConst"
+import {LOGIN_PAGE} from "@/constant/PageUriConst"
 import User from "@/pojo/User";
 
 export default defineComponent({

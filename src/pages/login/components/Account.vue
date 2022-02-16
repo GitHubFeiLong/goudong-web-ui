@@ -40,9 +40,9 @@ import User from '@/pojo/User';
 // import { loginApi } from '@/api/Oauth2Api';
 import {loginApi} from '@/api/GoudongOauth2ServerApi';
 import QuickLogin from './QuickLogin.vue';
-import {INDEX_PAGE} from "@/constants/PageUriConst";
+import {INDEX_PAGE} from "@/constant/PageUriConst";
 import LocalStorageUtil from "@/utils/LocalStorageUtil";
-import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/pojo/ProjectConst";
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/constant/LocalStorageConst";
 import Token from "@/pojo/Token";
 // 申明jquery
 declare let $: (selector: string) => any;

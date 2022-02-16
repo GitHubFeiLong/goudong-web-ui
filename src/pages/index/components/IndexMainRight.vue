@@ -58,7 +58,7 @@
 import { defineComponent, onMounted, reactive } from 'vue';
 import User from '@/pojo/User';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
-import { USER_LOCAL_STORAGE } from '@/pojo/ProjectConst';
+import { USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst';
 
 export default defineComponent({
   setup() {

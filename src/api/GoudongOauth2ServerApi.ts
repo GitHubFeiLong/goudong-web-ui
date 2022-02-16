@@ -1,7 +1,6 @@
 /** ===================认证服务相关的接口======================== */
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';
-import {AxiosRequestConfigData} from "@/pojo/AxiosRequestConfigData";
 
 // 认证相关请求
 //==================================================================================================

@@ -20,9 +20,9 @@ import User from '@/pojo/User';
 import { loginApi } from '@/api/GoudongOauth2ServerApi';
 import Result from '@/pojo/Result';
 import LocalStorageUtil from "@/utils/LocalStorageUtil";
-import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/pojo/ProjectConst";
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/constant/LocalStorageConst";
 import Token from "@/pojo/Token";
-import {INDEX_PAGE} from "@/constants/PageUriConst";
+import {INDEX_PAGE} from "@/constant/PageUriConst";
 
 export default defineComponent({
   props: {

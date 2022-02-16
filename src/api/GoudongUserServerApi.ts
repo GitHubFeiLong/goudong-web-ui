@@ -1,8 +1,8 @@
 /** ===================用户服务相关的接口======================== */
 import User from '@/pojo/User';
-import { CONTENT_TYPE_0, CONTENT_TYPE_1, CONTENT_TYPE_2 } from '@/pojo/ProjectConst';
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';
+import {Other} from "@/pojo/Other";
 
 /**
  * 检查手机号是否可用
@@ -46,4 +46,4 @@ export const updatePasswordApi = (data: object): Promise<AxiosResponse> => Axios
  */
 export const updateOpenIdApi = (data: object): Promise<AxiosResponse> => AxiosUtil.patch('/api/user/base-user/bind-open-id', data);
 
-export const demoSecrypt = (data: object): Promise<AxiosResponse> => AxiosUtil.post('/api/user/demo/secrypt', data)
+export const demoSecrypt = (data: object): Promise<AxiosResponse> =>  AxiosUtil.post('/api/user/demo/secrypt', data, Other.build().needRsaEncrypt(true).createConfig());
