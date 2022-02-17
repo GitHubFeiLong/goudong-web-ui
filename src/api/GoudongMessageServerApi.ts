@@ -1,7 +1,7 @@
 /** ===================消息服务相关的接口======================== */
 import AxiosUtil from '@/utils/AxiosUtil';
 import { AxiosResponse } from 'axios';
-import {CustomAxiosRequestConfig} from "@/pojo/CustomAxiosRequestConfig";
+import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
 
 /**
  * 发送手机验证码

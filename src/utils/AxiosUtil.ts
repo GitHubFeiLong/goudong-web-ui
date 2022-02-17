@@ -10,7 +10,7 @@ import Token from "@/pojo/Token";
 import {refreshTokenApi} from "@/api/GoudongOauth2ServerApi";
 import {validateUrlAuthentication, validateUrlNotAuthentication} from "@/utils/ValidateUtil";
 import {LOGIN_PAGE} from "@/constant/PageUriConst";
-import {CustomAxiosRequestConfig} from "@/pojo/CustomAxiosRequestConfig";
+import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
 import * as AESUtil from '@/utils/AESUtil';
 import * as RSAUtil from '@/utils/RSAUtil';
 /**
@@ -171,8 +171,9 @@ service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
  * @param config
  */
 function requestParameterEncryptHandler(config: AxiosRequestConfig){
+  console.log("requestParameterEncryptHandler")
   // 当配置了自定义参数，那么需要判断属性进行处理
-  let other = (config as CustomAxiosRequestConfig)._other;
+  let other = (config as CustomAxiosRequestConfig)._requestOther;
   if (other !== undefined && other !== null) {
     if (other.needAesEncrypt) {
       console.log("本次请求体需要加密----")
@@ -210,11 +211,13 @@ function requestParameterEncryptHandler(config: AxiosRequestConfig){
  */
 function responseParameterDecryptHandler(config: AxiosResponse) {
   // 当配置了自定义参数，那么需要判断属性进行处理
-  let other = (config.config as CustomAxiosRequestConfig)._other;
+  let other = (config.config as CustomAxiosRequestConfig)._responseOther;
   if (other !== undefined && other !== null) {
-    if (other.needAesEncrypt) {
+    if (other.needAesDecrypt) {
       console.log("解密前数据：", config.data);
-      config.data = AESUtil.decrypt(config.data, other.aesKey as string);
+      config.data = AESUtil.decrypt(config.data,
+        (config.config as CustomAxiosRequestConfig)._requestOther?.aesKey as string
+        );
       config.data = JSON.parse(config.data)
       // 添加Aes-Key到请求头
       console.log("解密后：", config.data)

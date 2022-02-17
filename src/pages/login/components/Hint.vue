@@ -9,15 +9,15 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, onMounted } from 'vue';
+import {defineComponent} from 'vue';
 
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
-import {generateKey, encrypt, decrypt} from '@/utils/AESUtil';
-import * as RSAUtil from '@/utils/RSAUtil';
 
 import * as UserAPI from '@/api/GoudongUserServerApi'
-import {Other} from "@/pojo/Other";
+import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
+import {ResponseOther} from "@/pojo/ResponseOther";
+import {RequestOther} from "@/pojo/RequestOther";
 
 export default defineComponent({
   props: {
@@ -43,11 +43,12 @@ export default defineComponent({
         "userType": "demoData",
         "code": "demoData"
       };
-      let config = Other.builder()
-        .needAesEncrypt(true)
-        .needElMessage(false)
-        .build().createConfig();
-      UserAPI.demoSecrypt(data, config).then((response)=>{
+      let customAxiosRequestConfig = CustomAxiosRequestConfig
+        .build()
+        .req(RequestOther.builder().needAesEncrypt(true).build())
+        .res(ResponseOther.builder().needAesDecrypt(true).build()
+      );
+      UserAPI.demoSecrypt(data, customAxiosRequestConfig).then((response)=>{
         console.log("response", response.data)
       })
 

@@ -5,23 +5,45 @@ import {
   AxiosTransformer, CancelToken,
   Method, ResponseType, TransitionalOptions
 } from "axios";
+import {RequestOther} from "@/pojo/RequestOther";
+import {ResponseOther} from "@/pojo/ResponseOther";
 
-import {Other} from '@/pojo/Other';
 /**
  * axios额外参数对象
  * {@link CustomAxiosRequestConfig}实现{@link AxiosRequestConfig}接口, 在其上进行了补充自定义参数
  * @author msi
  */
-export class CustomAxiosRequestConfig implements AxiosRequestConfig{
+export default class CustomAxiosRequestConfig implements AxiosRequestConfig{
   /**
-   * 自定义的其它参数
+   * 自定义请求参数
    * @private
    */
-  _other: Other | null;
+  _requestOther: RequestOther | null = null;
 
-  public constructor(other: Other) {
-    this._other = other;
+  /**
+   * 自定义响应参数
+   * @private
+   */
+  _responseOther: ResponseOther | null = null;
+
+  static build():CustomAxiosRequestConfig{
+    return new CustomAxiosRequestConfig();
   }
+
+  constructor() {
+  }
+
+  req(requestOther: RequestOther):CustomAxiosRequestConfig{
+    this._requestOther = requestOther;
+    return this;
+  }
+  res(responseOther:ResponseOther):CustomAxiosRequestConfig{
+    this._responseOther = responseOther;
+    return this;
+  }
+
+  //~ getter/setter
+  //================================================================================================
 
 //~ 以下是AxiosRequestConfig属性，不能进行擅自修改
   //================================================================================================

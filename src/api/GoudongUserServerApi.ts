@@ -1,9 +1,8 @@
 /** ===================用户服务相关的接口======================== */
 import User from '@/pojo/User';
 import AxiosUtil from '@/utils/AxiosUtil';
-import {AxiosRequestConfig, AxiosResponse} from 'axios';
-import {Other} from "@/pojo/Other";
-import {CustomAxiosRequestConfig} from "@/pojo/CustomAxiosRequestConfig";
+import {AxiosResponse} from 'axios';
+import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
 
 /**
  * 检查手机号是否可用
