@@ -18,13 +18,13 @@ export default class CustomAxiosRequestConfig implements AxiosRequestConfig{
    * 自定义请求参数
    * @private
    */
-  _requestOther: RequestOther | null = null;
+  _requestOther: RequestOther = RequestOther.builder().build();
 
   /**
    * 自定义响应参数
    * @private
    */
-  _responseOther: ResponseOther | null = null;
+  _responseOther: ResponseOther = ResponseOther.builder().build();
 
   static build():CustomAxiosRequestConfig{
     return new CustomAxiosRequestConfig();
@@ -42,10 +42,7 @@ export default class CustomAxiosRequestConfig implements AxiosRequestConfig{
     return this;
   }
 
-  //~ getter/setter
-  //================================================================================================
-
-//~ 以下是AxiosRequestConfig属性，不能进行擅自修改
+  //~ 以下是AxiosRequestConfig属性，不能进行擅自修改
   //================================================================================================
   url?: string;
   method?: Method;

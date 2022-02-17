@@ -27,14 +27,9 @@ export class RequestOther extends Other{
   private _needRsaEncrypt: boolean = false;
 
   /**
-   * 需要加密的数据的key
-   */
-  private _needEncryptKey: object | null | undefined = null;
-
-  /**
    * aes的密钥
    */
-  private _aesKey:string | null= null;
+  private _aesKey:any;
 
   //~ 静态method
   //================================================================================================
@@ -51,12 +46,11 @@ export class RequestOther extends Other{
 
   //~ constructor
   //================================================================================================
-  constructor(needElMessage: boolean, needAesEncrypt: boolean, needRsaEncrypt: boolean, needEncryptKey: object | null | undefined, aesKey: string | null) {
+  constructor(needElMessage: boolean, needAesEncrypt: boolean, needRsaEncrypt: boolean, aesKey: any) {
     super();
     this._needElMessage = needElMessage;
     this._needAesEncrypt = needAesEncrypt;
     this._needRsaEncrypt = needRsaEncrypt;
-    this._needEncryptKey = needEncryptKey;
     this._aesKey = aesKey;
   }
 
@@ -86,19 +80,11 @@ export class RequestOther extends Other{
     this._needRsaEncrypt = value;
   }
 
-  get needEncryptKey(): object | null | undefined {
-    return this._needEncryptKey;
-  }
-
-  set needEncryptKey(value: object | null | undefined) {
-    this._needEncryptKey = value;
-  }
-
-  get aesKey(): string | null {
+  get aesKey(): any {
     return this._aesKey;
   }
 
-  set aesKey(value: string | null) {
+  set aesKey(value: any) {
     this._aesKey = value;
   }
 }
@@ -121,17 +107,12 @@ class RequestOtherBuilder {
   private _needRsaEncrypt: boolean = false;
 
   /**
-   * 需要加密的数据的key
-   */
-  private _needEncryptKey: object | null | undefined = null;
-
-  /**
    * aes的密钥
    */
-  private _aesKey:string | null= null;
+  private _aesKey:any;
 
   build():RequestOther{
-    let other = new RequestOther(this._needElMessage, this._needAesEncrypt, this._needRsaEncrypt, this._needEncryptKey, this._aesKey);
+    let other = new RequestOther(this._needElMessage, this._needAesEncrypt, this._needRsaEncrypt, this._aesKey);
     return other;
   }
 
@@ -150,10 +131,6 @@ class RequestOtherBuilder {
     return this;
   }
 
-  needEncryptKey(needEncryptKey:object | null | undefined):RequestOtherBuilder{
-    this._needEncryptKey = needEncryptKey;
-    return this;
-  }
   aesKey(aesKey:string|null):RequestOtherBuilder{
     this._aesKey = aesKey;
     return this;

@@ -13,6 +13,8 @@ import {LOGIN_PAGE} from "@/constant/PageUriConst";
 import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
 import * as AESUtil from '@/utils/AESUtil';
 import * as RSAUtil from '@/utils/RSAUtil';
+import {RequestOther} from "@/pojo/RequestOther";
+import {ResponseOther} from "@/pojo/ResponseOther";
 /**
  * 初始化 axios
  */
@@ -52,7 +54,7 @@ const service = axios.create({
  */
 service.interceptors.request.use((config: AxiosRequestConfig) => {
   // 请求参数加密
-  requestParameterEncryptHandler(config);
+  let requestOther = requestParameterEncryptHandler(config);
 
   // 不是登录和刷新令牌url，就进入if，携带令牌请求
   if (validateUrlNotAuthentication(config.url)) {
@@ -81,7 +83,7 @@ let isRefreshing = false
  */
 service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
   console.log("响应拦截:", response);
-  responseParameterDecryptHandler(response);
+  let responseOther = responseParameterDecryptHandler(response);
   // 响应码
   const {status} = response;
   const config = response.config;
@@ -169,60 +171,60 @@ service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
 /**
  * 请求参数加密
  * @param config
+ * @return requestOther
  */
-function requestParameterEncryptHandler(config: AxiosRequestConfig){
-  console.log("requestParameterEncryptHandler")
-  // 当配置了自定义参数，那么需要判断属性进行处理
-  let other = (config as CustomAxiosRequestConfig)._requestOther;
-  if (other !== undefined && other !== null) {
-    if (other.needAesEncrypt) {
-      console.log("本次请求体需要加密----")
-      console.log("加密前数据：", config.data);
-      // 生成AES密钥
-      let key = AESUtil.generateKey();
-      // 将aes的key设置到属性上
-      other.aesKey= key;
-      // 添加Aes-Key到请求头
-      config.headers[HttpHeaderConst.AES_KEY] = RSAUtil.encrypt(key);
-      if (typeof(config.data) === "object") {
-        // 加密
-        config.data = AESUtil.encrypt(JSON.stringify(config.data), key)
-      } else {
-        // 加密
-        config.data = AESUtil.encrypt(config.data, key)
-      }
+function requestParameterEncryptHandler(config: AxiosRequestConfig): RequestOther{
+  let requestOther = (config as CustomAxiosRequestConfig)._requestOther;
+  if (requestOther.needAesEncrypt) {
+    console.log("本次请求体需要加密----")
+    console.log("加密前数据：", config.data);
+    // 生成AES密钥
+    let key = AESUtil.generateKey();
+    // 将aes的key设置到属性上
+    requestOther.aesKey= key;
+    // 添加Aes-Key到请求头
+    config.headers[HttpHeaderConst.AES_KEY] = RSAUtil.encrypt(key);
+    if (typeof(config.data) === "object") {
+      // 加密
+      config.data = AESUtil.encrypt(JSON.stringify(config.data), key)
+    } else {
+      // 加密
+      config.data = AESUtil.encrypt(config.data, key)
+    }
+    console.log("加密后：", config.data)
+  } else if (requestOther.needRsaEncrypt) {
+    console.log("本次请求体需要加密----")
+    let data = config.data;
+    console.log("加密前数据：", data);
+    if (typeof(data) === "object") {
+      // 加密
+      config.data = RSAUtil.encrypt(JSON.stringify(data))
       console.log("加密后：", config.data)
-    } else if (other.needRsaEncrypt) {
-      console.log("本次请求体需要加密----")
-      let data = config.data;
-      console.log("加密前数据：", data);
-      if (typeof(data) === "object") {
-        // 加密
-        config.data = RSAUtil.encrypt(JSON.stringify(data))
-        console.log("加密后：", config.data)
-      }
     }
   }
+
+  return requestOther;
 }
 
 /**
  * 响应参数进行解密
  * @param config
+ * @return responseOther
  */
-function responseParameterDecryptHandler(config: AxiosResponse) {
-  // 当配置了自定义参数，那么需要判断属性进行处理
-  let other = (config.config as CustomAxiosRequestConfig)._responseOther;
-  if (other !== undefined && other !== null) {
-    if (other.needAesDecrypt) {
-      console.log("解密前数据：", config.data);
-      config.data = AESUtil.decrypt(config.data,
-        (config.config as CustomAxiosRequestConfig)._requestOther?.aesKey as string
-        );
-      config.data = JSON.parse(config.data)
-      // 添加Aes-Key到请求头
-      console.log("解密后：", config.data)
-    }
+function responseParameterDecryptHandler(config: AxiosResponse):ResponseOther {
+  let responseOther = (config.config as CustomAxiosRequestConfig)._responseOther;
+  let requestOther = (config.config as CustomAxiosRequestConfig)._requestOther
+  if (responseOther.needAesDecrypt) {
+    console.log("解密前数据：", config.data);
+    config.data = AESUtil.decrypt(config.data,
+      requestOther.aesKey as string
+    );
+    config.data = JSON.parse(config.data)
+    // 添加Aes-Key到请求头
+    console.log("解密后：", config.data)
   }
+
+  return responseOther;
 }
 export default service;
 
