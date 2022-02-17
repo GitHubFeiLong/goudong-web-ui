@@ -17,6 +17,7 @@ import {generateKey, encrypt, decrypt} from '@/utils/AESUtil';
 import * as RSAUtil from '@/utils/RSAUtil';
 
 import * as UserAPI from '@/api/GoudongUserServerApi'
+import {Other} from "@/pojo/Other";
 
 export default defineComponent({
   props: {
@@ -42,7 +43,13 @@ export default defineComponent({
         "userType": "demoData",
         "code": "demoData"
       };
-      UserAPI.demoSecrypt(data)
+      let config = Other.builder()
+        .needAesEncrypt(true)
+        .needElMessage(false)
+        .build().createConfig();
+      UserAPI.demoSecrypt(data, config).then((response)=>{
+        console.log("response", response.data)
+      })
 
       // var s = generateKey();
       // var s1 = encrypt("hello world", s);

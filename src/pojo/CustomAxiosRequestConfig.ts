@@ -23,7 +23,7 @@ export class CustomAxiosRequestConfig implements AxiosRequestConfig{
     this._other = other;
   }
 
-  //~ 以下是AxiosRequestConfig属性，不能进行擅自修改
+//~ 以下是AxiosRequestConfig属性，不能进行擅自修改
   //================================================================================================
   url?: string;
   method?: Method;

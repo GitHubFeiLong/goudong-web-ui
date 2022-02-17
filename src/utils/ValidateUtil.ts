@@ -1,11 +1,10 @@
 import * as HintEntity from '@/pojo/HintEntity';
-import {loginApi} from '@/api/GoudongOauth2ServerApi'
 
 /**
  * 邮箱验证
  * @param value 待验证的值
  */
-function validateEmail(value: string): Promise<string|void> {
+export function validateEmail(value: string): Promise<string|void> {
   return new Promise((resolve, reject) => {
     const reg = /^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/;
     if (value === '' || value === undefined || value === null) {
@@ -22,7 +21,7 @@ function validateEmail(value: string): Promise<string|void> {
  * 验证用户名格式
  * @param value 用户名
  */
-function validateUsername(value: string): Promise<HintEntity.HintEntity> {
+export function validateUsername(value: string): Promise<HintEntity.HintEntity> {
   return new Promise(((resolve, reject) => {
     if (value === '' || value === undefined || value === null) {
       reject(HintEntity.USERNAME_HINT_01);
@@ -45,7 +44,7 @@ function validateUsername(value: string): Promise<HintEntity.HintEntity> {
  * 验证密码是否符合规则
  * @param value 密码
  */
-function validatePassword(value: string): Promise<HintEntity.HintEntity> {
+export function validatePassword(value: string): Promise<HintEntity.HintEntity> {
   return new Promise(((resolve, reject) => {
     // 适中 包含(数字+字母)(数字+字符)(字母+字符) 比严格的要宽，所以先执行严格的正则
     const general = /^(?=[a-zA-Z]*\d)(?=\d*[a-zA-Z])|(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*\d)(?=\d*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])|(?=[a-zA-Z]*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*[a-zA-Z])/;
@@ -78,7 +77,7 @@ function validatePassword(value: string): Promise<HintEntity.HintEntity> {
  * 手机号验证
  * @param value 待验证的值
  */
-function validatePhone(value: string): Promise<string|void> {
+export function validatePhone(value: string): Promise<string|void> {
   return new Promise((resolve, reject) => {
     const reg = /^1([358][0-9]|4[01456879]|6[2567]|7[0135678]|9[012356789])[0-9]{8}$/;
     if (value === '' || value === null) {
@@ -96,7 +95,7 @@ function validatePhone(value: string): Promise<string|void> {
  * 判断是否需要请求头带token的
  * @param url
  */
-function validateUrlAuthentication(url: string | undefined):Boolean {
+export function validateUrlAuthentication(url: string | undefined):Boolean {
   return !validateUrlNotAuthentication(url);
 }
 
@@ -105,7 +104,7 @@ function validateUrlAuthentication(url: string | undefined):Boolean {
  * @param url
  * @return true url不是认证地址，需要携token； false：url是认证地址，不需要带token
  */
-function validateUrlNotAuthentication(url: string | undefined):Boolean {
+export function validateUrlNotAuthentication(url: string | undefined):Boolean {
   // url类型是undefined直接返回
   if (url === undefined) {
     return false;
@@ -115,7 +114,24 @@ function validateUrlNotAuthentication(url: string | undefined):Boolean {
     && !url?.startsWith("/api/oauth2/authentication/refresh-token")
 }
 
-export {
-  validateEmail, validateUsername, validatePassword, validatePhone,validateUrlAuthentication,
-  validateUrlNotAuthentication,
-};
+/**
+ * 判断字符串是否是json格式
+ * @param str
+ */
+export function isJSON(str:string):Promise<boolean> {
+  return new Promise(()=>{
+    if (typeof str === 'string') {
+      try {
+        let obj = JSON.parse(str);
+        if(typeof obj == 'object' && obj ){
+          return true;
+        }else{
+          return false;
+        }
+      } catch(e) {
+        console.error('error：'+str+'!!!'+e);
+        return false;
+      }
+    }
+  });
+}
