@@ -26,7 +26,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## 重要流程
 ### 无感刷新token
 查看 README/axios响应拦截器实现无感刷新token.svg1
-![axios响应拦截器实现无感刷新token.svg](./README/axios响应拦截器实现无感刷新token.svg)
+![axios响应拦截器实现无感刷新token.svg](README.assets/axios响应拦截器实现无感刷新token.svg)
 
 无感刷新令牌的大致步骤：
 1. 判断响应码是否是401，如果响应码不等于401，就使用其它逻辑处理响应，如果响应码等于401就开始进行无感刷新token的流程了。
@@ -54,4 +54,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 2. AES使用随机密钥进行加密参数
 3. 使用RSA公钥加密随机AES密钥，并放在一个请求头中（Aes-key）
 4. 接收到的响应，如果有必要的地方可以在后端生成一个摘要，前端使用RSA公钥验签。
-![前端使用RSA和AES组合加密](./README/前端使用RSA和AES组合加密.svg)
+![前端使用RSA和AES组合加密](README.assets/前端使用RSA和AES组合加密.svg)
