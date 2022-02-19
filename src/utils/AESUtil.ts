@@ -14,7 +14,7 @@ const CryptoJS = require('crypto-js');  //引用AES源码js
  * 生成AES的key，默认16位
  * @param length
  */
-export function generateKey (length:number = 16) {
+export function generateKey (length:number = 32) {
   let random = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let str = "";
   for (let i = 0; i < length; i++) {

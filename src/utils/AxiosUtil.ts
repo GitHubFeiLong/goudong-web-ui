@@ -78,6 +78,57 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
 let requests: any[] = [];
 // 是否正在刷新的标记
 let isRefreshing = false
+
+/**
+ * 刷新令牌
+ * @param token 令牌对象
+ * @param config axios的配置对象
+ * @param result 响应结果。
+ */
+function refreshingToken(token: Token, config: AxiosRequestConfig, result: Result<any>) {
+  if (!isRefreshing) {
+    isRefreshing = true
+    return new Promise((resolve, reject) => {
+      // 请求刷新令牌
+      refreshTokenApi(token.refreshToken).then((response) => {
+        // 这个是才后端反的data一层数据
+        let result = response.data.data;
+        // 生成token对象
+        const newToken = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
+        // 设置token对象
+        LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
+
+        // 防止刷新令牌处理完成后，其它请求又401，所以延时补发请求。
+        setTimeout(() => {
+          // 其它失败的请求进行补发
+          requests.forEach((cb) => cb())
+          // 刷新token获取后，补偿本次失败的请求【成功】
+          requests = [];
+        }, 3000);
+        return service(config);
+      }).catch(() => {
+        ElMessage.error(result.clientMessage);
+        console.error("刷新令牌时，refresh_token无效，跳转到登录页")
+        // 刷新令牌失败，直接跳转登录界面
+        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+        LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+        requests = [];
+        window.location.href = LOGIN_PAGE
+      }).finally(() => {
+        isRefreshing = false;
+      })
+    })
+  } else {
+    // 正在刷新token，返回一个未执行resolve的promise
+    return new Promise(resolve => {
+      // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+      requests.push(() => {
+        service(config)
+      })
+    })
+  }
+}
+
 /**
  * 响应拦截器
  */
@@ -99,47 +150,7 @@ service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
     // 其它请求，获取token
     const token: Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
     // 这里进行判断，只有一个请求进入判断
-    if (!isRefreshing) {
-      isRefreshing = true
-      return new Promise((resolve, reject) => {
-        // 请求刷新令牌
-        refreshTokenApi(token.refreshToken).then((response) => {
-          // 这个是才后端反的data一层数据
-          let result = response.data.data;
-          // 生成token对象
-          const newToken = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
-          // 设置token对象
-          LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, newToken);
-
-          // 防止刷新令牌处理完成后，其它请求又401，所以延时补发请求。
-          setTimeout(()=>{
-            // 其它失败的请求进行补发
-            requests.forEach((cb) => cb())
-            // 刷新token获取后，补偿本次失败的请求【成功】
-            requests = [];
-          }, 3000);
-          return service(config);
-        }).catch(()=>{
-          ElMessage.error(result.clientMessage);
-          console.error("刷新令牌时，refresh_token无效，跳转到登录页")
-          // 刷新令牌失败，直接跳转登录界面
-          LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
-          LocalStorageUtil.remove(USER_LOCAL_STORAGE);
-          requests = [];
-          window.location.href = LOGIN_PAGE
-        }).finally(()=>{
-          isRefreshing = false;
-        })
-      })
-    } else {
-      // 正在刷新token，返回一个未执行resolve的promise
-      return new Promise(resolve => {
-        // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
-        requests.push(() => {
-          service(config)
-        })
-      })
-    }
+    return refreshingToken(token, config, result);
   }
 
   if (status < 200 || status >= 400) {
@@ -169,38 +180,79 @@ service.interceptors.response.use( (response: AxiosResponse<Result<any>>) => {
 });
 
 /**
+ * 生成AES密钥，并设置aes密钥密文到请求头`Aes-Key`中
+ * @param requestOther 额外的请求参数
+ * @param responseOther 额外响应的参数
+ * @param config
+ */
+function setAesKey(requestOther: RequestOther, responseOther: ResponseOther, config: AxiosRequestConfig) {
+  if (requestOther.needAesEncrypt || responseOther.needAesDecrypt) {
+    // 生成AES密钥
+    let key = AESUtil.generateKey();
+    // 将aes的key设置到属性上
+    requestOther.aesKey = key;
+    // 添加Aes-Key到请求头
+    config.headers[HttpHeaderConst.AES_KEY] = RSAUtil.encrypt(key);
+  }
+}
+
+/**
+ * 请求使用AES加密处理
+ * @param config
+ * @param requestOther
+ */
+function requestNeedAesEncryptHandler(config: AxiosRequestConfig, requestOther: RequestOther) {
+  console.log("本次请求体需要加密----")
+  console.log("加密前数据：", config.data);
+  let key = requestOther.aesKey;
+  switch (typeof (config.data)) {
+    case "object":
+      // 加密
+      config.data = AESUtil.encrypt(JSON.stringify(config.data), key)
+      break;
+    default:
+      // 加密
+      config.data = AESUtil.encrypt(config.data as string, key)
+      break;
+  }
+  console.log("加密后：", config.data)
+}
+
+/**
+ * 请求使用RSA加密处理
+ * @param config
+ */
+function requestNeedRsaEncryptHandler(config: AxiosRequestConfig) {
+  console.log("本次请求体需要加密----")
+  console.log("加密前数据：", config.data);
+  switch (typeof (config.data)) {
+    case "object":
+      // 加密
+      config.data = RSAUtil.encrypt(JSON.stringify(config.data))
+      break;
+    default:
+      config.data = RSAUtil.encrypt(config.data as string)
+      break;
+  }
+}
+
+/**
  * 请求参数加密
  * @param config
  * @return requestOther
  */
 function requestParameterEncryptHandler(config: AxiosRequestConfig): RequestOther{
   let requestOther = (config as CustomAxiosRequestConfig)._requestOther;
+  let responseOther = (config as CustomAxiosRequestConfig)._responseOther;
+
+  // 设置AES密钥
+  setAesKey(requestOther, responseOther, config);
+
+  // 需要请求加密
   if (requestOther.needAesEncrypt) {
-    console.log("本次请求体需要加密----")
-    console.log("加密前数据：", config.data);
-    // 生成AES密钥
-    let key = AESUtil.generateKey(32);
-    // 将aes的key设置到属性上
-    requestOther.aesKey= key;
-    // 添加Aes-Key到请求头
-    config.headers[HttpHeaderConst.AES_KEY] = RSAUtil.encrypt(key);
-    if (typeof(config.data) === "object") {
-      // 加密
-      config.data = AESUtil.encrypt(JSON.stringify(config.data), key)
-    } else {
-      // 加密
-      config.data = AESUtil.encrypt(config.data, key)
-    }
-    console.log("加密后：", config.data)
+    requestNeedAesEncryptHandler(config, requestOther);
   } else if (requestOther.needRsaEncrypt) {
-    console.log("本次请求体需要加密----")
-    let data = config.data;
-    console.log("加密前数据：", data);
-    if (typeof(data) === "object") {
-      // 加密
-      config.data = RSAUtil.encrypt(JSON.stringify(data))
-      console.log("加密后：", config.data)
-    }
+    requestNeedRsaEncryptHandler(config);
   }
 
   return requestOther;
@@ -226,6 +278,7 @@ function responseParameterDecryptHandler(config: AxiosResponse):ResponseOther {
 
   return responseOther;
 }
+
 export default service;
 
 
