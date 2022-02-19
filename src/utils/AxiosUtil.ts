@@ -179,7 +179,7 @@ function requestParameterEncryptHandler(config: AxiosRequestConfig): RequestOthe
     console.log("本次请求体需要加密----")
     console.log("加密前数据：", config.data);
     // 生成AES密钥
-    let key = AESUtil.generateKey();
+    let key = AESUtil.generateKey(32);
     // 将aes的key设置到属性上
     requestOther.aesKey= key;
     // 添加Aes-Key到请求头
