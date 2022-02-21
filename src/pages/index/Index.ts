@@ -3,7 +3,7 @@ import router from '@/router/IndexRouter';
 import store from '@/store/IndexStore';
 import ElementPlus from 'element-plus';
 import App from './Index.vue';
-import 'element-plus/lib/theme-chalk/index.css';
+import 'element-plus/dist/index.css'
 import '@/assets/css/commons.css';
 import '@/assets/fonts/iconfont.css';
 
