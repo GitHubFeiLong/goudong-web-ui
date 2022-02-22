@@ -1,7 +1,7 @@
 <template>
   <el-upload
     class="upload-demo"
-    action="https://jsonplaceholder.typicode.com/posts/"
+    action="/upload-group/upload"
     :on-preview="handlePreview"
     :on-remove="handleRemove"
     :before-remove="beforeRemove"
@@ -27,7 +27,7 @@ interface RawFile {
   name: string
   url: string
 }
-
+const host = "http://10.168.12.13:10004/api/file";
 const fileList = ref<RawFile[]>([
   {
     name: 'food.jpeg',
