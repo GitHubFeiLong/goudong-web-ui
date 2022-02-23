@@ -5,6 +5,7 @@
  * @date 2022/2/17 14:24
  */
 import Other from "@/pojo/Other";
+import Header from "@/pojo/Header";
 
 /**
  * 类描述：
@@ -31,6 +32,12 @@ export class RequestOther extends Other{
    */
   private _aesKey:any;
 
+  /**
+   * 请求头或响应头
+   * @protected
+   */
+  protected _headers:Header[] = [];
+
   //~ 静态method
   //================================================================================================
   /**
@@ -46,9 +53,10 @@ export class RequestOther extends Other{
 
   //~ constructor
   //================================================================================================
-  constructor(needElMessage: boolean, needAesEncrypt: boolean, needRsaEncrypt: boolean, aesKey: any) {
+  constructor(needElMessage: boolean, headers: any,needAesEncrypt: boolean, needRsaEncrypt: boolean, aesKey: any) {
     super();
     this._needElMessage = needElMessage;
+    this._headers = headers;
     this._needAesEncrypt = needAesEncrypt;
     this._needRsaEncrypt = needRsaEncrypt;
     this._aesKey = aesKey;
@@ -62,6 +70,14 @@ export class RequestOther extends Other{
 
   set needElMessage(value: boolean) {
     this._needElMessage = value;
+  }
+
+  get headers(): Header[] {
+    return this._headers;
+  }
+
+  set headers(headers:Header[]) {
+    this._headers = headers;
   }
 
   get needAesEncrypt(): boolean {
@@ -87,32 +103,28 @@ export class RequestOther extends Other{
   set aesKey(value: any) {
     this._aesKey = value;
   }
+
+
 }
 
+/**
+ * 构建对象
+ */
 class RequestOtherBuilder {
-  /**
-   * 是否需要element的错误弹出框
-   */
   private _needElMessage: boolean = true;
-
-  /**
-   * 是否需要aes加密
-   * true：使用AES加密；false：不需要使用AES加密
-   */
   private _needAesEncrypt: boolean = false;
-  /**
-   * 是否需要使用rsa加密
-   * true：使用RSA加密；false：不加密
-   */
   private _needRsaEncrypt: boolean = false;
-
-  /**
-   * aes的密钥
-   */
   private _aesKey:any;
+  private _headers: Header[] = [];
 
   build():RequestOther{
-    let other = new RequestOther(this._needElMessage, this._needAesEncrypt, this._needRsaEncrypt, this._aesKey);
+    let other = new RequestOther(
+      this._needElMessage,
+      this._headers,
+      this._needAesEncrypt,
+      this._needRsaEncrypt,
+      this._aesKey
+    );
     return other;
   }
 
@@ -133,6 +145,11 @@ class RequestOtherBuilder {
 
   aesKey(aesKey:string|null):RequestOtherBuilder{
     this._aesKey = aesKey;
+    return this;
+  }
+
+  headers(headers:Header[]):RequestOtherBuilder{
+    this._headers = headers;
     return this;
   }
 }
