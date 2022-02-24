@@ -60,17 +60,32 @@ const uploadDemo = () => {
       let blockSize = 50 * 1024;
       let file = files[i];
       // 文件API
-      let blob = file.slice(0, 10, "jpg");
-      console.log("blob", blob)
-
       num = Math.ceil(file.size / blockSize);
       for (let j = 0; j <num; j++) {
         start = end == 0 ? 0 : end + 1;
         end = (start + blockSize > file.size) ? file.size : (start + blockSize);
-        console.log("第%o块，start=%o,end=%o", i, start, end)
+        console.log("第%o块，start=%o,end=%o", j, start, end)
+
+        let param = new FormData(); // 创建form对象
+        // 分片
+        let shardData = file.slice(start, end);
+        param.append("fileMd5", "fileMd5"); // 通过append向form对象添加数据
+        param.append("fileName", file.name); // 通过append向form对象添加数据
+        param.append("fileSize", file.size.toString()); // 通过append向form对象添加数据
+        param.append("shardTotal", num.toString()); // 通过append向form对象添加数据
+        param.append("shardIndex", j.toString()); // 添加form表单中其他数据
+        param.append("shardData", shardData); // 添加form表单中其他数据
+
+        console.log(param);
+        let config = {
+          headers: { "Content-Type": "multipart/form-data", "Range":"bytes=0-10" }
+        };
+
+        axios.post("http://localhost:10004/api/file/upload-group/upload-demo", param, config);
       }
     }
 
+    // axios.post("http://localhost:10000/api/file/upload-group/upload-demo", param, config);
 
 
     // let param = new FormData(); // 创建form对象
