@@ -1,55 +1,22 @@
 <template>
-  <el-upload
-    class="upload-demo"
-    :action="host"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
-    :before-remove="beforeRemove"
-    multiple
-    :limit="3"
-    :on-exceed="handleExceed"
-    :file-list="fileList"
-  >
-    <el-button type="primary">Click to upload</el-button>
-    <template #tip>
-      <div class="el-upload__tip">
-        jpg/png files with a size less than 500kb
-      </div>
-    </template>
-  </el-upload>
-
   <input type="file" @change="getFile" multiple >
+  <input type="button" value="上传" @click="uploadDemo">
   <input type="button" value="下载" @click="uploadDemo">
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue'
-import {ElMessage, ElMessageBox} from 'element-plus'
 import * as FileServerApi from '@/api/GoudongFileServerApi';
-import type {UploadFile} from 'element-plus/es/components/upload/src/upload.type'
-import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
-import {RequestOther} from "@/pojo/RequestOther";
-import Header from '@/pojo/Header';
+import AxiosUtil from "@/utils/AxiosUtil";
 import axios from "axios";
+const CryptoJS = require('crypto-js');
 
 const BASE_URL = require('/src/config/BaseUrl.ts');
 
-let customAxiosRequestConfig = CustomAxiosRequestConfig.build();
-
-customAxiosRequestConfig.req(
-  RequestOther.builder().headers([new Header("Range","bytes=0-10")]).build()
-);
-let fileData = []
-const download = ()=>{
-  console.log(111)
-  FileServerApi.download(customAxiosRequestConfig).then((response)=>{
-    console.log(response)
-    fileData.push(response.data)
-  })
-}
-
 let myFiles = ref<FileList>();
+/**
+ * 上传
+ */
 const uploadDemo = () => {
-
   let files : FileList | undefined = myFiles.value;
 
   if (files != undefined) {
@@ -57,31 +24,38 @@ const uploadDemo = () => {
       console.log("====第%o个文件===", i)
       // 分片
       let num = 0, start = 0, end = 0;
-      let blockSize = 50 * 1024;
-      let file = files[i];
+      // 上传块的大小
+      const blockSize = 50 * 1024;
+      const file = files[i];
+      const fileName = file.name;
+      const fileSize = file.size;
+      const fileType = fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
+      const fileMd5 = CryptoJS.MD5(file).toString();
       // 文件API
-      num = Math.ceil(file.size / blockSize);
+      num = Math.ceil(fileSize / blockSize);
       for (let j = 0; j <num; j++) {
         start = end == 0 ? 0 : end + 1;
-        end = (start + blockSize > file.size) ? file.size : (start + blockSize);
+        end = (start + blockSize > fileSize) ? fileSize : (start + blockSize);
         console.log("第%o块，start=%o,end=%o", j, start, end)
 
         let param = new FormData(); // 创建form对象
         // 分片
         let shardData = file.slice(start, end);
-        param.append("fileMd5", "fileMd5"); // 通过append向form对象添加数据
-        param.append("fileName", file.name); // 通过append向form对象添加数据
-        param.append("fileSize", file.size.toString()); // 通过append向form对象添加数据
+        param.append("fileMd5", fileMd5); // 通过append向form对象添加数据
+        param.append("fileName", fileName); // 通过append向form对象添加数据
+        param.append("fileType", fileType); // 通过append向form对象添加数据
+        param.append("fileSize", fileSize.toString()); // 通过append向form对象添加数据
+        param.append("blockSize", blockSize.toString()); // 通过append向form对象添加数据
         param.append("shardTotal", num.toString()); // 通过append向form对象添加数据
         param.append("shardIndex", j.toString()); // 添加form表单中其他数据
         param.append("shardData", shardData); // 添加form表单中其他数据
 
-        console.log(param);
         let config = {
-          headers: { "Content-Type": "multipart/form-data", "Range":"bytes=0-10" }
+          headers: { "Content-Type": "multipart/form-data"}
         };
 
-        axios.post("http://localhost:10004/api/file/upload-group/upload-demo", param, config);
+        AxiosUtil.post("/api/file/upload-group/shard-upload", param, config);
+        // axios.post("http://localhost:10004/api/file/upload-group/shard-upload", param, config);
       }
     }
 
@@ -110,46 +84,16 @@ const uploadDemo = () => {
 
 }
 
+/**
+ * 文件change事件
+ * @param e
+ */
 const getFile = (e:any) => {
+  // 返回FileList对象File集合
   let files = e.target.files;
   // let file:File = files[0] as File;
   // console.log(file)
-
   myFiles.value = files;
 }
 
-
-interface RawFile {
-  name: string
-  url: string
-}
-// const host = ref<String>(`${BASE_URL.gatewayUrl}api/file/upload-group/upload`);
-const host = ref<String>(`http://localhost:10004/api/file/upload-group/upload`);
-const fileList = ref<RawFile[]>([
-  {
-    name: 'food.jpeg',
-    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-  },
-  {
-    name: 'food2.jpeg',
-    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-  },
-])
-
-const handleRemove = (file: UploadFile, fileList: UploadFile[]) => {
-  console.log(file, fileList)
-}
-const handlePreview = (file: UploadFile) => {
-  console.log(file)
-}
-const handleExceed = (files: FileList, fileList: UploadFile[]) => {
-  ElMessage.warning(
-    `The limit is 3, you selected ${files.length} files this time, add up to ${
-      files.length + fileList.length
-    } totally`
-  )
-}
-const beforeRemove = (file: UploadFile, fileList: UploadFile[]) => {
-  return ElMessageBox.confirm(`Cancel the transfert of ${file.name} ?`)
-}
 </script>
