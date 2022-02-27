@@ -34,7 +34,8 @@ const uploadDemo = () => {
       // 文件API
       num = Math.ceil(fileSize / blockSize);
       for (let j = 0; j <num; j++) {
-        start = end == 0 ? 0 : end + 1;
+        // 这里的本次start是上次的end（注意：不然会少一个字节）
+        start = end;
         end = (start + blockSize > fileSize) ? fileSize : (start + blockSize);
         console.log("第%o块，start=%o,end=%o", j, start, end)
 
