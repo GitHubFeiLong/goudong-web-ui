@@ -5,11 +5,9 @@
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue'
-import * as FileServerApi from '@/api/GoudongFileServerApi';
 import AxiosUtil from "@/utils/AxiosUtil";
-import axios from "axios";
 const CryptoJS = require('crypto-js');
-
+const moment = require('moment');
 const BASE_URL = require('/src/config/BaseUrl.ts');
 
 let myFiles = ref<FileList>();
@@ -31,6 +29,8 @@ const uploadDemo = () => {
       const fileSize = file.size;
       const fileType = fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
       const fileMd5 = CryptoJS.MD5(file).toString();
+      const lastModifiedTime = moment(new Date(file.lastModified)).format("yyyy-MM-DD HH:mm:ss");
+      console.log(lastModifiedTime)
       // 文件API
       num = Math.ceil(fileSize / blockSize);
       for (let j = 0; j <num; j++) {
@@ -50,6 +50,7 @@ const uploadDemo = () => {
         param.append("shardTotal", num.toString()); // 通过append向form对象添加数据
         param.append("shardIndex", j.toString()); // 添加form表单中其他数据
         param.append("shardData", shardData); // 添加form表单中其他数据
+        param.append("lastModifiedTime", lastModifiedTime); // 添加form表单中其他数据
 
         let config = {
           headers: { "Content-Type": "multipart/form-data"}
