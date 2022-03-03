@@ -18,6 +18,7 @@ const uploadDemo = () => {
   let files : FileList | undefined = myFiles.value;
 
   if (files != undefined) {
+    let formDataArray: Array<FormData> = [];
     for (let i = 0; i < files.length; i++) {
       console.log("====第%o个文件===", i)
       // 分片
@@ -52,15 +53,22 @@ const uploadDemo = () => {
         param.append("shardData", shardData); // 添加form表单中其他数据
         param.append("lastModifiedTime", lastModifiedTime); // 添加form表单中其他数据
 
-        let config = {
-          headers: { "Content-Type": "multipart/form-data"}
-        };
+        formDataArray.push(param);
 
-        AxiosUtil.post("/api/file/upload-group/shard-upload", param, config);
         // axios.post("http://localhost:10004/api/file/upload-group/shard-upload", param, config);
       }
     }
 
+    let config = {
+      headers: { "Content-Type": "multipart/form-data"}
+    };
+    AxiosUtil.post("/api/file/upload-group/shard-upload", formDataArray[0], config)
+      .then(()=>{
+        setTimeout(()=>{
+          AxiosUtil.post("/api/file/upload-group/shard-upload", formDataArray[1], config)
+        }, 2000)
+
+      });
     // axios.post("http://localhost:10000/api/file/upload-group/upload-demo", param, config);
 
 
