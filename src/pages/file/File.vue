@@ -11,6 +11,10 @@ const moment = require('moment');
 const BASE_URL = require('/src/config/BaseUrl.ts');
 
 let myFiles = ref<FileList>();
+
+let config = {
+  headers: { "Content-Type": "multipart/form-data"}
+};
 /**
  * 上传
  */
@@ -59,16 +63,26 @@ const uploadDemo = () => {
       }
     }
 
-    let config = {
-      headers: { "Content-Type": "multipart/form-data"}
-    };
-    AxiosUtil.post("/api/file/upload-group/shard-upload", formDataArray[0], config)
-      .then(()=>{
-        setTimeout(()=>{
-          AxiosUtil.post("/api/file/upload-group/shard-upload", formDataArray[1], config)
-        }, 2000)
 
-      });
+    // 递归上传
+    let index = 0;
+    const shardUpload = (index: number) => {
+      if (index < formDataArray.length) {
+        console.log("第%o次调用接口", index + 1)
+        AxiosUtil.post("/api/file/upload-group/shard-upload", formDataArray[index], config)
+          .then((response)=>{
+            index++;
+            shardUpload(index);
+            console.log("index", index)
+          }).catch((error)=>{
+            index++;
+        });
+      }
+    }
+    if (formDataArray.length > 0) {
+      console.log(formDataArray)
+      shardUpload(0);
+    }
     // axios.post("http://localhost:10000/api/file/upload-group/upload-demo", param, config);
 
 
