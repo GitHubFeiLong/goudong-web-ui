@@ -1,15 +1,21 @@
 <template>
   <input type="file" @change="getFile" multiple >
-  <input type="button" value="上传" @click="uploadDemo">
-  <input type="button" value="下载" @click="uploadDemo">
+  <input type="button" value="上传" @click="shardUpload">
+  <input type="button" value="下载" @click="shardUpload">
+
+  <div class="demo-progress">
+    <el-progress :percentage="percentage" />
+    <el-progress :percentage="100" :format="format" />
+    <el-progress :percentage="100" status="success" />
+    <el-progress :percentage="100" status="warning" />
+    <el-progress :percentage="50" status="exception" />
+  </div>
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue'
-import AxiosUtil from "@/utils/AxiosUtil";
-const CryptoJS = require('crypto-js');
-const moment = require('moment');
-const BASE_URL = require('/src/config/BaseUrl.ts');
+import * as FileUtil from '@/utils/FileUtil';
 
+const moment = require('moment');
 let myFiles = ref<FileList>();
 
 let config = {
@@ -18,92 +24,13 @@ let config = {
 /**
  * 上传
  */
-const uploadDemo = () => {
+let percentage = new ref<number>();
+percentage.value = 0
+const shardUpload = () => {
   let files : FileList | undefined = myFiles.value;
 
   if (files != undefined) {
-    let formDataArray: Array<FormData> = [];
-    for (let i = 0; i < files.length; i++) {
-      console.log("====第%o个文件===", i)
-      // 分片
-      let num = 0, start = 0, end = 0;
-      // 上传块的大小
-      const blockSize = 50 * 1024;
-      const file = files[i];
-      const fileName = file.name;
-      const fileSize = file.size;
-      const fileType = fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
-      const fileMd5 = CryptoJS.MD5(file).toString();
-      const lastModifiedTime = moment(new Date(file.lastModified)).format("yyyy-MM-DD HH:mm:ss");
-      console.log(lastModifiedTime)
-      // 文件API
-      num = Math.ceil(fileSize / blockSize);
-      for (let j = 0; j <num; j++) {
-        // 这里的本次start是上次的end（注意：不然会少一个字节）
-        start = end;
-        end = (start + blockSize > fileSize) ? fileSize : (start + blockSize);
-        console.log("第%o块，start=%o,end=%o", j, start, end)
-
-        let param = new FormData(); // 创建form对象
-        // 分片
-        let shardData = file.slice(start, end);
-        param.append("fileMd5", fileMd5); // 通过append向form对象添加数据
-        param.append("fileName", fileName); // 通过append向form对象添加数据
-        param.append("fileType", fileType); // 通过append向form对象添加数据
-        param.append("fileSize", fileSize.toString()); // 通过append向form对象添加数据
-        param.append("blockSize", blockSize.toString()); // 通过append向form对象添加数据
-        param.append("shardTotal", num.toString()); // 通过append向form对象添加数据
-        param.append("shardIndex", j.toString()); // 添加form表单中其他数据
-        param.append("shardData", shardData); // 添加form表单中其他数据
-        param.append("lastModifiedTime", lastModifiedTime); // 添加form表单中其他数据
-
-        formDataArray.push(param);
-
-        // axios.post("http://localhost:10004/api/file/upload-group/shard-upload", param, config);
-      }
-    }
-
-
-    // 递归上传
-    let index = 0;
-    const shardUpload = (index: number) => {
-      if (index < formDataArray.length) {
-        console.log("第%o次调用接口", index + 1)
-        AxiosUtil.post("/api/file/upload-group/shard-upload", formDataArray[index], config)
-          .then((response)=>{
-            index++;
-            shardUpload(index);
-            console.log("index", index)
-          }).catch((error)=>{
-            index++;
-        });
-      }
-    }
-    if (formDataArray.length > 0) {
-      console.log(formDataArray)
-      shardUpload(0);
-    }
-    // axios.post("http://localhost:10000/api/file/upload-group/upload-demo", param, config);
-
-
-    // let param = new FormData(); // 创建form对象
-    // param.append("file", file); // 通过append向form对象添加数据
-    //
-    // param.append("originalFilename", "demo"); // 添加form表单中其他数据
-    //
-    // console.log(param.get("file")); // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-
-
-    // let config = {
-    //   headers: { "Content-Type": "multipart/form-data", "Range":"bytes=0-10" }
-    // };
-    //
-    // axios.post("http://localhost:10000/api/file/upload-group/upload-demo", param, config);
-
-    // 分片上传
-    // FileServerApi.uploadDemo(param,customAxiosRequestConfig).then(response=>{
-    //
-    // });
+    FileUtil.shardUpload(files, 1024, percentage)
   }
 
 }
@@ -120,4 +47,15 @@ const getFile = (e:any) => {
   myFiles.value = files;
 }
 
+
+
+
+const format = (percentage) => (percentage === 100 ? 'Full' : `${percentage}%`)
 </script>
+
+<style scoped>
+.demo-progress .el-progress--line {
+  margin-bottom: 15px;
+  width: 350px;
+}
+</style>
