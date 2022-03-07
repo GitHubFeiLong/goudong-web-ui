@@ -30,7 +30,7 @@ const shardUpload = () => {
   let files : FileList | undefined = myFiles.value;
 
   if (files != undefined) {
-    FileUtil.shardUpload(files, 1024, percentage)
+    FileUtil.shardUpload(files, 1024*1024*5, percentage)
   }
 
 }

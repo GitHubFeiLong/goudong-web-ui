@@ -6,7 +6,7 @@ const moment = require("moment");
 /**
  * 多文件进行分片上传文件
  * @param files 文件数组
- * @param blockSize 分片大小
+ * @param blockSize 分片大小 默认值是5MB
  * @param percentage 接受后端上传成功的百分比
  */
 export function shardUpload (files: FileList, blockSize: number = 1024*1024*5, percentage:any){
@@ -92,7 +92,8 @@ export function shardUpload (files: FileList, blockSize: number = 1024*1024*5, p
         }).catch((error)=>{
           console.error("分片%o上传失败：%o", index, error)
           index++;
-          innerShardUpload(index);
+          // 上传失败就不再上传了，因为可能会出现很多次错误弹框
+          ///innerShardUpload(index);
         });
       }
     }
