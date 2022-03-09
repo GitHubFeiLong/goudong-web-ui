@@ -85,8 +85,6 @@ export function shardUpload (files: FileList, blockSize: number = 1024*1024*5, p
           if (!response.data.data.entiretySuccessful) {
             index++;
             innerShardUpload(index);
-            console.log("index", index)
-            console.log(response.data.data.percentage)
           }
           percentage.value = response.data.data.percentage;
         }).catch((error)=>{
