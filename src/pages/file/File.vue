@@ -5,7 +5,7 @@
 
   <div class="demo-progress">
     <el-progress :percentage="percentage" />
-    <el-progress :percentage="100" :format="format" />
+    <el-progress :percentage="percentage1" :format="format" />
     <el-progress :percentage="100" status="success" />
     <el-progress :percentage="100" status="warning" />
     <el-progress :percentage="50" status="exception" />
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
 import * as FileUtil from '@/utils/FileUtil';
+import {shardUploads} from "@/utils/FileUtil";
 
 const moment = require('moment');
 let myFiles = ref<FileList>();
@@ -25,12 +26,14 @@ let config = {
  * 上传
  */
 let percentage = new ref<number>();
+let percentage1 = new ref<number>();
 percentage.value = 0
+percentage1.value = 0
 const shardUpload = () => {
   let files : FileList | undefined = myFiles.value;
 
   if (files != undefined) {
-    FileUtil.shardUpload(files, 1024*1024*5, percentage)
+    FileUtil.shardUploads(files, [percentage, percentage1])
   }
 
 }
