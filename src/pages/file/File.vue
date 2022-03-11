@@ -25,7 +25,7 @@ let config = {
 /**
  * 上传
  */
-let percentage = new ref<number>();
+let percentage = new ref<number>(0);
 let percentage1 = new ref<number>();
 percentage.value = 0
 percentage1.value = 0
