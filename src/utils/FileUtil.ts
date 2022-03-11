@@ -26,7 +26,6 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
   const fileType = file.name.substring(file.name.lastIndexOf(".")+1).toUpperCase();
   // 先预检，再上传
   fileServerApi.preCheck(fileType, file.size).then((response)=>{
-    console.log("response=>", response)
     new Promise<string>(resolve => {
       if (file.size <= GB) {
         // 获取文件二进制数据，计算md5值
