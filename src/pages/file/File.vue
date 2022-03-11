@@ -1,7 +1,7 @@
 <template>
   <input type="file" @change="getFile" multiple >
   <input type="button" value="上传" @click="shardUpload">
-  <input type="button" value="下载" @click="shardUpload">
+  <input type="button" value="下载" @click="download">
 
   <div class="demo-progress">
     <el-progress :percentage="percentage" />
@@ -51,7 +51,10 @@ const getFile = (e:any) => {
 }
 
 
-
+const download = ()=>{
+  console.log("下载")
+  FileUtil.shardDownload();
+}
 
 const format = (percentage) => (percentage === 100 ? 'Full' : `${percentage}%`)
 </script>

@@ -1,4 +1,4 @@
-import * as fileServerApi from "@/api/GoudongFileServerApi";
+import * as FileServerApi from "@/api/GoudongFileServerApi";
 import CryptoJS from "crypto-js";
 import SparkMD5 from "spark-md5";
 import {ElMessage} from "element-plus";
@@ -25,7 +25,7 @@ let config = {
 export function shardUpload (file: File, percentage: any, blockSize: number = DEFAULT_BLOCK_SIZE){
   const fileType = file.name.substring(file.name.lastIndexOf(".")+1).toUpperCase();
   // 先预检，再上传
-  fileServerApi.preCheck(fileType, file.size).then((response)=>{
+  FileServerApi.preCheck(fileType, file.size).then((response)=>{
     new Promise<string>(resolve => {
       if (file.size <= GB) {
         // 获取文件二进制数据，计算md5值
@@ -83,7 +83,7 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
       const innerShardUpload = (index: number) => {
         if (index < formDataArray.length) {
           console.log("第%o次调用接口", index + 1)
-          fileServerApi.shardUpload(formDataArray[index], config).then((response)=>{
+          FileServerApi.shardUpload(formDataArray[index], config).then((response)=>{
             if (!response.data.data.entiretySuccessful) {
               index++;
               innerShardUpload(index);
@@ -123,4 +123,10 @@ export function shardUploads (files: FileList, percentages:any[], blockSize: num
   for (let i = 0; i < files.length; i++) {
     shardUpload(files[i], percentages[i])
   }
+}
+
+export function shardDownload():void{
+  FileServerApi.download().then((response)=>{
+    console.log("下载成功：", response)
+  });
 }
