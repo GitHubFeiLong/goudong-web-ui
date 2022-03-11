@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "noImplicitAny": true,
