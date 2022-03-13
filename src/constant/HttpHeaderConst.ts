@@ -14,6 +14,10 @@ export const BEARER = 'Bearer ';
  */
 export const AES_KEY = "Aes-Key";
 
+export const CONTENT_DISPOSITION = "content-disposition";
+export const CONTENT_LENGTH = "content-length";
+export const CONTENT_RANGE= "content-range";
+
 /**
  * 请求媒体类型
  */

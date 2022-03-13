@@ -1,48 +1,38 @@
 <template>
-  <input type="file" @change="getFile" multiple >
+  <input type="file" @change="change" >
   <input type="button" value="上传" @click="shardUpload">
+  <input type="button" value="暂停" @click="pauseShardUpload">
   <input type="button" value="下载" @click="download">
 
   <div class="demo-progress">
     <el-progress :percentage="percentage" />
-    <el-progress :percentage="percentage1" :format="format" />
-    <el-progress :percentage="100" status="success" />
-    <el-progress :percentage="100" status="warning" />
-    <el-progress :percentage="50" status="exception" />
   </div>
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue'
 import * as FileUtil from '@/utils/FileUtil';
-import {shardUploads} from "@/utils/FileUtil";
-
+import {download as dddd, saveAs} from '@/utils/MultiThreadDownload';
 const moment = require('moment');
 let myFiles = ref<FileList>();
 
-let config = {
-  headers: { "Content-Type": "multipart/form-data"}
-};
 /**
  * 上传
  */
 let percentage = new ref<number>(0);
-let percentage1 = new ref<number>();
 percentage.value = 0
-percentage1.value = 0
 const shardUpload = () => {
   let files : FileList | undefined = myFiles.value;
 
   if (files != undefined) {
-    FileUtil.shardUploads(files, [percentage, percentage1])
+    FileUtil.shardUploads(files, [percentage])
   }
-
 }
 
 /**
  * 文件change事件
  * @param e
  */
-const getFile = (e:any) => {
+const change = (e:any) => {
   // 返回FileList对象File集合
   let files = e.target.files;
   // let file:File = files[0] as File;
@@ -50,13 +40,28 @@ const getFile = (e:any) => {
   myFiles.value = files;
 }
 
+/**
+ * 暂停上传
+ */
+const pauseShardUpload = () => {
+
+}
 
 const download = ()=>{
   console.log("下载")
-  FileUtil.shardDownload();
+  // FileUtil.shardDownload();
+  multiThreadedDownload()
 }
 
-const format = (percentage) => (percentage === 100 ? 'Full' : `${percentage}%`)
+function multiThreadedDownload() {
+  const url = "http://localhost:9998/api/file/download-group/download";
+  if (!url || !/https?/.test(url)) return;
+  console.log("多线程下载开始: " + +new Date());
+  dddd(url, 100 * 1024, 1).then((buffers) => {
+    console.log("多线程下载结束: " + +new Date());
+    saveAs({ buffers, name: "我的压缩包", mime: "application/zip" });
+  });
+}
 </script>
 
 <style scoped>

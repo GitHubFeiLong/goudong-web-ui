@@ -10,6 +10,7 @@ import {AxiosRequestConfig, AxiosResponse} from 'axios';
  */
 export const preCheck = (fileType:string, fileSize: number, conf?: AxiosRequestConfig) => AxiosUtil.get(`/api/file/upload-group/pre-check?fileType=${fileType}&fileSize=${fileSize}`, conf)
 
+
 export const download = (conf?: AxiosRequestConfig): Promise<AxiosResponse> =>  AxiosUtil.get('/api/file/download-group/download', conf);
 
 /**

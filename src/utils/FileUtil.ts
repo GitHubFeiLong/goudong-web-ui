@@ -1,6 +1,7 @@
 import * as FileServerApi from "@/api/GoudongFileServerApi";
 import CryptoJS from "crypto-js";
 import SparkMD5 from "spark-md5";
+import * as HttpHeaderConst from "@/constant/HttpHeaderConst";
 import {ElMessage} from "element-plus";
 
 const moment = require("moment");
@@ -125,8 +126,49 @@ export function shardUploads (files: FileList, percentages:any[], blockSize: num
   }
 }
 
+/**
+ * 获取文件完整大小
+ */
+// function getContentLength(): Promise<number>{
+//   return new Promise<number>((resolve, reject)=>{
+//     FileServerApi.getContentLength("").then((response)=>{
+//       resolve(response.headers[HttpHeaderConst.CONTENT_LENGTH])
+//     })
+//   })
+// }
+
+/**
+ * 分段下载
+ */
+let bytes = 1024*100;
 export function shardDownload():void{
-  FileServerApi.download().then((response)=>{
+  // getContentLength().then((contentLength)=>{
+  //   console.log(contentLength)
+  //   rangeDownload(0, contentLength)
+  // })
+
+}
+
+
+//@ts-ignore
+import { saveAs } from 'file-saver';
+function rangeDownload(start:number, end: number) {
+  let config = {
+    headers: { "Range": `bytes=${start}-${end}`}
+  }
+  FileServerApi.download(config).then((response)=>{
+    let range = response.headers[HttpHeaderConst.CONTENT_RANGE];
+    let disposition = response.headers[HttpHeaderConst.CONTENT_DISPOSITION];
+    if (response.status === 200) {
+      //将arraybuffer转成blob
+      saveAs(new Blob([response.data]), '1.png')
+    }
+
+    if (response.status === 206) {
+      saveAs(new Blob([response.data]), '1.png')
+      // rangeDownload(end + 1, 10240000)
+    }
+
     console.log("下载成功：", response)
   });
 }
