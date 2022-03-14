@@ -18,7 +18,7 @@ let myFiles = ref<FileList>();
 /**
  * 上传
  */
-let percentage = new ref<number>(0);
+let percentage = ref<number>(0);
 percentage.value = 0
 const shardUpload = () => {
   let files : FileList | undefined = myFiles.value;
@@ -54,12 +54,12 @@ const download = ()=>{
 }
 
 function multiThreadedDownload() {
-  const url = "http://localhost:9998/api/file/download-group/download";
+  const url = "http://localhost:9998/api/file/download-group/download?fileId=1503235999478714368";
   if (!url || !/https?/.test(url)) return;
   console.log("多线程下载开始: " + +new Date());
   dddd(url, 100 * 1024, 1).then((buffers) => {
     console.log("多线程下载结束: " + +new Date());
-    saveAs({ buffers, name: "我的压缩包", mime: "application/zip" });
+    saveAs("我的压缩包", buffers, "application/zip");
   });
 }
 </script>

@@ -14,18 +14,6 @@ export function concatenate(arrays:Uint8Array[]) {
   return result;
 }
 
-/**
- * 获取资源大小
- * @param url
- */
-export function getContentLength(url:string):Promise<number>{
-  return new Promise(resolve => {
-    AxiosUtil.get(url).then((response)=>{
-      resolve(1);
-    })
-  });
-
-}
 
 /**
  * 获取二进制内容
@@ -57,13 +45,14 @@ export function getBinaryContent(url:string, start:number, end:number, i:number)
   });
 }
 
-export function saveAs({ name, buffers, mime = "application/octet-stream" }:object) {
+export function saveAs(name:string, buffers:any, mime = "application/octet-stream") {
   const blob = new Blob([buffers], { type: mime });
   const blobUrl = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a:any = document.createElement("a");
   a.download = name || Math.random();
   a.href = blobUrl;
   a.click();
+  //@ts-ignore
   URL.revokeObjectURL(blob);
 }
 
@@ -96,9 +85,9 @@ export async function asyncPool(poolLimit:number, array:number[], iteratorFn:any
  */
 export async function download(url:string, chunkSize:number, poolLimit:number = 1) {
   let contentLength = 0;
-  await getContentLength(url).then(length=>{
-    contentLength = length;
-  });
+  await FileServerApi.fileLink("MTUwMzIzNTk5OTQ3ODcxNDM2OA%3D%3D").then((response)=>{
+    contentLength = response.data.data.size;
+  })
 
   // 块大小
   const chunks = typeof chunkSize === "number" ? Math.ceil(contentLength / chunkSize) : 1;

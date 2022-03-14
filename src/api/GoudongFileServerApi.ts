@@ -19,3 +19,11 @@ export const download = (conf?: AxiosRequestConfig): Promise<AxiosResponse> =>  
  * @param conf axios配置
  */
 export const shardUpload = (formData:FormData, conf?: AxiosRequestConfig): Promise<AxiosResponse> =>  AxiosUtil.post('/api/file/upload-group/shard-upload', formData, conf);
+
+/**
+ * 获取上传文件的文件信息
+ * @param encode 文件id，先使用Base64编码再使用编码
+ * @param type 类型（0:获取文件流；1：获取文件基本信息）
+ * @param conf
+ */
+export const fileLink = (encode:string, type:number=1, conf?:AxiosRequestConfig): Promise<AxiosResponse> =>  AxiosUtil.get(`/api/file/file-link/${encode}?type=${type}`, conf);
