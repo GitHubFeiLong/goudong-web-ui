@@ -12,6 +12,8 @@
 import {ref} from 'vue'
 import * as FileUtil from '@/utils/FileUtil';
 import {download as dddd, saveAs} from '@/utils/MultiThreadDownload';
+import * as FileServerApi from "@/api/GoudongFileServerApi";
+import {AxiosResponse} from "axios";
 const moment = require('moment');
 let myFiles = ref<FileList>();
 
@@ -53,15 +55,19 @@ const download = ()=>{
   multiThreadedDownload()
 }
 
-function multiThreadedDownload() {
-  const url = "http://localhost:9998/api/file/download-group/download?fileId=1503235999478714368";
+async function multiThreadedDownload() {
+  // 1. 获取文件基本信息
+  let fileId:bigint = BigInt(1503339420588314624);
+  let response:AxiosResponse = await FileServerApi.fileLink(fileId, 0)
+  let file = response.data.data;
+  const url = "http://localhost:9998/api/file/download-group/download?fileId="+fileId;
   if (!url || !/https?/.test(url)) return;
-  console.log("多线程下载开始: " + +new Date());
-  dddd(url, 100 * 1024, 1).then((buffers) => {
+  dddd(url, file.size, 1024*1024).then((buffers) => {
     console.log("多线程下载结束: " + +new Date());
-    saveAs("我的压缩包", buffers, "application/zip");
+    saveAs(file.originalFilename, buffers, file.mimeType);
   });
 }
+
 </script>
 
 <style scoped>

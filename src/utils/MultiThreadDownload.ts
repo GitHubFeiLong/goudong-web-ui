@@ -80,16 +80,13 @@ export async function asyncPool(poolLimit:number, array:number[], iteratorFn:any
 /**
  * 异步多线程分块下载
  * @param url 指定资源路径
+ * @param contentLength 下载文件大小，单位字节
  * @param chunkSize 每次下载块的大小
  * @param poolLimit 线程数量
  */
-export async function download(url:string, chunkSize:number, poolLimit:number = 1) {
-  let contentLength = 0;
-  await FileServerApi.fileLink("MTUwMzIzNTk5OTQ3ODcxNDM2OA%3D%3D").then((response)=>{
-    contentLength = response.data.data.size;
-  })
+export async function download(url:string, contentLength:number, chunkSize:number, poolLimit:number = 1) {
 
-  // 块大小
+  // 块的数量
   const chunks = typeof chunkSize === "number" ? Math.ceil(contentLength / chunkSize) : 1;
   console.log(new Array(chunks).keys())
 
