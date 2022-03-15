@@ -1,12 +1,20 @@
 <template>
-  <input type="file" @change="change" >
-  <input type="button" value="上传" @click="shardUpload">
-  <input type="button" value="暂停" @click="pauseShardUpload">
-  <input type="button" value="下载" @click="download">
-
-  <div class="demo-progress">
-    <el-progress :percentage="percentage" />
+  <div>
+    <input type="file" @change="change" >
+    <input type="button" value="上传" @click="shardUpload">
+    <div class="demo-progress">
+      <el-progress :percentage="percentage" />
+    </div>
   </div>
+  <div>
+    <input type="text" placeholder="文件id" v-model="downloadFileId">
+    <input type="button" value="下载" @click="download">
+  </div>
+
+<!--  <input type="button" value="暂停" @click="pauseShardUpload">-->
+
+
+
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue'
@@ -17,6 +25,7 @@ import {AxiosResponse} from "axios";
 const moment = require('moment');
 let myFiles = ref<FileList>();
 
+let downloadFileId = ref<bigint>(BigInt(0));
 /**
  * 上传
  */
@@ -50,14 +59,13 @@ const pauseShardUpload = () => {
 }
 
 const download = ()=>{
-  console.log("下载")
   // FileUtil.shardDownload();
-  multiThreadedDownload()
+  multiThreadedDownload(downloadFileId.value)
 }
 
-async function multiThreadedDownload() {
+async function multiThreadedDownload(fileId:bigint) {
   // 1. 获取文件基本信息
-  let fileId:bigint = BigInt(1503339420588314624);
+  // let fileId:bigint = BigInt(1503339420588314624);
   let response:AxiosResponse = await FileServerApi.fileLink(fileId, 0)
   let file = response.data.data;
   const url = "http://localhost:9998/api/file/download-group/download?fileId="+fileId;
