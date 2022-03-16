@@ -1,6 +1,7 @@
 /** ===================文件服务相关的接口======================== */
 import AxiosUtil from '@/utils/AxiosUtil';
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {ShardPrefixCheckParam} from "@/pojo/ShardPrefixCheckParam";
 
 /**
  * 上传文件前的预检查
@@ -8,7 +9,7 @@ import {AxiosRequestConfig, AxiosResponse} from 'axios';
  * @param fileSize 文件大小
  * @param conf axios配置
  */
-export const preCheck = (fileType:string, fileSize: number, conf?: AxiosRequestConfig) => AxiosUtil.get(`/api/file/upload-group/pre-check?fileType=${fileType}&fileSize=${fileSize}`, conf)
+export const shardPrefixCheck = (data:ShardPrefixCheckParam, conf?: AxiosRequestConfig) => AxiosUtil.post(`/api/file/upload-group/shard-prefix-check`, data, conf)
 
 
 export const download = (conf?: AxiosRequestConfig): Promise<AxiosResponse> =>  AxiosUtil.get('/api/file/download-group/download', conf);

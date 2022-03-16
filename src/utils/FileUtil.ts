@@ -24,45 +24,60 @@ let config = {
  * @param blockSize 分块大小
  */
 export function shardUpload (file: File, percentage: any, blockSize: number = DEFAULT_BLOCK_SIZE){
-  const fileType = file.name.substring(file.name.lastIndexOf(".")+1).toUpperCase();
-  // 先预检，再上传
-  FileServerApi.preCheck(fileType, file.size).then((response)=>{
-    new Promise<string>(resolve => {
-      if (file.size <= GB) {
-        // 获取文件二进制数据，计算md5值
-        let fileReader = new FileReader();
-        let spark = new SparkMD5.ArrayBuffer();
-        fileReader.readAsArrayBuffer(file);
-        fileReader.onload = function (e) {
-          // @ts-ignore
-          spark.append(e.target.result);
-          let md5 = spark.end();
-          resolve(md5)
-        };
-      } else {
+  new Promise<string>(resolve => {
+    if (file.size <= GB) {
+      // 获取文件二进制数据，计算md5值
+      let fileReader = new FileReader();
+      let spark = new SparkMD5.ArrayBuffer();
+      fileReader.readAsArrayBuffer(file);
+      fileReader.onload = function (e) {
         // @ts-ignore
-        let md5 = CryptoJS.MD5(file).toString();
+        spark.append(e.target.result);
+        let md5 = spark.end();
         resolve(md5)
+      };
+    } else {
+      // @ts-ignore
+      let md5 = CryptoJS.MD5(file).toString();
+      resolve(md5)
+    }
+  }).then(md5 => {
+    console.log("解析完文件的md5值：%o", md5)
+    // 将分片后的formData放进数组中
+    let formDataArray: FormData[] = [];
+    // 分片
+    let num = 0, start = 0, end = 0;
+    const fileName = file.name;
+    const fileSize = file.size;
+    const fileType = fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
+    const lastModifiedTime = moment(new Date(file.lastModified)).format("yyyy-MM-DD HH:mm:ss");
+    // 文件API
+    num = Math.ceil(fileSize / blockSize);
+    // 构造预检参数对象
+    let shardPrefixCheckParam = new ShardPrefixCheckParam();
+    shardPrefixCheckParam.fileMd5 = md5;
+    shardPrefixCheckParam.fileType = fileType
+    shardPrefixCheckParam.fileSize = fileSize
+    shardPrefixCheckParam.lastModifiedTime = lastModifiedTime
+    shardPrefixCheckParam.blockSize = blockSize
+    shardPrefixCheckParam.shardTotal = num
+    // 先预检，再上传
+    FileServerApi.shardPrefixCheck(shardPrefixCheckParam).then((response)=>{
+      // 获取后端返回的失败数组和进度
+      let entiretySuccessful = response.data.data.entiretySuccessful
+      if (entiretySuccessful) {
+        // 上传完成
+
       }
-    }).then(md5 => {
-      console.log("解析完文件的md5值：%o", md5)
-      // 将分片后的formData放进数组中
-      let formDataArray: FormData[] = [];
-      // 分片
-      let num = 0, start = 0, end = 0;
-      const fileName = file.name;
-      const fileSize = file.size;
-      const fileType = fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
-      const lastModifiedTime = moment(new Date(file.lastModified)).format("yyyy-MM-DD HH:mm:ss");
+      let percentage = response.data.data.percentage
 
-      // 文件API
-      num = Math.ceil(fileSize / blockSize);
-      for (let j = 0; j <num; j++) {
-        // 这里的本次start是上次的end（注意：不然会少一个字节）
-        start = end;
-        end = (start + blockSize > fileSize) ? fileSize : (start + blockSize);
-        console.log("第%o块，start=%o,end=%o", j, start, end)
 
+      let unsuccessfulShardIndexArray:number[] = response.data.data.unsuccessfulShardIndexArray;
+
+      unsuccessfulShardIndexArray.forEach(index=>{
+        let start = index * blockSize;
+        let end = (start + blockSize) > fileSize ? fileSize : (start + blockSize);
+        console.log("第%o块，start=%o,end=%o", index, start, end)
         let param = new FormData(); // 创建form对象
         // 分片
         let shardData = file.slice(start, end);
@@ -72,19 +87,24 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
         param.append("fileSize", fileSize.toString()); // 通过append向form对象添加数据
         param.append("blockSize", blockSize.toString()); // 通过append向form对象添加数据
         param.append("shardTotal", num.toString()); // 通过append向form对象添加数据
-        param.append("shardIndex", j.toString()); // 添加form表单中其他数据
+        param.append("shardIndex", index.toString()); // 添加form表单中其他数据
         param.append("shardData", shardData); // 添加form表单中其他数据
         param.append("lastModifiedTime", lastModifiedTime); // 添加form表单中其他数据
 
         // 添加到数组
         formDataArray.push(param);
-      }
+      })
 
       // 递归上传
       const innerShardUpload = (index: number) => {
         if (index < formDataArray.length) {
           console.log("第%o次调用接口", index + 1)
-          FileServerApi.shardUpload(formDataArray[index], config).then((response)=>{
+          let formData = formDataArray[index]
+          formData.forEach((value, key) => {
+            console.log("key %s: value %s", key, value);
+          })
+
+          FileServerApi.shardUpload(formData, config).then((response)=>{
             if (!response.data.data.entiretySuccessful) {
               index++;
               innerShardUpload(index);
@@ -100,10 +120,12 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
       }
 
       if (formDataArray.length > 0) {
-        console.log(formDataArray)
+        // console.log(.keys())
+
         innerShardUpload(0);
       }
     })
+
   })
 
 }
@@ -152,6 +174,8 @@ export function shardDownload():void{
 
 //@ts-ignore
 import { saveAs } from 'file-saver';
+import {shardPrefixCheck} from "@/api/GoudongFileServerApi";
+import {ShardPrefixCheckParam} from "@/pojo/ShardPrefixCheckParam";
 function rangeDownload(start:number, end: number) {
   let config = {
     headers: { "Range": `bytes=${start}-${end}`}

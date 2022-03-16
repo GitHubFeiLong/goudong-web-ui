@@ -3,7 +3,7 @@
     <input type="file" @change="change" >
     <input type="button" value="上传" @click="shardUpload">
     <div class="demo-progress">
-      <el-progress :percentage="percentage" />
+      <el-progress :percentage="shardUploadActive.percentage" />
     </div>
   </div>
   <div>
@@ -17,11 +17,12 @@
 
 </template>
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref, reactive} from 'vue'
 import * as FileUtil from '@/utils/FileUtil';
 import {download as dddd, saveAs} from '@/utils/MultiThreadDownload';
 import * as FileServerApi from "@/api/GoudongFileServerApi";
 import {AxiosResponse} from "axios";
+import {ShardUploadReactive} from "@/pojo/ShardUploadReactive";
 const moment = require('moment');
 let myFiles = ref<FileList>();
 
@@ -31,6 +32,9 @@ let downloadFileId = ref<bigint>(BigInt(0));
  */
 let percentage = ref<number>(0);
 percentage.value = 0
+// 声明一个用于接收上传实时信息
+let shardUploadReactive = new ShardUploadReactive();
+let shardUploadActive = reactive(shardUploadReactive)
 const shardUpload = () => {
   let files : FileList | undefined = myFiles.value;
 
