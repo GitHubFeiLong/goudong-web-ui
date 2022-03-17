@@ -2,8 +2,10 @@
   <div>
     <input type="file" @change="change" >
     <input type="button" value="上传" @click="shardUpload">
+    <input v-if="shardUploadReactive.pause" type="button" value="继续" @click="shardUploadReactive.pause=false">
+    <input v-else type="button" value="暂停" @click="shardUploadReactive.pause=true">
     <div class="demo-progress">
-      <el-progress :percentage="shardUploadActive.percentage" />
+      <el-progress :percentage="shardUploadReactive.percentage" />
     </div>
   </div>
   <div>
@@ -12,8 +14,6 @@
   </div>
 
 <!--  <input type="button" value="暂停" @click="pauseShardUpload">-->
-
-
 
 </template>
 <script lang="ts" setup>
@@ -24,22 +24,18 @@ import * as FileServerApi from "@/api/GoudongFileServerApi";
 import {AxiosResponse} from "axios";
 import {ShardUploadReactive} from "@/pojo/ShardUploadReactive";
 const moment = require('moment');
-let myFiles = ref<FileList>();
+
+let checkedFile:File|null = null;
 
 let downloadFileId = ref<bigint>(BigInt(0));
 /**
  * 上传
  */
-let percentage = ref<number>(0);
-percentage.value = 0
 // 声明一个用于接收上传实时信息
-let shardUploadReactive = new ShardUploadReactive();
-let shardUploadActive = reactive(shardUploadReactive)
+let shardUploadReactive = reactive(ShardUploadReactive.getInstance())
 const shardUpload = () => {
-  let files : FileList | undefined = myFiles.value;
-
-  if (files != undefined) {
-    FileUtil.shardUploads(files, [percentage])
+  if (checkedFile !== null) {
+    FileUtil.shardUpload(checkedFile as File, shardUploadReactive)
   }
 }
 
@@ -49,10 +45,8 @@ const shardUpload = () => {
  */
 const change = (e:any) => {
   // 返回FileList对象File集合
-  let files = e.target.files;
-  // let file:File = files[0] as File;
-  // console.log(file)
-  myFiles.value = files;
+  checkedFile = e.target.files[0]
+  Object.assign(shardUploadReactive, ShardUploadReactive.getInstance())
 }
 
 /**

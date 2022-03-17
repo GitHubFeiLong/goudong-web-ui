@@ -23,7 +23,7 @@ let config = {
  * @param percentage 接受上传的百分比
  * @param blockSize 分块大小
  */
-export function shardUpload (file: File, percentage: any, blockSize: number = DEFAULT_BLOCK_SIZE){
+export function shardUpload (file: File, shardUploadReactive: any, blockSize: number = DEFAULT_BLOCK_SIZE){
   new Promise<string>(resolve => {
     if (file.size <= GB) {
       // 获取文件二进制数据，计算md5值
@@ -61,16 +61,23 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
     shardPrefixCheckParam.lastModifiedTime = lastModifiedTime
     shardPrefixCheckParam.blockSize = blockSize
     shardPrefixCheckParam.shardTotal = num
+
+    // 修改状态
+    shardUploadReactive.startTime = new Date();
+
     // 先预检，再上传
     FileServerApi.shardPrefixCheck(shardPrefixCheckParam).then((response)=>{
       // 获取后端返回的失败数组和进度
-      let entiretySuccessful = response.data.data.entiretySuccessful
+      let entiretySuccessful = response.data.data.entiretySuccessful;
+
+      shardUploadReactive.entiretySuccessful = entiretySuccessful;
       if (entiretySuccessful) {
+        console.log("上传完成")
         // 上传完成
-
+        shardUploadReactive.percentage = response.data.data.percentage;
+        shardUploadReactive.endTime = new Date();
+        return;
       }
-      let percentage = response.data.data.percentage
-
 
       let unsuccessfulShardIndexArray:number[] = response.data.data.unsuccessfulShardIndexArray;
 
@@ -105,15 +112,27 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
           })
 
           FileServerApi.shardUpload(formData, config).then((response)=>{
+            shardUploadReactive.percentage = response.data.data.percentage;
+            shardUploadReactive.entiretySuccessful = response.data.data.entiretySuccessful;
             if (!response.data.data.entiretySuccessful) {
               index++;
               innerShardUpload(index);
             }
-            percentage.value = response.data.data.percentage;
+
           }).catch((error)=>{
             console.error("分片%o上传失败：%o", index, error)
-            index++;
+
+            shardUploadReactive.endTime = new Date();
+            shardUploadReactive.unsuccessful = true;
+            if (error.data.clientMessage) {
+              shardUploadReactive.errorMessage = error.data.clientMessage;
+            } else {
+              shardUploadReactive.errorMessage = error;
+            }
+
+
             // 上传失败就不再上传了，因为可能会出现很多次错误弹框
+            // index++;
             ///innerShardUpload(index);
           });
         }
@@ -121,9 +140,19 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
 
       if (formDataArray.length > 0) {
         // console.log(.keys())
-
         innerShardUpload(0);
       }
+    }).catch((error)=>{
+      console.log("失败", error)
+      shardUploadReactive.endTime = new Date();
+      shardUploadReactive.unsuccessful = true;
+      if (error.data.clientMessage) {
+        shardUploadReactive.errorMessage = error.data.clientMessage;
+      } else {
+        shardUploadReactive.errorMessage = error;
+      }
+
+      console.log(shardUploadReactive)
     })
 
   })
@@ -136,15 +165,15 @@ export function shardUpload (file: File, percentage: any, blockSize: number = DE
  * @param percentages 接受后端上传成功的百分比对象数组
  * @param blockSize 分片大小 默认值是5MB
  */
-export function shardUploads (files: FileList, percentages:any[], blockSize: number = DEFAULT_BLOCK_SIZE){
-  if (files.length !== percentages.length) {
+export function shardUploads (files: FileList, reactive:any[], blockSize: number = DEFAULT_BLOCK_SIZE){
+  if (files.length !== reactive.length) {
     console.error("批量上传的文件数量和接受百分比数量不一致")
     ElMessage.error('批量上传的文件数量和接受百分比数量不一致')
     return false;
   }
 
   for (let i = 0; i < files.length; i++) {
-    shardUpload(files[i], percentages[i])
+    shardUpload(files[i], reactive[i])
   }
 }
 
@@ -176,6 +205,8 @@ export function shardDownload():void{
 import { saveAs } from 'file-saver';
 import {shardPrefixCheck} from "@/api/GoudongFileServerApi";
 import {ShardPrefixCheckParam} from "@/pojo/ShardPrefixCheckParam";
+import {reactive} from "vue";
+import {ShardUploadReactive} from "@/pojo/ShardUploadReactive";
 function rangeDownload(start:number, end: number) {
   let config = {
     headers: { "Range": `bytes=${start}-${end}`}

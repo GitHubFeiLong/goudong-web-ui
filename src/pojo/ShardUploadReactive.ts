@@ -1,6 +1,8 @@
 /**
  * 文件分片上传时实时更新的属性
  */
+import {reactive} from "vue";
+
 export class ShardUploadReactive {
   /**
    * 开始上传的时间
@@ -19,6 +21,16 @@ export class ShardUploadReactive {
    * 是否上传完成
    */
   entiretySuccessful:boolean = false;
+
+  /**
+   * 是否上传失败
+   */
+  unsuccessful:boolean = false;
+
+  /**
+   * 失败信息
+   */
+  errorMessage:string|null = null
 
   /**
    * 上传总用时（去掉暂停的时间）
@@ -40,8 +52,27 @@ export class ShardUploadReactive {
    */
   pauseEndTime:Date|null = null;
   /**
-   * 暂停总时常
+   * 暂停总时长
    */
   pauseTotalSecond:number = 0;
 
+  private constructor() {
+  }
+
+  static getInstance():ShardUploadReactive{
+    return new ShardUploadReactive();
+  }
+  static init(shardUploadReactive:any) {
+    shardUploadReactive.startTime = new Date();
+    shardUploadReactive.endTime = null;
+    shardUploadReactive.percentage = 0;
+    shardUploadReactive.entiretySuccessful = false;
+    shardUploadReactive.unsuccessful = false;
+    shardUploadReactive.errorMessage = null;
+    shardUploadReactive.totalSecond = 0;
+    shardUploadReactive.pause = false;
+    shardUploadReactive.pauseStartTime = null;
+    shardUploadReactive.pauseEndTime = null;
+    shardUploadReactive.pauseTotalSecond = 0;
+  }
 }
