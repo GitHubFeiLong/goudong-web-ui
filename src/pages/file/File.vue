@@ -1,19 +1,20 @@
 <template>
   <div>
     <input type="file" @change="change" >
-    <input type="button" value="上传" @click="shardUpload">
-    <input v-if="shardUploadReactive.pause" type="button" value="继续" @click="shardUploadReactive.pause=false">
-    <input v-else type="button" value="暂停" @click="shardUploadReactive.pause=true">
+    <el-button v-show="checkedFile != null && shardUploadReactive.status === UploadStatusEnum.INIT"  type="primary" @click="shardUpload">上传</el-button>
+    <el-button v-show="shardUploadReactive.status === UploadStatusEnum.PAUSED"  type="primary" @click="keepUpShardUpload">继续</el-button>
+    <el-button v-show="shardUploadReactive.status === UploadStatusEnum.UPLOADING"  type="primary" @click="pauseShardUpload">暂停</el-button>
     <div class="demo-progress">
-      <el-progress :percentage="shardUploadReactive.percentage" />
+      <el-progress :percentage="shardUploadReactive.percentage"
+                   :indeterminate="shardUploadReactive.status === UploadStatusEnum.READYING"
+                   :status="shardUploadReactive.status === UploadStatusEnum.FINISHED ? 'success' : (shardUploadReactive.status === UploadStatusEnum.FAILED ? 'exception' : '')"
+      />
     </div>
   </div>
   <div>
     <input type="text" placeholder="文件id" v-model="downloadFileId">
     <input type="button" value="下载" @click="download">
   </div>
-
-<!--  <input type="button" value="暂停" @click="pauseShardUpload">-->
 
 </template>
 <script lang="ts" setup>
@@ -23,41 +24,67 @@ import {download as dddd, saveAs} from '@/utils/MultiThreadDownload';
 import * as FileServerApi from "@/api/GoudongFileServerApi";
 import {AxiosResponse} from "axios";
 import {ShardUploadReactive} from "@/pojo/ShardUploadReactive";
+import {UploadStatusEnum} from "@/enum/UploadStatusEnum";
+import {ElMessage} from "element-plus";
 const moment = require('moment');
-
-let checkedFile:File|null = null;
-
-let downloadFileId = ref<bigint>(BigInt(0));
-/**
- * 上传
- */
+let checkedFile= ref();
 // 声明一个用于接收上传实时信息
-let shardUploadReactive = reactive(ShardUploadReactive.getInstance())
-const shardUpload = () => {
-  if (checkedFile !== null) {
-    FileUtil.shardUpload(checkedFile as File, shardUploadReactive)
-  }
-}
-
+let shardUploadReactive:ShardUploadReactive = reactive(ShardUploadReactive.getInstance())
+let downloadFileId = ref<bigint>(BigInt(0));
 /**
  * 文件change事件
  * @param e
  */
 const change = (e:any) => {
   // 返回FileList对象File集合
-  checkedFile = e.target.files[0]
+  checkedFile.value = e.target.files[0]
   Object.assign(shardUploadReactive, ShardUploadReactive.getInstance())
+}
+
+/**
+ * 上传
+ */
+const shardUpload = () => {
+  if (checkedFile.value !== null) {
+    shardUploadReactive.startTime = new Date().getTime();
+    shardUploadReactive.status = UploadStatusEnum.READYING;
+    FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive)
+  }
 }
 
 /**
  * 暂停上传
  */
 const pauseShardUpload = () => {
+  if (shardUploadReactive.status === UploadStatusEnum.UPLOADING) {
+    shardUploadReactive.status = UploadStatusEnum.PAUSED
+    shardUploadReactive.pauseStartTime = new Date().getTime();
+    return;
+  }
+  ElMessage.error('上传文件的状态错误')
+  console.error("文件状态错误，此时应该是上传中状态才能调用暂停上传")
+}
+/**
+ * 继续上传
+ */
+const keepUpShardUpload = () => {
+  if (shardUploadReactive.status === UploadStatusEnum.PAUSED) {
+    shardUploadReactive.status = UploadStatusEnum.UPLOADING
+    // 暂停总时长
+    shardUploadReactive.pauseTotalTime += new Date().getTime() - shardUploadReactive.pauseStartTime
 
+    // 暂停开始时间和结束时间进行初始
+    shardUploadReactive.pauseStartTime = 0;
+    shardUploadReactive.pauseEndTime = 0;
+
+    FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive)
+    return;
+  }
+  ElMessage.error('上传文件的状态错误')
+  console.error("文件状态错误，此时应该是暂停状态才能调用继续上传")
 }
 
 const download = ()=>{
-  // FileUtil.shardDownload();
   multiThreadedDownload(downloadFileId.value)
 }
 

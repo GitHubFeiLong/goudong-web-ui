@@ -18,13 +18,46 @@ let config = {
 };
 
 /**
+ * 上传失败
+ * @param shardUploadReactive
+ * @param error
+ */
+function shardUploadFailed(shardUploadReactive: ShardUploadReactive, error: any) {
+  shardUploadReactive.status = UploadStatusEnum.FAILED;
+  shardUploadReactive.endTime = new Date().getTime();
+  shardUploadReactive.totalTime = shardUploadReactive.endTime -
+    (shardUploadReactive.startTime as number) -
+    shardUploadReactive.pauseTotalTime;
+  if (error.data.clientMessage) {
+    shardUploadReactive.errorMessage = error.data.clientMessage;
+  } else {
+    shardUploadReactive.errorMessage = error;
+  }
+}
+
+/**
  * 单文件的分片上传
  * @param file 待上传文件
  * @param percentage 接受上传的百分比
  * @param blockSize 分块大小
  */
-export function shardUpload (file: File, shardUploadReactive: any, blockSize: number = DEFAULT_BLOCK_SIZE){
+export function shardUpload (file: File, shardUploadReactive: ShardUploadReactive, blockSize: number = DEFAULT_BLOCK_SIZE){
+
   new Promise<string>(resolve => {
+    /*
+      当文件已经计算过md5值后，就直接判断文件是否有修改
+      如果未修改就直接使用原md5（减少计算时间）
+      如果有修改就需要重新计算md5
+     */
+    if (shardUploadReactive.shardPrefixCheckParam.lastModifiedTime != null) {
+      let equalsLastModify = shardUploadReactive.shardPrefixCheckParam.lastModifiedTime === moment(new Date(file.lastModified)).format("yyyy-MM-DD HH:mm:ss");
+      if (equalsLastModify) {
+        resolve(shardUploadReactive.shardPrefixCheckParam.fileMd5 as string)
+      }
+    }
+    /*
+      正常情况下，需要计算文件的md5值
+     */
     if (file.size <= GB) {
       // 获取文件二进制数据，计算md5值
       let fileReader = new FileReader();
@@ -43,10 +76,9 @@ export function shardUpload (file: File, shardUploadReactive: any, blockSize: nu
     }
   }).then(md5 => {
     console.log("解析完文件的md5值：%o", md5)
-    // 将分片后的formData放进数组中
-    let formDataArray: FormData[] = [];
+    shardUploadReactive.status = UploadStatusEnum.UPLOADING;
     // 分片
-    let num = 0, start = 0, end = 0;
+    let num = 0;
     const fileName = file.name;
     const fileSize = file.size;
     const fileType = fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
@@ -62,24 +94,36 @@ export function shardUpload (file: File, shardUploadReactive: any, blockSize: nu
     shardPrefixCheckParam.blockSize = blockSize
     shardPrefixCheckParam.shardTotal = num
 
-    // 修改状态
-    shardUploadReactive.startTime = new Date();
-
     // 先预检，再上传
     FileServerApi.shardPrefixCheck(shardPrefixCheckParam).then((response)=>{
       // 获取后端返回的失败数组和进度
       let entiretySuccessful = response.data.data.entiretySuccessful;
 
-      shardUploadReactive.entiretySuccessful = entiretySuccessful;
       if (entiretySuccessful) {
         console.log("上传完成")
         // 上传完成
         shardUploadReactive.percentage = response.data.data.percentage;
-        shardUploadReactive.endTime = new Date();
+        shardUploadReactive.endTime = new Date().getTime();
+        shardUploadReactive.status = UploadStatusEnum.FINISHED
+        shardUploadReactive.totalTime = shardUploadReactive.endTime -
+          (shardUploadReactive.startTime as number) -
+          shardUploadReactive.pauseTotalTime;
+
         return;
       }
 
+      // 给rective对象赋值
+      shardUploadReactive.shardPrefixCheckParam.fileMd5 = shardPrefixCheckParam.fileMd5;
+      shardUploadReactive.shardPrefixCheckParam.fileType = shardPrefixCheckParam.fileType
+      shardUploadReactive.shardPrefixCheckParam.fileSize = shardPrefixCheckParam.fileSize
+      shardUploadReactive.shardPrefixCheckParam.lastModifiedTime = shardPrefixCheckParam.lastModifiedTime
+      shardUploadReactive.shardPrefixCheckParam.blockSize = shardPrefixCheckParam.blockSize
+      shardUploadReactive.shardPrefixCheckParam.shardTotal = shardPrefixCheckParam.shardTotal
+
+      // 未上传索引
       let unsuccessfulShardIndexArray:number[] = response.data.data.unsuccessfulShardIndexArray;
+      // 将分片后的formData放进数组中
+      let formDataArray: FormData[] = [];
 
       unsuccessfulShardIndexArray.forEach(index=>{
         let start = index * blockSize;
@@ -104,55 +148,32 @@ export function shardUpload (file: File, shardUploadReactive: any, blockSize: nu
 
       // 递归上传
       const innerShardUpload = (index: number) => {
-        if (index < formDataArray.length) {
+        if (index < formDataArray.length && shardUploadReactive.status == UploadStatusEnum.UPLOADING) {
           console.log("第%o次调用接口", index + 1)
           let formData = formDataArray[index]
-          formData.forEach((value, key) => {
-            console.log("key %s: value %s", key, value);
-          })
 
           FileServerApi.shardUpload(formData, config).then((response)=>{
             shardUploadReactive.percentage = response.data.data.percentage;
-            shardUploadReactive.entiretySuccessful = response.data.data.entiretySuccessful;
             if (!response.data.data.entiretySuccessful) {
               index++;
               innerShardUpload(index);
+            } else {
+              shardUploadReactive.status = UploadStatusEnum.FINISHED
             }
 
           }).catch((error)=>{
             console.error("分片%o上传失败：%o", index, error)
-
-            shardUploadReactive.endTime = new Date();
-            shardUploadReactive.unsuccessful = true;
-            if (error.data.clientMessage) {
-              shardUploadReactive.errorMessage = error.data.clientMessage;
-            } else {
-              shardUploadReactive.errorMessage = error;
-            }
-
-
-            // 上传失败就不再上传了，因为可能会出现很多次错误弹框
-            // index++;
-            ///innerShardUpload(index);
+            shardUploadFailed(shardUploadReactive, error);
           });
         }
       }
 
       if (formDataArray.length > 0) {
-        // console.log(.keys())
         innerShardUpload(0);
       }
     }).catch((error)=>{
       console.log("失败", error)
-      shardUploadReactive.endTime = new Date();
-      shardUploadReactive.unsuccessful = true;
-      if (error.data.clientMessage) {
-        shardUploadReactive.errorMessage = error.data.clientMessage;
-      } else {
-        shardUploadReactive.errorMessage = error;
-      }
-
-      console.log(shardUploadReactive)
+      shardUploadFailed(shardUploadReactive, error);
     })
 
   })
@@ -166,27 +187,17 @@ export function shardUpload (file: File, shardUploadReactive: any, blockSize: nu
  * @param blockSize 分片大小 默认值是5MB
  */
 export function shardUploads (files: FileList, reactive:any[], blockSize: number = DEFAULT_BLOCK_SIZE){
-  if (files.length !== reactive.length) {
-    console.error("批量上传的文件数量和接受百分比数量不一致")
-    ElMessage.error('批量上传的文件数量和接受百分比数量不一致')
-    return false;
-  }
-
-  for (let i = 0; i < files.length; i++) {
-    shardUpload(files[i], reactive[i])
-  }
+  // if (files.length !== reactive.length) {
+  //   console.error("批量上传的文件数量和接受百分比数量不一致")
+  //   ElMessage.error('批量上传的文件数量和接受百分比数量不一致')
+  //   return false;
+  // }
+  //
+  // for (let i = 0; i < files.length; i++) {
+  //   shardUpload(files[i], reactive[i])
+  // }
 }
 
-/**
- * 获取文件完整大小
- */
-// function getContentLength(): Promise<number>{
-//   return new Promise<number>((resolve, reject)=>{
-//     FileServerApi.getContentLength("").then((response)=>{
-//       resolve(response.headers[HttpHeaderConst.CONTENT_LENGTH])
-//     })
-//   })
-// }
 
 /**
  * 分段下载
@@ -207,6 +218,7 @@ import {shardPrefixCheck} from "@/api/GoudongFileServerApi";
 import {ShardPrefixCheckParam} from "@/pojo/ShardPrefixCheckParam";
 import {reactive} from "vue";
 import {ShardUploadReactive} from "@/pojo/ShardUploadReactive";
+import {UploadStatusEnum} from "@/enum/UploadStatusEnum";
 function rangeDownload(start:number, end: number) {
   let config = {
     headers: { "Range": `bytes=${start}-${end}`}
