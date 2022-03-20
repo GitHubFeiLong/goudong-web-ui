@@ -76,7 +76,7 @@ export function shardUpload (file: File, shardUploadReactive: ShardUploadReactiv
     }
   }).then(md5 => {
     console.log("解析完文件的md5值：%o", md5)
-    shardUploadReactive.status = UploadStatusEnum.UPLOADING;
+
     // 分片
     let num = 0;
     const fileName = file.name;
@@ -146,6 +146,8 @@ export function shardUpload (file: File, shardUploadReactive: ShardUploadReactiv
         formDataArray.push(param);
       })
 
+      // 前面是准备工作
+      shardUploadReactive.status = UploadStatusEnum.UPLOADING;
       // 递归上传
       const innerShardUpload = (index: number) => {
         if (index < formDataArray.length && shardUploadReactive.status == UploadStatusEnum.UPLOADING) {
@@ -158,7 +160,11 @@ export function shardUpload (file: File, shardUploadReactive: ShardUploadReactiv
               index++;
               innerShardUpload(index);
             } else {
-              shardUploadReactive.status = UploadStatusEnum.FINISHED
+              shardUploadReactive.status = UploadStatusEnum.FINISHED;
+              shardUploadReactive.endTime = new Date().getTime();
+              shardUploadReactive.totalTime = shardUploadReactive.endTime -
+                (shardUploadReactive.startTime as number) -
+                shardUploadReactive.pauseTotalTime;
             }
 
           }).catch((error)=>{

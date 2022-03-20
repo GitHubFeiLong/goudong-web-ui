@@ -43,10 +43,6 @@ export class ShardUploadReactive {
   pauseStartTime:number|null = null;
 
   /**
-   * 暂停结束时间
-   */
-  pauseEndTime:number|null = null;
-  /**
    * 暂停总时长
    */
   pauseTotalTime:number = 0;
@@ -70,7 +66,6 @@ export class ShardUploadReactive {
     shardUploadReactive.totalTime = 0;
     shardUploadReactive.status = UploadStatusEnum.INIT;
     shardUploadReactive.pauseStartTime = null;
-    shardUploadReactive.pauseEndTime = null;
     shardUploadReactive.pauseTotalTime = 0;
   }
 

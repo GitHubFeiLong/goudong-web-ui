@@ -10,6 +10,7 @@
                    :status="shardUploadReactive.status === UploadStatusEnum.FINISHED ? 'success' : (shardUploadReactive.status === UploadStatusEnum.FAILED ? 'exception' : '')"
       />
     </div>
+
   </div>
   <div>
     <input type="text" placeholder="文件id" v-model="downloadFileId">
@@ -69,13 +70,12 @@ const pauseShardUpload = () => {
  */
 const keepUpShardUpload = () => {
   if (shardUploadReactive.status === UploadStatusEnum.PAUSED) {
-    shardUploadReactive.status = UploadStatusEnum.UPLOADING
+    shardUploadReactive.status = UploadStatusEnum.READYING
     // 暂停总时长
     shardUploadReactive.pauseTotalTime += new Date().getTime() - shardUploadReactive.pauseStartTime
 
     // 暂停开始时间和结束时间进行初始
     shardUploadReactive.pauseStartTime = 0;
-    shardUploadReactive.pauseEndTime = 0;
 
     FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive)
     return;

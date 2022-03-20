@@ -1,9 +1,10 @@
-import * as FileServerApi from "@/api/GoudongFileServerApi";
-import * as HttpHeaderConst from "@/constant/HttpHeaderConst";
-import AxiosUtil from "@/utils/AxiosUtil";
-
+/**
+ * 将数据连接成完整的文件
+ * @param arrays
+ */
 export function concatenate(arrays:Uint8Array[]) {
   if (!arrays.length) return null;
+  // 获取文件总长度
   let totalLength = arrays.reduce((acc, value) => acc + value.length, 0);
   let result = new Uint8Array(totalLength);
   let length = 0;
@@ -45,7 +46,14 @@ export function getBinaryContent(url:string, start:number, end:number, i:number)
   });
 }
 
+/**
+ * 保存文件
+ * @param name
+ * @param buffers
+ * @param mime
+ */
 export function saveAs(name:string, buffers:any, mime = "application/octet-stream") {
+  // 创建文件对象
   const blob = new Blob([buffers], { type: mime });
   const blobUrl = URL.createObjectURL(blob);
   const a:any = document.createElement("a");
@@ -56,9 +64,16 @@ export function saveAs(name:string, buffers:any, mime = "application/octet-strea
   URL.revokeObjectURL(blob);
 }
 
+/**
+ * 异步池
+ * @param poolLimit 数量
+ * @param array 分块索引数组
+ * @param iteratorFn 具体执行分片下载功能
+ */
 export async function asyncPool(poolLimit:number, array:number[], iteratorFn:any){
   const ret = []; // 存储所有的异步任务
   const executing:any = []; // 存储正在执行的异步任务
+  // 循环所有分片
   for (const item of array) {
     // 调用iteratorFn函数创建异步任务
     const p = Promise.resolve().then(() => iteratorFn(item, array));
@@ -102,6 +117,7 @@ export async function download(url:string, contentLength:number, chunkSize:numbe
     }
   );
 
+  console.log("分片下载文件完成，开始合并文件")
   const sortedBuffers = results.map((item) => new Uint8Array(item.buffer));
   return concatenate(sortedBuffers);
 }
