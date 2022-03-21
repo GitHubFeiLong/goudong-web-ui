@@ -1,21 +1,29 @@
 <template>
-  <div>
-    <input type="file" @change="change" >
-    <el-button v-show="checkedFile != null && shardUploadReactive.status === UploadStatusEnum.INIT"  type="primary" @click="shardUpload">上传</el-button>
-    <el-button v-show="shardUploadReactive.status === UploadStatusEnum.PAUSED"  type="primary" @click="keepUpShardUpload">继续</el-button>
-    <el-button v-show="shardUploadReactive.status === UploadStatusEnum.UPLOADING"  type="primary" @click="pauseShardUpload">暂停</el-button>
-    <div class="demo-progress">
-      <el-progress :percentage="shardUploadReactive.percentage"
-                   :indeterminate="shardUploadReactive.status === UploadStatusEnum.READYING"
-                   :status="shardUploadReactive.status === UploadStatusEnum.FINISHED ? 'success' : (shardUploadReactive.status === UploadStatusEnum.FAILED ? 'exception' : '')"
-      />
-    </div>
+  <div class="outer-div">
+    <div class="upload">
+      <el-button type="primary" @click="checkFile" class="check-file">选择文件</el-button>
+      <input id="file" type="file" @change="change" class="file-input">
+      <el-button v-show="checkedFile != null && shardUploadReactive.status === UploadStatusEnum.INIT"  type="primary" @click="shardUpload">上传</el-button>
+      <el-button v-show="shardUploadReactive.status === UploadStatusEnum.PAUSED"  type="primary" @click="keepUpShardUpload">继续</el-button>
+      <el-button v-show="shardUploadReactive.status === UploadStatusEnum.UPLOADING"  type="primary" @click="pauseShardUpload">暂停</el-button>
+      <div class="demo-progress">
+        <el-progress :percentage="shardUploadReactive.percentage"
+                     :indeterminate="shardUploadReactive.status === UploadStatusEnum.READYING"
+                     :status="shardUploadReactive.status === UploadStatusEnum.FINISHED ? 'success' : (shardUploadReactive.status === UploadStatusEnum.FAILED ? 'exception' : '')"
+        />
+      </div>
 
+    </div>
+    <div class="download">
+      <el-input class="file-id"
+                v-model="downloadFileId"
+                placeholder="文件id"
+                size="default"
+                clearable />
+      <el-button type="primary" @click="download" class="btn">下载</el-button>
+    </div>
   </div>
-  <div>
-    <input type="text" placeholder="文件id" v-model="downloadFileId">
-    <input type="button" value="下载" @click="download">
-  </div>
+
 
 </template>
 <script lang="ts" setup>
@@ -32,6 +40,10 @@ let checkedFile= ref();
 // 声明一个用于接收上传实时信息
 let shardUploadReactive:ShardUploadReactive = reactive(ShardUploadReactive.getInstance())
 let downloadFileId = ref<bigint>(BigInt(0));
+
+function checkFile() {
+  document.getElementById("file").click();
+}
 /**
  * 文件change事件
  * @param e
@@ -103,9 +115,33 @@ async function multiThreadedDownload(fileId:bigint) {
 
 </script>
 
-<style scoped>
+<style lang='less' scoped>
 .demo-progress .el-progress--line {
   margin-bottom: 15px;
   width: 350px;
+}
+
+.outer-div{
+  width: 500px;
+  height: 700px;
+  margin-left: 25%;
+  margin-top: 40px;
+  .upload{
+    .check-file{
+      margin-right: 20px;
+    }
+    .file-input{
+      display: none;
+    }
+  }
+  .download{
+    margin-top: 50px;
+    .file-id{
+      width: 200px;
+    }
+    .btn{
+      margin-left: 10px;
+    }
+  }
 }
 </style>
