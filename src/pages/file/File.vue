@@ -1,8 +1,7 @@
 <template>
   <div class="outer-div">
     <div class="upload">
-      <el-button type="primary" @click="checkFile" class="check-file">选择文件</el-button>
-      <input id="file" type="file" @change="change" class="file-input">
+      <input id="file" type="file" @change="change" class="check-file">
       <el-button v-show="checkedFile != null && shardUploadReactive.status === UploadStatusEnum.INIT"  type="primary" @click="shardUpload">上传</el-button>
       <el-button v-show="shardUploadReactive.status === UploadStatusEnum.PAUSED"  type="primary" @click="keepUpShardUpload">继续</el-button>
       <el-button v-show="shardUploadReactive.status === UploadStatusEnum.UPLOADING"  type="primary" @click="pauseShardUpload">暂停</el-button>
@@ -41,9 +40,6 @@ let checkedFile= ref();
 let shardUploadReactive:ShardUploadReactive = reactive(ShardUploadReactive.getInstance())
 let downloadFileId = ref<bigint>(BigInt(0));
 
-function checkFile() {
-  document.getElementById("file").click();
-}
 /**
  * 文件change事件
  * @param e
@@ -129,9 +125,6 @@ async function multiThreadedDownload(fileId:bigint) {
   .upload{
     .check-file{
       margin-right: 20px;
-    }
-    .file-input{
-      display: none;
     }
   }
   .download{
