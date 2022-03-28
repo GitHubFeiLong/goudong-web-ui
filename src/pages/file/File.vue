@@ -2,7 +2,7 @@
   <div class="outer-div">
     <div class="upload">
       <input id="file" type="file" @change="change" class="check-file">
-      <el-button v-show="checkedFile != null && shardUploadReactive.status === UploadStatusEnum.INIT"  type="primary" @click="shardUpload">上传</el-button>
+      <el-button type="primary" @click="shardUpload">上传</el-button>
       <el-button v-show="shardUploadReactive.status === UploadStatusEnum.PAUSED"  type="primary" @click="keepUpShardUpload">继续</el-button>
       <el-button v-show="shardUploadReactive.status === UploadStatusEnum.UPLOADING"  type="primary" @click="pauseShardUpload">暂停</el-button>
       <div class="demo-progress">

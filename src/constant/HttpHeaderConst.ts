@@ -1,4 +1,4 @@
-/*请求头/响应头相关常量*/
+/*请求头/响应头相关常量，且自定义的请求头和响应头使用`X-`前缀，方便与规范区分*/
 
 /**
  * 认证请求头
@@ -10,9 +10,9 @@ export const AUTHORIZATION = 'Authorization';
 export const BEARER = 'Bearer ';
 
 /**
- * Aes-Key请求头
+ * X-Aes-Key请求头
  */
-export const AES_KEY = "Aes-Key";
+export const X_AES_KEY = "X-Aes-Key";
 
 export const CONTENT_DISPOSITION = "content-disposition";
 export const CONTENT_LENGTH = "content-length";
