@@ -34,6 +34,8 @@ module.exports = {
     "no-unused-vars":"off", // 定义了不使用 不警告
     "@typescript-eslint/no-unused-vars": ["off"],
     "@typescript-eslint/ban-ts-ignore": "off",
+    "no-underscore-dangle": 1,
+    "quotes":[1, "single"],
     "no-param-reassign": [
       "error",
       {
