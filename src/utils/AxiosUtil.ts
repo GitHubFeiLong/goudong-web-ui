@@ -100,6 +100,17 @@ let isRefreshing = false
  */
 function refreshingToken(token: Token, config: AxiosRequestConfig, result: Result<any>) {
   if (!isRefreshing) {
+    if (token === null || token === undefined || token.refreshToken === '') {
+
+      ElMessage.error(result.clientMessage);
+      console.error("刷新令牌时，refresh_token无效，跳转到登录页")
+      // 刷新令牌失败，直接跳转登录界面
+      LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+      LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+      requests = [];
+      isRefreshing = true;
+      window.location.href = LOGIN_PAGE;
+    }
     isRefreshing = true
     return new Promise((resolve, reject) => {
       // 请求刷新令牌
@@ -290,17 +301,17 @@ function requestOtherHandler(config: AxiosRequestConfig): RequestOther{
  */
 function responseOtherHandler(config: AxiosResponse):ResponseOther {
   let responseOther = (config.config as CustomAxiosRequestConfig)._responseOther;
-  let requestOther = (config.config as CustomAxiosRequestConfig)._requestOther
+  let requestOther = (config.config as CustomAxiosRequestConfig)._requestOther;
   if (requestOther && responseOther) {
-    if (responseOther.needAesDecrypt) {
-      console.log("解密前数据：", config.data);
-      config.data = AESUtil.decrypt(config.data,
-        requestOther.aesKey as string
-      );
-      config.data = JSON.parse(config.data)
-      // 添加X-Aes-Key到请求头
-      console.log("解密后：", config.data)
+
+    if (config.status > 200 && config.status < 400) {
+      if (responseOther.needAesDecrypt && config.data !== null && config.data !== undefined && config.data !== '') {
+        console.log('解密前数据：', config.data);
+        config.data = AESUtil.decrypt(config.data, requestOther.aesKey as string);
+        console.log('解密后数据：', config.data);
+      }
     }
+
   }
 
   return responseOther;
