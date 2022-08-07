@@ -61,3 +61,4 @@ export function decrypt(data: string, key: string) {
   let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
   return decryptedStr.toString();
 }
+
