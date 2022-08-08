@@ -1,4 +1,7 @@
-// 这里是一个默认的url，可以没有
+/*
+  这里是一个默认的url，可以没有
+  测试环境和生产环境需要在Nginx中进行配置
+ */
 let gatewayUrl = '';
 // 根据环境设置 服务不同的地址
 switch (process.env.VUE_APP_ENV) {

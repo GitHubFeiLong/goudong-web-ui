@@ -129,13 +129,19 @@ function refreshingToken(token: Token, config: AxiosRequestConfig, result: Resul
         }, 3000);
         return service(config);
       }).catch(() => {
-        ElMessage.error(result.clientMessage);
-        console.error('刷新令牌时，refresh_token无效，跳转到登录页');
-        // 刷新令牌失败，直接跳转登录界面
-        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
-        LocalStorageUtil.remove(USER_LOCAL_STORAGE);
-        requests = [];
-        window.location.href = LOGIN_PAGE;
+        /*
+          本身刷新token的请求和桶里面的请求，出现错误都会走到catch里面，所以这里需要判断是否是刷新令牌这个请求出现错误，
+          如果是刷新令牌出现错误，那就需要处理，如不是就不需要处理，响应拦截器会处理。
+         */
+        if (validateUrlAuthentication(config.url)) {
+          ElMessage.error(result.clientMessage);
+          console.error('刷新令牌时，refresh_token无效，跳转到登录页');
+          // 刷新令牌失败，直接跳转登录界面
+          LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE);
+          LocalStorageUtil.remove(USER_LOCAL_STORAGE);
+          requests = [];
+          window.location.href = LOGIN_PAGE;
+        }
       }).finally(() => {
         isRefreshing = false;
       });

@@ -92,6 +92,7 @@ export function validatePhone(value: string): Promise<string|void> {
 }
 
 /**
+ * 请求是否是认证请求（登录认证和刷新认证请求）
  * 判断是否需要请求头带token的
  * @param url
  */
@@ -111,7 +112,7 @@ export function validateUrlNotAuthentication(url: string | undefined):Boolean {
   }
   // 不是登录请求，也不是刷新token 的请求
   return !url?.startsWith("/api/oauth2/authentication/login")
-    && !url?.startsWith("/api/oauth2/authentication/refresh-token")
+    && !url?.startsWith("/api/oauth2/authentication/refresh-token");
 }
 
 /**
