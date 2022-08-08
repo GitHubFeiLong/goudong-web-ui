@@ -128,7 +128,7 @@ function refreshingToken(token: Token, config: AxiosRequestConfig, result: Resul
           requests = [];
         }, 3000);
         return service(config);
-      }).catch(() => {
+      }).catch((e) => {
         /*
           本身刷新token的请求和桶里面的请求，出现错误都会走到catch里面，所以这里需要判断是否是刷新令牌这个请求出现错误，
           如果是刷新令牌出现错误，那就需要处理，如不是就不需要处理，响应拦截器会处理。
@@ -141,6 +141,10 @@ function refreshingToken(token: Token, config: AxiosRequestConfig, result: Resul
           LocalStorageUtil.remove(USER_LOCAL_STORAGE);
           requests = [];
           window.location.href = LOGIN_PAGE;
+        } else {
+          // 桶里面的其它请求出现错误。
+          ElMessage.error(result.clientMessage);
+          console.error('请求桶请求出现错误:' , result);
         }
       }).finally(() => {
         isRefreshing = false;

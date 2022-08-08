@@ -12,6 +12,7 @@ switch (process.env.VUE_APP_ENV) {
     gatewayUrl = 'http://goudong.shop:10000/';
     break;
   default: // 开发环境url
+    // gatewayUrl = 'http://192.168.74.128:10000/';
     gatewayUrl = 'http://localhost:10000/';
     break;
 }
