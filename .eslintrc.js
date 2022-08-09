@@ -36,6 +36,7 @@ module.exports = {
     "@typescript-eslint/ban-ts-ignore": "off",
     "no-underscore-dangle": 1,
     "quotes":[1, "single"],
+    "semi":[1],
     "no-param-reassign": [
       "error",
       {
