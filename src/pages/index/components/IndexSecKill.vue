@@ -59,7 +59,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive, watch, computed, toRaw } from 'vue';
+import {computed, defineComponent, onMounted, reactive, toRaw, watch,} from 'vue';
 import IndexStore from '@/store/IndexStore';
 
 import moment from 'moment';
@@ -108,7 +108,7 @@ export default defineComponent({
       second: '00',
     });
     // 右侧的侧边栏的class
-    let sidebarClass =  IndexStore.getters.sidebarClass;
+    let { sidebarClass } = IndexStore.getters;
     /**
      * 初始化时间
      */
@@ -159,7 +159,7 @@ export default defineComponent({
       let everTop = (number - nowTop) / spacingInex; // 计算每次滑动的距离
       let scrollTimer = setInterval(() => {
         if (spacingInex > 0) {
-          spacingInex--;
+          spacingInex -= 1;
           ScrollTop(nowTop += everTop);
         } else {
           clearInterval(scrollTimer); // 清除计时器
@@ -169,18 +169,16 @@ export default defineComponent({
 
     const goToTop = () => {
       ScrollTop(0, 500);
-    }
+    };
 
     onMounted(() => {
       init();
       secKillInterval();
     });
     // 计算属性
-    const sidebarClassComputed = computed(() => {
-      return IndexStore.getters.sidebarClass;
-    })
+    const sidebarClassComputed = computed(() => IndexStore.getters.sidebarClass);
     watch(sidebarClassComputed, (now, old) => {
-      sidebarClass.value = toRaw(sidebarClassComputed.value)
+      sidebarClass.value = toRaw(sidebarClassComputed.value);
     });
     return {
       arr,

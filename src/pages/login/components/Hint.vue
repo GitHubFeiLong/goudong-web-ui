@@ -14,10 +14,10 @@ import {defineComponent} from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
 
-import * as UserAPI from '@/api/GoudongUserServerApi'
-import CustomAxiosRequestConfig from "@/pojo/CustomAxiosRequestConfig";
-import {ResponseOther} from "@/pojo/ResponseOther";
-import {RequestOther} from "@/pojo/RequestOther";
+import * as UserAPI from '@/api/GoudongUserServerApi';
+import CustomAxiosRequestConfig from '@/pojo/CustomAxiosRequestConfig';
+import {ResponseOther} from '@/pojo/ResponseOther';
+import {RequestOther} from '@/pojo/RequestOther';
 
 export default defineComponent({
   props: {
@@ -27,30 +27,29 @@ export default defineComponent({
     const notDone = () => {
       NotDone();
     };
-    const demo = () =>{
+    const demo = () => {
       let data: { serialVersionUID: number; password: string; accountRadio: string; code: string; phone: string; loginName: string; nickname: string; qqOpenId: string; remark: string; userType: string; email: string; username: string };
       data = {
-        "serialVersionUID": 1,
-        "username": "demoData",
-        "password": "demoData",
-        "email": "demoData",
-        "phone": "demoData",
-        "nickname": "demoData",
-        "remark": "demoData",
-        "qqOpenId": "demoData",
-        "accountRadio": "demoData",
-        "loginName": "demoData",
-        "userType": "demoData",
-        "code": "demoData"
+        serialVersionUID: 1,
+        username: 'demoData',
+        password: 'demoData',
+        email: 'demoData',
+        phone: 'demoData',
+        nickname: 'demoData',
+        remark: 'demoData',
+        qqOpenId: 'demoData',
+        accountRadio: 'demoData',
+        loginName: 'demoData',
+        userType: 'demoData',
+        code: 'demoData',
       };
       let customAxiosRequestConfig = CustomAxiosRequestConfig
         .build()
         .req(RequestOther.builder().needAesEncrypt(true).build())
-        .res(ResponseOther.builder().needAesDecrypt(true).build()
-      );
-      UserAPI.demoSecrypt(data, customAxiosRequestConfig).then((response)=>{
-        console.log("response", response.data)
-      })
+        .res(ResponseOther.builder().needAesDecrypt(true).build());
+      UserAPI.demoSecrypt(data, customAxiosRequestConfig).then((response) => {
+        console.log('response', response.data);
+      });
 
       // var s = generateKey();
       // var s1 = encrypt("hello world", s);
@@ -88,7 +87,7 @@ export default defineComponent({
       //     })
       //   }, i*100)
       // }
-    }
+    };
     return {
       notDone,
       demo,

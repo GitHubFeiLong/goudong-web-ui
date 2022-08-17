@@ -65,7 +65,7 @@ import * as HintEntity from '@/pojo/HintEntity';
 // 验证
 import * as Validate from '@/utils/ValidateUtil';
 // 接口地址
-import {phoneCodeApi, checkPhoneCodeApi} from '@/api/GoudongMessageServerApi';
+import {checkPhoneCodeApi, phoneCodeApi} from '@/api/GoudongMessageServerApi';
 import {checkRegistryPhoneApi} from '@/api/GoudongUserServerApi';
 import Result from '@/pojo/Result';
 import User from '@/pojo/User';
@@ -135,7 +135,7 @@ export default defineComponent({
         // 检查手机号是否被使用
         checkRegistryPhoneApi(phone.value).then((response) => {
           const result: Result<User> = response.data;
-          console.log("result.data", result.data == true)
+          console.log('result.data', result.data === true);
           // 是否可以使用
           if (response.data.data) {
             // 验证码验证

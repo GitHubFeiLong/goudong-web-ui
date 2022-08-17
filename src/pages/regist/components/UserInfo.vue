@@ -63,16 +63,17 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, watch } from 'vue';
+import {defineComponent, ref, watch} from 'vue';
 
 import * as HintEntity from '@/pojo/HintEntity';
-import { BLANK } from '@/pojo/HintEntity';
+import {BLANK} from '@/pojo/HintEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import {
+  checkRegistryEmailApi,
+  checkRegistryUsernameApi,
   createUserApi,
-  checkRegistryUsernameApi, checkRegistryEmailApi
 } from '@/api/GoudongUserServerApi';
-import { emailCodeApi,checkEmailCodeApi } from '@/api/GoudongMessageServerApi';
+import {checkEmailCodeApi, emailCodeApi} from '@/api/GoudongMessageServerApi';
 import User from '@/pojo/User';
 import RegisterStore from '@/store/RegisterStore';
 import Hint from './Hint.vue';

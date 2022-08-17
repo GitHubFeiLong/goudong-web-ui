@@ -1,8 +1,11 @@
 module.exports = {
   root: true,
   env: {
-    node: true,
     jquery: true,
+    "es2020": true,  // <- activate “es2020” globals
+    "browser": true,
+    "node": true,
+    "mocha": true
   },
   extends: [
     'plugin:vue/vue3-essential',
@@ -34,8 +37,16 @@ module.exports = {
     "no-unused-vars":"off", // 定义了不使用 不警告
     "@typescript-eslint/no-unused-vars": ["off"],
     "@typescript-eslint/ban-ts-ignore": "off",
+    "prefer-destructuring": ["error", {"object": true, "array": false}],
+    "no-use-before-define": 'off',
+    "vue/no-unused-vars": 1,
+    "no-unreachable": 1,
+    "vue/no-unused-components": 1, // 组件注册了不使用
+    "@typescript-eslint/no-use-before-define": [1],
+    "consistent-return":1,
+    "no-multi-assign":1,
     "no-param-reassign": [
-      "error",
+      1,
       {
         "props": true,
         "ignorePropertyModificationsFor": [

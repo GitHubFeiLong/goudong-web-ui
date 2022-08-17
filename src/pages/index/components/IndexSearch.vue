@@ -63,8 +63,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch, computed, toRaw } from 'vue';
-import IndexStore from "@/store/IndexStore";
+import {computed, defineComponent, onMounted, reactive, toRaw, watch,} from 'vue';
+import IndexStore from '@/store/IndexStore';
 
 export default defineComponent({
   setup() {
@@ -86,14 +86,12 @@ export default defineComponent({
       littleTitle: littleTitleRandomArr[0],
     });
     // 搜索栏class对象
-    let searchClass =  IndexStore.getters.searchClass;
+    let { searchClass } = IndexStore.getters;
 
     // 计算属性
-    const searchClassComputed = computed(() => {
-      return IndexStore.getters.sidebarClass;
-    })
+    const searchClassComputed = computed(() => IndexStore.getters.sidebarClass);
     watch(searchClassComputed, (now, old) => {
-      searchClass.value = toRaw(searchClassComputed.value)
+      searchClass.value = toRaw(searchClassComputed.value);
     });
 
     onMounted(() => {

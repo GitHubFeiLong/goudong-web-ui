@@ -21,10 +21,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 // 引入工具ts
 import NotDone from '@/utils/NotDone';
-const baseUrl = require('@/config/BaseUrl')
+
+const baseUrl = require('@/config/BaseUrl');
+
 export default defineComponent({
   name: 'QuickLogin',
   setup() {

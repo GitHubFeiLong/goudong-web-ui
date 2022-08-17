@@ -60,106 +60,123 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, onMounted, reactive} from 'vue';
-  import IndexDivTitle from "@/components/IndexDivTitle.vue";
-  import IndexFeatureOptimizationDiscoverGoods from "@/pages/index/components/IndexFeatureOptimizationDiscoverGoods.vue";
-  import IndexFeatureOptimizationThree from "@/pages/index/components/IndexFeatureOptimizationThree.vue";
+import {defineComponent, onMounted, reactive} from 'vue';
+import IndexDivTitle from '@/components/IndexDivTitle.vue';
+import IndexFeatureOptimizationDiscoverGoods
+  from '@/pages/index/components/IndexFeatureOptimizationDiscoverGoods.vue';
+import IndexFeatureOptimizationThree
+  from '@/pages/index/components/IndexFeatureOptimizationThree.vue';
 
-  import DaySpecialPrice from "@/pojo/DaySpecialPrice";
-  import DiscountCommodity from "@/pojo/DiscountCommodity";
+import DaySpecialPrice from '@/pojo/DaySpecialPrice';
+import DiscountCommodity from '@/pojo/DiscountCommodity';
 
-  export default defineComponent({
-    components:{
-      IndexDivTitle,
-      IndexFeatureOptimizationDiscoverGoods,
-      IndexFeatureOptimizationThree,
-    },
-    setup(){
-      // 每日特价对象
-      let daySpecialPrice = reactive<any>({
-        // 标题
-        daySpecialPriceTitle : "每日特价",
-        // 标题类型数组
-        daySpecialPriceTitleArrays :[
-          {title : '精选', active : true, commodities : [
-            new DaySpecialPrice("","香之渝香菇卤肉味煲仔饭250g*1", require('@/assets/imgs/day-choiceness-1.jpg'),9.9,19.9,"151天"),
-            new DaySpecialPrice("","迷你电脑机箱上置电源台式", require('@/assets/imgs/day-choiceness-2.jpg'),42.9,69.5,"277天"),
-            new DaySpecialPrice("","雅百达 无线蓝牙耳机跑步运动双耳迷你入耳式适用小米华为vivo苹果oppo安卓苹果通用 旗舰版【配套充电线+保护袋】", require('@/assets/imgs/day-choiceness-3.jpg'),29.9,49.9,"312天"),
-            new DaySpecialPrice("","夏季新款短袖套装男", require('@/assets/imgs/day-choiceness-4.jpg'),49,128,"45天"),
-            new DaySpecialPrice("","短袖+长裤两件套套装男", require('@/assets/imgs/day-choiceness-5.jpg'),69.9,128,"39天"),
-            ]
-          },
-          {title:'美食', active:false, commodities : [
-              new DaySpecialPrice("","乱劈才冲泡米饭速食食", require('@/assets/imgs/day-fine-food-1.jpg'),6.8,19.9,"339天"),
-              new DaySpecialPrice("","珠韵苕茶福鼎白茶100克", require('@/assets/imgs/day-fine-food-2.jpg'),67.8,121,"1年"),
-              new DaySpecialPrice("","麻辣兔腿开袋即食*2只（120g）", require('@/assets/imgs/day-fine-food-3.jpg'),19.9,29.9,""),
-              new DaySpecialPrice("","三明治面包整箱肉松夹心蒸蛋糕", require('@/assets/imgs/day-fine-food-4.jpg'),23,36.5,"222天"),
-              new DaySpecialPrice("","抢！！【89元3份】香辣小龙虾", require('@/assets/imgs/day-fine-food-5.jpg'),58,88,"40天"),
-            ]
-          },
-          {title:'百货', active:false, commodities : [
-              new DaySpecialPrice("","欢适舒弹抱枕高精密提花靠垫", require('@/assets/imgs/day-sears-1.jpg'),49,75,"1年"),
-              new DaySpecialPrice("","美珑美利 德国钢材和羽冻肉刀", require('@/assets/imgs/day-sears-2.jpg'),78.9,149,"225天"),
-              new DaySpecialPrice("","大号1.5cm*14盘中国结", require('@/assets/imgs/day-sears-3.jpg'),46.8,78,"1年"),
-              new DaySpecialPrice("","不粘锅炒锅麦饭石少油烟炒菜锅", require('@/assets/imgs/day-sears-4.jpg'),59,139.9,"1年"),
-              new DaySpecialPrice("","拜格厨房不锈钢菜刀女士刀", require('@/assets/imgs/day-sears-5.jpg'),12.9,39,"56天"),
-            ]
-          },
-          {title:'个护', active:false, commodities : [
-              new DaySpecialPrice("","口腔溃疡喷雾喷剂", require('@/assets/imgs/day-personal-care-1.jpg'), 25.8, 39.9, "1年"),
-              new DaySpecialPrice("","美乳霜产后修复女性下垂乳房", require('@/assets/imgs/day-personal-care-2.jpg'),61,88,"61天"),
-              new DaySpecialPrice("","蜕皮款「5袋」莹润牛奶护足膜", require('@/assets/imgs/day-personal-care-3.jpg'),34,49,"273天"),
-              new DaySpecialPrice("","老北京足贴50片装 祛湿助眠", require('@/assets/imgs/day-personal-care-4.jpg'),19.9,29.9,"185天"),
-              new DaySpecialPrice("","小苍兰护发精油两瓶装", require('@/assets/imgs/day-personal-care-5.jpg'),29,69,"1年"),
-            ]
-          },
-          {title:'预告', active:false, commodities : [
-              new DaySpecialPrice("","南极人童装女童外套2021新款", require('@/assets/imgs/day-foreshow-1.jpg'), 59, 138, ""),
-              new DaySpecialPrice("","南京桂花风味盐水鸭1kg整只装", require('@/assets/imgs/day-foreshow-2.jpg'),39.8,69,""),
-              new DaySpecialPrice("","抢！！【89元3份】香辣小龙虾", require('@/assets/imgs/day-foreshow-3.jpg'),58,88,""),
-              new DaySpecialPrice("","智能运动手环血压心率监测防水", require('@/assets/imgs/day-foreshow-4.jpg'),99,258,""),
-              new DaySpecialPrice("","LUPHIE 车载出风口旋转香氛", require('@/assets/imgs/day-foreshow-5.jpg'),33.6,48,""),
-            ]
-          },
-        ],
-        // 当前类型商品数组
-        daySpecialPriceCommodities : [],
-        // 标题类型鼠标移入事件
-        daySpecialPriceTitleMouseOver:(index:number)=>{
-          daySpecialPrice.daySpecialPriceTitleArrays.forEach((item:any, idx:number)=>{
-            item.active = false;
-            if (index === idx) {
-              item.active = true;
-            }
-          });
-
-          daySpecialPrice.daySpecialPriceCommodities = daySpecialPrice.daySpecialPriceTitleArrays[index].commodities;
+export default defineComponent({
+  components: {
+    IndexDivTitle,
+    IndexFeatureOptimizationDiscoverGoods,
+    IndexFeatureOptimizationThree,
+  },
+  setup() {
+    // 每日特价对象
+    let daySpecialPrice = reactive<any>({
+      // 标题
+      daySpecialPriceTitle: '每日特价',
+      // 标题类型数组
+      daySpecialPriceTitleArrays: [
+        {
+          title: '精选',
+          active: true,
+          commodities: [
+            new DaySpecialPrice('', '香之渝香菇卤肉味煲仔饭250g*1', require('@/assets/imgs/day-choiceness-1.jpg'), 9.9, 19.9, '151天'),
+            new DaySpecialPrice('', '迷你电脑机箱上置电源台式', require('@/assets/imgs/day-choiceness-2.jpg'), 42.9, 69.5, '277天'),
+            new DaySpecialPrice('', '雅百达 无线蓝牙耳机跑步运动双耳迷你入耳式适用小米华为vivo苹果oppo安卓苹果通用 旗舰版【配套充电线+保护袋】', require('@/assets/imgs/day-choiceness-3.jpg'), 29.9, 49.9, '312天'),
+            new DaySpecialPrice('', '夏季新款短袖套装男', require('@/assets/imgs/day-choiceness-4.jpg'), 49, 128, '45天'),
+            new DaySpecialPrice('', '短袖+长裤两件套套装男', require('@/assets/imgs/day-choiceness-5.jpg'), 69.9, 128, '39天'),
+          ],
         },
-      });
+        {
+          title: '美食',
+          active: false,
+          commodities: [
+            new DaySpecialPrice('', '乱劈才冲泡米饭速食食', require('@/assets/imgs/day-fine-food-1.jpg'), 6.8, 19.9, '339天'),
+            new DaySpecialPrice('', '珠韵苕茶福鼎白茶100克', require('@/assets/imgs/day-fine-food-2.jpg'), 67.8, 121, '1年'),
+            new DaySpecialPrice('', '麻辣兔腿开袋即食*2只（120g）', require('@/assets/imgs/day-fine-food-3.jpg'), 19.9, 29.9, ''),
+            new DaySpecialPrice('', '三明治面包整箱肉松夹心蒸蛋糕', require('@/assets/imgs/day-fine-food-4.jpg'), 23, 36.5, '222天'),
+            new DaySpecialPrice('', '抢！！【89元3份】香辣小龙虾', require('@/assets/imgs/day-fine-food-5.jpg'), 58, 88, '40天'),
+          ],
+        },
+        {
+          title: '百货',
+          active: false,
+          commodities: [
+            new DaySpecialPrice('', '欢适舒弹抱枕高精密提花靠垫', require('@/assets/imgs/day-sears-1.jpg'), 49, 75, '1年'),
+            new DaySpecialPrice('', '美珑美利 德国钢材和羽冻肉刀', require('@/assets/imgs/day-sears-2.jpg'), 78.9, 149, '225天'),
+            new DaySpecialPrice('', '大号1.5cm*14盘中国结', require('@/assets/imgs/day-sears-3.jpg'), 46.8, 78, '1年'),
+            new DaySpecialPrice('', '不粘锅炒锅麦饭石少油烟炒菜锅', require('@/assets/imgs/day-sears-4.jpg'), 59, 139.9, '1年'),
+            new DaySpecialPrice('', '拜格厨房不锈钢菜刀女士刀', require('@/assets/imgs/day-sears-5.jpg'), 12.9, 39, '56天'),
+          ],
+        },
+        {
+          title: '个护',
+          active: false,
+          commodities: [
+            new DaySpecialPrice('', '口腔溃疡喷雾喷剂', require('@/assets/imgs/day-personal-care-1.jpg'), 25.8, 39.9, '1年'),
+            new DaySpecialPrice('', '美乳霜产后修复女性下垂乳房', require('@/assets/imgs/day-personal-care-2.jpg'), 61, 88, '61天'),
+            new DaySpecialPrice('', '蜕皮款「5袋」莹润牛奶护足膜', require('@/assets/imgs/day-personal-care-3.jpg'), 34, 49, '273天'),
+            new DaySpecialPrice('', '老北京足贴50片装 祛湿助眠', require('@/assets/imgs/day-personal-care-4.jpg'), 19.9, 29.9, '185天'),
+            new DaySpecialPrice('', '小苍兰护发精油两瓶装', require('@/assets/imgs/day-personal-care-5.jpg'), 29, 69, '1年'),
+          ],
+        },
+        {
+          title: '预告',
+          active: false,
+          commodities: [
+            new DaySpecialPrice('', '南极人童装女童外套2021新款', require('@/assets/imgs/day-foreshow-1.jpg'), 59, 138, ''),
+            new DaySpecialPrice('', '南京桂花风味盐水鸭1kg整只装', require('@/assets/imgs/day-foreshow-2.jpg'), 39.8, 69, ''),
+            new DaySpecialPrice('', '抢！！【89元3份】香辣小龙虾', require('@/assets/imgs/day-foreshow-3.jpg'), 58, 88, ''),
+            new DaySpecialPrice('', '智能运动手环血压心率监测防水', require('@/assets/imgs/day-foreshow-4.jpg'), 99, 258, ''),
+            new DaySpecialPrice('', 'LUPHIE 车载出风口旋转香氛', require('@/assets/imgs/day-foreshow-5.jpg'), 33.6, 48, ''),
+          ],
+        },
+      ],
+      // 当前类型商品数组
+      daySpecialPriceCommodities: [],
+      // 标题类型鼠标移入事件
+      daySpecialPriceTitleMouseOver: (index: number) => {
+        daySpecialPrice.daySpecialPriceTitleArrays.forEach((item: any, idx: number) => {
+          item.active = false;
+          if (index === idx) {
+            item.active = true;
+          }
+        });
 
-      // 品牌闪购
-      let brandBuy = reactive<any>({
-        brandBuyTitle : "品牌闪购",
-        brandBuyArrays : [
-          new DiscountCommodity('', '梦花园',  require('@/assets/imgs/brand-buy-1.jpg'), '全场九折起 | 仅剩 2 天', 2, '梦花园户外专场'),
-          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-2.jpg'), '全场低至9折', -1, 'keep瑜伽闪购专场'),
-          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-3.jpg'), '爆品直降1000元', -1, '苏泊尔品牌特惠'),
-          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-4.jpg'), '夏爆款39元起', -1, '迪士尼童装'),
-          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-5.jpg'), '24小时限时底价', -1, '金帅品牌闪购专场'),
-          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-6.jpg'), '最高直降500元', -1, '海康威视闪购专场'),
-          new DiscountCommodity('', '',  require('@/assets/imgs/brand-buy-7.jpg'), '低至5折', -1, '小米闪购专场'),
-        ],
-      });
+        daySpecialPrice.daySpecialPriceCommodities = daySpecialPrice.daySpecialPriceTitleArrays[index].commodities;
+      },
+    });
 
-      onMounted(()=>{
-        daySpecialPrice.daySpecialPriceCommodities = daySpecialPrice.daySpecialPriceTitleArrays[0].commodities;
-      })
-      return {
-        daySpecialPrice,
-        brandBuy,
-      }
-    }
-  })
+    // 品牌闪购
+    let brandBuy = reactive<any>({
+      brandBuyTitle: '品牌闪购',
+      brandBuyArrays: [
+        new DiscountCommodity('', '梦花园', require('@/assets/imgs/brand-buy-1.jpg'), '全场九折起 | 仅剩 2 天', 2, '梦花园户外专场'),
+        new DiscountCommodity('', '', require('@/assets/imgs/brand-buy-2.jpg'), '全场低至9折', -1, 'keep瑜伽闪购专场'),
+        new DiscountCommodity('', '', require('@/assets/imgs/brand-buy-3.jpg'), '爆品直降1000元', -1, '苏泊尔品牌特惠'),
+        new DiscountCommodity('', '', require('@/assets/imgs/brand-buy-4.jpg'), '夏爆款39元起', -1, '迪士尼童装'),
+        new DiscountCommodity('', '', require('@/assets/imgs/brand-buy-5.jpg'), '24小时限时底价', -1, '金帅品牌闪购专场'),
+        new DiscountCommodity('', '', require('@/assets/imgs/brand-buy-6.jpg'), '最高直降500元', -1, '海康威视闪购专场'),
+        new DiscountCommodity('', '', require('@/assets/imgs/brand-buy-7.jpg'), '低至5折', -1, '小米闪购专场'),
+      ],
+    });
+
+    onMounted(() => {
+      daySpecialPrice.daySpecialPriceCommodities = daySpecialPrice.daySpecialPriceTitleArrays[0].commodities;
+    });
+    return {
+      daySpecialPrice,
+      brandBuy,
+    };
+  },
+});
 </script>
 <style scoped lang="less">
   .day-special-price-container{

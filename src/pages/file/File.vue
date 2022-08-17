@@ -26,29 +26,31 @@
 
 </template>
 <script lang="ts" setup>
-import {ref, reactive} from 'vue'
+import {reactive, ref} from 'vue';
 import * as FileUtil from '@/utils/FileUtil';
 import {download as dddd, saveAs} from '@/utils/MultiThreadDownload';
-import * as FileServerApi from "@/api/GoudongFileServerApi";
-import {AxiosResponse} from "axios";
-import {ShardUploadReactive} from "@/pojo/ShardUploadReactive";
-import {UploadStatusEnum} from "@/enum/UploadStatusEnum";
-import {ElMessage} from "element-plus";
+import * as FileServerApi from '@/api/GoudongFileServerApi';
+import {AxiosResponse} from 'axios';
+import {ShardUploadReactive} from '@/pojo/ShardUploadReactive';
+import {UploadStatusEnum} from '@/enum/UploadStatusEnum';
+import {ElMessage} from 'element-plus';
+
 const moment = require('moment');
-let checkedFile= ref();
+
+let checkedFile = ref();
 // 声明一个用于接收上传实时信息
-let shardUploadReactive:ShardUploadReactive = reactive(ShardUploadReactive.getInstance())
+let shardUploadReactive: ShardUploadReactive = reactive(ShardUploadReactive.getInstance());
 let downloadFileId = ref<bigint>(BigInt(0));
 
 /**
  * 文件change事件
  * @param e
  */
-const change = (e:any) => {
+const change = (e: any) => {
   // 返回FileList对象File集合
-  checkedFile.value = e.target.files[0]
-  Object.assign(shardUploadReactive, ShardUploadReactive.getInstance())
-}
+  checkedFile.value = e.target.files[0];
+  Object.assign(shardUploadReactive, ShardUploadReactive.getInstance());
+};
 
 /**
  * 上传
@@ -57,57 +59,57 @@ const shardUpload = () => {
   if (checkedFile.value !== null) {
     shardUploadReactive.startTime = new Date().getTime();
     shardUploadReactive.status = UploadStatusEnum.READYING;
-    FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive)
+    FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive);
   }
-}
+};
 
 /**
  * 暂停上传
  */
 const pauseShardUpload = () => {
   if (shardUploadReactive.status === UploadStatusEnum.UPLOADING) {
-    shardUploadReactive.status = UploadStatusEnum.PAUSED
+    shardUploadReactive.status = UploadStatusEnum.PAUSED;
     shardUploadReactive.pauseStartTime = new Date().getTime();
     return;
   }
-  ElMessage.error('上传文件的状态错误')
-  console.error("文件状态错误，此时应该是上传中状态才能调用暂停上传")
-}
+  ElMessage.error('上传文件的状态错误');
+  console.error('文件状态错误，此时应该是上传中状态才能调用暂停上传');
+};
 /**
  * 继续上传
  */
 const keepUpShardUpload = () => {
   if (shardUploadReactive.status === UploadStatusEnum.PAUSED) {
-    shardUploadReactive.status = UploadStatusEnum.READYING
+    shardUploadReactive.status = UploadStatusEnum.READYING;
     // 暂停总时长
-    shardUploadReactive.pauseTotalTime += new Date().getTime() - shardUploadReactive.pauseStartTime
+    shardUploadReactive.pauseTotalTime += new Date().getTime() - shardUploadReactive.pauseStartTime;
 
     // 暂停开始时间和结束时间进行初始
     shardUploadReactive.pauseStartTime = 0;
 
-    FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive)
+    FileUtil.shardUpload(checkedFile.value as File, shardUploadReactive);
     return;
   }
-  ElMessage.error('上传文件的状态错误')
-  console.error("文件状态错误，此时应该是暂停状态才能调用继续上传")
-}
+  ElMessage.error('上传文件的状态错误');
+  console.error('文件状态错误，此时应该是暂停状态才能调用继续上传');
+};
 
-const download = ()=>{
-  multiThreadedDownload(downloadFileId.value)
-}
-
-async function multiThreadedDownload(fileId:bigint) {
+async function multiThreadedDownload(fileId: bigint) {
   // 1. 获取文件基本信息
   // let fileId:bigint = BigInt(1503339420588314624);
-  let response:AxiosResponse = await FileServerApi.fileLink(fileId, 0)
+  let response: AxiosResponse = await FileServerApi.fileLink(fileId, 0);
   let file = response.data.data;
-  const url = "http://localhost:9998/api/file/download-group/download?fileId="+fileId;
+  const url = `http://localhost:9998/api/file/download-group/download?fileId=${fileId}`;
   if (!url || !/https?/.test(url)) return;
-  dddd(url, file.size, 1024*1024).then((buffers) => {
-    console.log("多线程下载结束: " + +new Date());
+  dddd(url, file.size, 1024 * 1024).then((buffers) => {
+    console.log(`多线程下载结束: ${+new Date()}`);
     saveAs(file.originalFilename, buffers, file.mimeType);
   });
 }
+
+const download = () => {
+  multiThreadedDownload(downloadFileId.value);
+};
 
 </script>
 

@@ -95,9 +95,9 @@ import City from '@/pojo/City';
 import LocalStorageUtil from '@/utils/LocalStorageUtil';
 import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/constant/LocalStorageConst';
 import IndexStore from '@/store/IndexStore';
-import {logoutApi} from "@/api/GoudongOauth2ServerApi";
-import {LOGIN_PAGE} from "@/constant/PageUriConst"
-import User from "@/pojo/User";
+import {logoutApi} from '@/api/GoudongOauth2ServerApi';
+import {LOGIN_PAGE} from '@/constant/PageUriConst';
+import User from '@/pojo/User';
 
 export default defineComponent({
   setup() {
@@ -159,8 +159,6 @@ export default defineComponent({
           // eslint-disable-next-line no-param-reassign
           item.checked = true;
           city.value = item.name as string;
-
-
         }
         // 重新渲染class
         showDetail.showCityBoxCard = false;
@@ -203,7 +201,7 @@ export default defineComponent({
      * 退出登录
      */
     const logout = () => {
-      console.log("退出登录")
+      console.log('退出登录');
       // 清空本地缓存用户数据
       logoutApi().then((response) => {
         // 清除 token
@@ -211,9 +209,9 @@ export default defineComponent({
         // 清除 用户信息
         LocalStorageUtil.remove(USER_LOCAL_STORAGE);
         // 重定向到登录页面
-        window.location.href=LOGIN_PAGE;
+        window.location.href = LOGIN_PAGE;
       });
-    }
+    };
     return {
       city,
       cityArr,

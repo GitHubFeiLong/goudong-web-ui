@@ -10,16 +10,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import {defineComponent, onMounted} from 'vue';
 import IndexStore from '@/store/IndexStore';
 
+import IndexFeatureOptimization from '@/pages/index/components/IndexFeatureOptimization.vue';
 import IndexActivity from './components/IndexActivity.vue';
 import IndexMenu from './components/IndexMenu.vue';
 import IndexSearch from './components/IndexSearch.vue';
 import IndexMain from './components/IndexMain.vue';
 import IndexSecKill from './components/IndexSecKill.vue';
 import IndexActivityFloor from './components/IndexActivityFloor.vue';
-import IndexFeatureOptimization from "@/pages/index/components/IndexFeatureOptimization.vue";
 
 export default defineComponent({
   components: {

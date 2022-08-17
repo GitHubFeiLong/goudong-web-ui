@@ -96,9 +96,7 @@
 </template>
 <script lang='ts'>
 import Result from '@/pojo/Result';
-import {
-  defineComponent, ref, reactive, onMounted, watch, inject,
-} from 'vue';
+import {defineComponent, reactive, ref, watch,} from 'vue';
 
 // 提示信息
 import BodyFoot from '@/pages/forgotPwd/components/BodyFoot.vue';
@@ -109,8 +107,8 @@ import * as HintEntity from '@/pojo/HintEntity';
 import QAEntity from '@/pojo/QAEntity';
 import * as Validate from '@/utils/ValidateUtil';
 import ForgotPwdStore from '@/store/ForgotPwdStore';
-import {phoneCodeApi, checkPhoneCodeApi} from '@/api/GoudongMessageServerApi';
-import { updatePasswordApi } from '@/api/GoudongUserServerApi';
+import {checkPhoneCodeApi, phoneCodeApi} from '@/api/GoudongMessageServerApi';
+import {updatePasswordApi} from '@/api/GoudongUserServerApi';
 
 declare let $: (selector: string) => any;
 
@@ -252,11 +250,11 @@ export default defineComponent({
 
     // 提交密码
     const clickSubmitBtn = () => {
-      console.log(ForgotPwdStore.state.authorityUser)
+      console.log(ForgotPwdStore.state.authorityUser);
       const param = {
-        id: ForgotPwdStore.state.authorityUser.id
-        , password: newPassword.value
-        , code: ForgotPwdStore.state.authorityUser.code
+        id: ForgotPwdStore.state.authorityUser.id,
+        password: newPassword.value,
+        code: ForgotPwdStore.state.authorityUser.code,
       };
       updatePasswordApi(param).then((response) => {
         stepStatus.value = 3;

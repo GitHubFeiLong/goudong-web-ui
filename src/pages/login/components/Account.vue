@@ -30,20 +30,18 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, reactive } from 'vue';
+import {defineComponent, reactive, ref} from 'vue';
 import MiniPuzzleVerify from '@/components/MiniPuzzleVerify.vue';
 
 // 引入工具ts
 import * as HintEntity from '@/pojo/HintEntity';
-import Result from '@/pojo/Result';
-import User from '@/pojo/User';
 // import { loginApi } from '@/api/Oauth2Api';
 import {loginApi} from '@/api/GoudongOauth2ServerApi';
+import {INDEX_PAGE} from '@/constant/PageUriConst';
+import LocalStorageUtil from '@/utils/LocalStorageUtil';
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/constant/LocalStorageConst';
+import Token from '@/pojo/Token';
 import QuickLogin from './QuickLogin.vue';
-import {INDEX_PAGE} from "@/constant/PageUriConst";
-import LocalStorageUtil from "@/utils/LocalStorageUtil";
-import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/constant/LocalStorageConst";
-import Token from "@/pojo/Token";
 // 申明jquery
 declare let $: (selector: string) => any;
 
@@ -139,26 +137,26 @@ export default defineComponent({
     const successPuzzle = () => {
       puzzle.showPuzzle = false;
       puzzle.puzzleSure = true;
-      let LoginBtnValue1 = "登    录";
-      let LoginBtnValue2 = "正在登录...";
+      let LoginBtnValue1 = '登    录';
+      let LoginBtnValue2 = '正在登录...';
       btnValue.value = LoginBtnValue2;
       // 请求登录接口
       loginApi(username.value, password.value).then((response) => {
         // 这个是才后端反的data一层数据
         let result = response.data.data;
         // 用户信息
-        const user: Result<User> = result.user;
+        const { user } = result;
         // 设置用户信息
         LocalStorageUtil.set(USER_LOCAL_STORAGE, user);
         // 生成token对象
-        const token = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
+        const token = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
         // 设置token对象
         LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, token);
         // 修改按钮文字
         btnValue.value = LoginBtnValue1;
         // 跳转登录
         window.location.href = INDEX_PAGE;
-      }, (response)=>{
+      }, (response) => {
         hint.value = HintEntity.USERNAME_PASSWORD_HINT_3;
         btnValue.value = LoginBtnValue1;
         console.log(response);

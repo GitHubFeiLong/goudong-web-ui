@@ -13,16 +13,15 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, onMounted } from 'vue';
+import {defineComponent, onMounted} from 'vue';
 
 import RegisterStore from '@/store/RegisterStore';
 import User from '@/pojo/User';
-import { loginApi } from '@/api/GoudongOauth2ServerApi';
-import Result from '@/pojo/Result';
-import LocalStorageUtil from "@/utils/LocalStorageUtil";
-import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from "@/constant/LocalStorageConst";
-import Token from "@/pojo/Token";
-import {INDEX_PAGE} from "@/constant/PageUriConst";
+import {loginApi} from '@/api/GoudongOauth2ServerApi';
+import LocalStorageUtil from '@/utils/LocalStorageUtil';
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/constant/LocalStorageConst';
+import Token from '@/pojo/Token';
+import {INDEX_PAGE} from '@/constant/PageUriConst';
 
 export default defineComponent({
   props: {
@@ -42,11 +41,11 @@ export default defineComponent({
         // 这个是才后端反的data一层数据
         let result = response.data.data;
         // 用户信息
-        const user: Result<User> = result.user;
+        const { user } = result;
         // 设置用户信息
         LocalStorageUtil.set(USER_LOCAL_STORAGE, user);
         // 生成token对象
-        const token = new Token(result.accessToken, result.refreshToken,result.accessExpires, result.refreshExpires);
+        const token = new Token(result.accessToken, result.refreshToken, result.accessExpires, result.refreshExpires);
         // 设置token对象
         LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, token);
 
