@@ -152,11 +152,15 @@ service.interceptors.response.use((response: AxiosResponse<Result<any>>) => {
   const result = response.data;
 
   // 响应码401，需要重新登录（或使用无感刷新token）
-  if (status == 401) {
+  if (status === 401) {
     // 登录或刷新令牌 请求返回401，返回reject
     if (validateUrlAuthentication(config.url)) {
       return Promise.reject();
     }
+
+    requests.push(() => {
+      service(config);
+    });
 
     // 其它请求，获取token
     const token: Token = Token.toToken(LocalStorageUtil.get(TOKEN_LOCAL_STORAGE) as Token);
