@@ -432,6 +432,9 @@ export default defineComponent({
           } else {
             hintEmailCode.value = HintEntity.EMAIL_CODE_HINT_2;
           }
+        }).finally(() => {
+          // 不管接口怎么是否请求成功，都恢复可点击状态
+          (nextStepRef.value as HTMLElement).removeAttribute('disabled');
         });
       } else if (!usernameSure.value) {
         // 用户名不正确
